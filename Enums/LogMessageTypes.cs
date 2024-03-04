@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Winestro_A.Enums;
 
-enum LogMessageTypes
+public enum LogMessageTypes
 {
     Info,
     Warning,
     Error,
 };
 
-enum LogMessageMetaTypes
+public enum LogMessageMetaTypes
 {
     Music,
     Misc,
