@@ -9,7 +9,7 @@ public sealed partial class LogMessageControl : UserControl
 {
     public LogMessageTypes Type { get; set; }
     public string Text { get; set; }
-    public TimeSpan Time { get; set; }
+    public string Time { get; set; }
 
     public string IconSource;
 
