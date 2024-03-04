@@ -11,7 +11,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -36,8 +36,25 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="3">
+        <StackPanel Grid.Row="3" Spacing="5">
             <TextBlock Text="Log" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <Pivot MinHeight="300" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <PivotItem Header="All">
+                    
+                </PivotItem>
+                <PivotItem Header="Info">
+
+                </PivotItem>
+                <PivotItem Header="Warnings">
+
+                </PivotItem>
+                <PivotItem Header="Errors">
+
+                </PivotItem>
+                <PivotItem Header="Music Log">
+
+                </PivotItem>
+            </Pivot>
         </StackPanel>
     </Grid>
 </Page>
