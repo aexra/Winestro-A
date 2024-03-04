@@ -25,11 +25,11 @@
             Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
             Padding="5 5 5 5"
             CornerRadius="5">
-            <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionStatus}" LeftWidth="120"/>
-            <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}" LeftWidth="120"/>
-            <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}" LeftWidth="120"/>
-            <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}" LeftWidth="120"/>
-            <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}" LeftWidth="120"/>
+            <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionStatus}"/>
+            <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}"/>
+            <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}"/>
+            <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}"/>
+            <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}"/>
         </StackPanel>
     </Grid>
 </Page>

@@ -21,7 +21,7 @@ public sealed partial class KeyValuePair : UserControl
 {
     public string Left { get; set; }
     public string Right { get; set; }
-    public GridLength LeftWidth { get; set; }
+    public GridLength LeftWidth { get; set; } = new GridLength(120);
 
     public KeyValuePair()
     {
