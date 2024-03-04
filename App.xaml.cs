@@ -77,8 +77,6 @@ public partial class App : Application
             services.AddTransient<GuildsPage>();
             services.AddTransient<ConfigViewModel>();
             services.AddTransient<ConfigPage>();
-            services.AddTransient<ModulesViewModel>();
-            services.AddTransient<ModulesPage>();
             services.AddTransient<MusicModulePage>();
             services.AddTransient<MusicModuleViewModel>();
             services.AddTransient<MiscModulePage>();

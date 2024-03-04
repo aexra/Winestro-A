@@ -41,7 +41,7 @@
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE99A;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem x:Uid="Shell_Modules" helpers:NavigationHelper.NavigateTo="Winestro_A.ViewModels.ModulesViewModel">
+                <NavigationViewItem x:Uid="Shell_Modules">
                     <NavigationViewItem.Icon>
                         <FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE81E;"/>
                     </NavigationViewItem.Icon>
