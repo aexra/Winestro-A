@@ -12,7 +12,7 @@
             <RowDefinition Height="60"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="400"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
@@ -36,27 +36,104 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Row="3" Spacing="5">
-            <TextBlock Text="Log" Style="{StaticResource SubtitleTextBlockStyle}"/>
-            <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10">
-                <Pivot MinHeight="300">
-                    <PivotItem Header="All">
+        <Border Grid.Row="3" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch">
+            <Pivot Title="LOG">
+                <PivotItem Header="All">
+                    
+                    <ListView x:Name="AllLogsLV" SelectionMode="Single">
+                        
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
 
-                    </PivotItem>
-                    <PivotItem Header="Info">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
 
-                    </PivotItem>
-                    <PivotItem Header="Warnings">
+                    </ListView>
 
-                    </PivotItem>
-                    <PivotItem Header="Errors">
+                </PivotItem>
+                <PivotItem Header="Info">
 
-                    </PivotItem>
-                    <PivotItem Header="Music Log">
+                    <ListView x:Name="InfoLogsLV" SelectionMode="Single">
 
-                    </PivotItem>
-                </Pivot>
-            </Border>
-        </StackPanel>
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+
+                </PivotItem>
+                <PivotItem Header="Warnings">
+
+                    <ListView x:Name="WarningsLogsLV" SelectionMode="Single">
+
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+
+                </PivotItem>
+                <PivotItem Header="Errors">
+
+                    <ListView x:Name="ErrorsLogsLV" SelectionMode="Single">
+
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+
+                </PivotItem>
+                <PivotItem Header="Music Log">
+
+                    <ListView x:Name="MusicLogsLV" SelectionMode="Single">
+
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+
+                </PivotItem>
+            </Pivot>
+        </Border>
     </Grid>
 </Page>
