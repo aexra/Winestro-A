@@ -38,23 +38,25 @@
 
         <StackPanel Grid.Row="3" Spacing="5">
             <TextBlock Text="Log" Style="{StaticResource SubtitleTextBlockStyle}"/>
-            <Pivot MinHeight="300" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-                <PivotItem Header="All">
-                    
-                </PivotItem>
-                <PivotItem Header="Info">
+            <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10">
+                <Pivot MinHeight="300">
+                    <PivotItem Header="All">
 
-                </PivotItem>
-                <PivotItem Header="Warnings">
+                    </PivotItem>
+                    <PivotItem Header="Info">
 
-                </PivotItem>
-                <PivotItem Header="Errors">
+                    </PivotItem>
+                    <PivotItem Header="Warnings">
 
-                </PivotItem>
-                <PivotItem Header="Music Log">
+                    </PivotItem>
+                    <PivotItem Header="Errors">
 
-                </PivotItem>
-            </Pivot>
+                    </PivotItem>
+                    <PivotItem Header="Music Log">
+
+                    </PivotItem>
+                </Pivot>
+            </Border>
         </StackPanel>
     </Grid>
 </Page>
