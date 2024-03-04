@@ -8,7 +8,7 @@ namespace Winestro_A.Helpers;
 
 public class TimeHelper
 {
-    public static string HHMMSSNow()
+    public static string NowS()
     {
         var s = string.Empty;
         TimeSpan now = DateTime.Now.TimeOfDay;

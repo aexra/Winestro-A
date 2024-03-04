@@ -11,45 +11,45 @@ namespace Winestro_A.Services;
 
 public class LogService
 {
-    public static Stack<LogMessage> LogMessages { get; private set; } = new();
-    public static Stack<LogMessage> InfoMessages { get; private set; } = new();
-    public static Stack<LogMessage> WarningMessages { get; private set; } = new();
-    public static Stack<LogMessage> ErrorMessages { get; private set; } = new();
+    public static Stack<LogMessageControl> LogMessages { get; private set; } = new();
+    public static Stack<LogMessageControl> InfoMessages { get; private set; } = new();
+    public static Stack<LogMessageControl> WarningMessages { get; private set; } = new();
+    public static Stack<LogMessageControl> ErrorMessages { get; private set; } = new();
 
     public static void Log(string msg)
     {
-        LogMessage lmsg = new()
+        LogMessageControl lmc = new()
         {
             Text = msg,
             Type = Enums.LogMessageTypes.Info,
-            Time = TimeHelper.Now
+            Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmsg);
-        InfoMessages.Push(lmsg);
+        LogMessages.Push(lmc);
+        InfoMessages.Push(lmc);
     }
     public static void Warning(string msg)
     {
-        LogMessage lmsg = new()
+        LogMessageControl lmc = new()
         {
             Text = msg,
             Type = Enums.LogMessageTypes.Warning,
-            Time = TimeHelper.Now
+            Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmsg);
-        WarningMessages.Push(lmsg);
+        LogMessages.Push(lmc);
+        WarningMessages.Push(lmc);
     }
     public static void Error(string msg)
     {
-        LogMessage lmsg = new()
+        LogMessageControl lmc = new()
         {
             Text = msg,
             Type = Enums.LogMessageTypes.Error,
-            Time = TimeHelper.Now
+            Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmsg);
-        ErrorMessages.Push(lmsg);
+        LogMessages.Push(lmc);
+        ErrorMessages.Push(lmc);
     }
 }
