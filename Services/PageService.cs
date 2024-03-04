@@ -16,6 +16,8 @@ public class PageService : IPageService
     {
         Configure<MaestroViewModel, MaestroPage>();
         Configure<ModulesViewModel, ModulesPage>();
+        Configure<MusicModuleViewModel, MusicModulePage>();
+        Configure<MiscModuleViewModel, MiscModulePage>();
         Configure<ConfigViewModel, ConfigPage>();
         Configure<GuildsViewModel, GuildsPage>();
         Configure<DebugViewModel, DebugPage>();
