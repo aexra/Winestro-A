@@ -4,9 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:Winestro_A.Controls"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea">
-        
+    <Grid x:Name="ContentArea" Margin="0 0 0 20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <Button x:Name="RunBtn" Content="Run" FontSize="24" Width="100"/>
+            <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="100" HorizontalAlignment="left"/>
+        </StackPanel>
+
+        <StackPanel 
+            Grid.Row="1"
+            Width="300"
+            HorizontalAlignment="left"
+            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+            Padding="5 5 5 5"
+            CornerRadius="5">
+            <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionStatus}" LeftWidth="120"/>
+            <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}" LeftWidth="120"/>
+            <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}" LeftWidth="120"/>
+            <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}" LeftWidth="120"/>
+            <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}" LeftWidth="120"/>
+        </StackPanel>
     </Grid>
 </Page>
