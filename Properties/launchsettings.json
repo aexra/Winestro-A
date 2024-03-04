@@ -1,0 +1,10 @@
+﻿{
+    "profiles": {
+      "Winestro-A (Package)": {
+        "commandName": "MsixPackage"
+      },
+      "Winestro-A (Unpackaged)": {
+        "commandName": "Project"
+      }
+    }
+}
