@@ -7,9 +7,11 @@
     xmlns:local="using:Winestro_A.Controls"
     mc:Ignorable="d">
 
-    <Grid x:Name="ContentArea" Margin="0 0 0 20">
+    <Grid x:Name="ContentArea" Margin="0 0 0 20" RowSpacing="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -18,18 +20,24 @@
             <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="100" HorizontalAlignment="left"/>
         </StackPanel>
 
-        <StackPanel 
-            Grid.Row="1"
-            Width="300"
-            HorizontalAlignment="left"
-            Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-            Padding="5 5 5 5"
-            CornerRadius="5">
-            <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionStatus}"/>
-            <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}"/>
-            <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}"/>
-            <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}"/>
-            <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}"/>
+        <StackPanel Grid.Row="1" Spacing="5">
+            <TextBlock Text="Info" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            <StackPanel
+                Width="300"
+                HorizontalAlignment="left"
+                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                Padding="5 5 5 5"
+                CornerRadius="5">
+                <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionStatus}"/>
+                <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}"/>
+                <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}"/>
+                <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}"/>
+                <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3">
+            <TextBlock Text="Log" Style="{StaticResource SubtitleTextBlockStyle}"/>
         </StackPanel>
     </Grid>
 </Page>
