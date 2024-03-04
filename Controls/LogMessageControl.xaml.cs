@@ -7,18 +7,11 @@ namespace Winestro_A.Controls;
 
 public sealed partial class LogMessageControl : UserControl
 {
-    public LogMessage MSG = new()
-    {
-        Type = LogMessageTypes.Info,
-        Text = string.Empty,
-        Time = TimeSpan.Zero
-    };
+    public LogMessageTypes Type { get; set; }
+    public string Text { get; set; }
+    public TimeSpan Time { get; set; }
 
-    public LogMessageTypes Type { get => MSG.Type; set => MSG.Type = value; }
-    public string Text { get => MSG.Text; set => MSG.Text = value; }
-    public TimeSpan Time { get => MSG.Time; set => MSG.Time = value; }
-
-    public string? IconSource;
+    public string IconSource;
 
     public LogMessageControl()
     {

@@ -56,26 +56,6 @@
                             </Style>
                         </ListView.ItemContainerStyle>
 
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-                        <local:LogMessageControl Text="lalalaaaaaaaaa" Time="0"/>
-
                     </ListView>
 
                 </PivotItem>
