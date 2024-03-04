@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="using:Winestro_A.Controls"
+    xmlns:services="using:Winestro_A.Services"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="0 0 0 20" RowSpacing="5">
@@ -16,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <Button x:Name="RunBtn" Content="Run" FontSize="24" Width="100"/>
+            <Button x:Name="RunBtn" Content="Run" FontSize="24" Width="100" Click="RunBtn_Click"/>
             <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="100" HorizontalAlignment="left"/>
         </StackPanel>
 
@@ -40,7 +41,7 @@
             <Pivot Title="LOG">
                 <PivotItem Header="All">
                     
-                    <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0">
+                    <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.LogMessages}">
                         
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>

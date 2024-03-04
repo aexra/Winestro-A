@@ -1,5 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-
+using Winestro_A.Services;
 using Winestro_A.ViewModels;
 
 namespace Winestro_A.Views;
@@ -21,5 +21,10 @@ public sealed partial class MaestroPage : Page
     {
         ViewModel = App.GetService<MaestroViewModel>();
         InitializeComponent();
+    }
+
+    private void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        LogService.Log("Log ehehehe");
     }
 }
