@@ -41,7 +41,7 @@
             <Pivot Title="LOG">
                 <PivotItem Header="All">
                     
-                    <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.LogMessages}">
+                    <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.LogMessages, Mode=OneWay}">
                         
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
