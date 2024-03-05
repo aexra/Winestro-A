@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using Winestro_A.Controls;
 using Winestro_A.Helpers;
-using Winestro_A.Structures;
 
 namespace Winestro_A.Services;
 
 public class LogService
 {
-    public static Stack<LogMessageControl> LogMessages { get; private set; } = new();
-    public static Stack<LogMessageControl> InfoMessages { get; private set; } = new();
-    public static Stack<LogMessageControl> WarningMessages { get; private set; } = new();
-    public static Stack<LogMessageControl> ErrorMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> LogMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> InfoMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> WarningMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> ErrorMessages { get; private set; } = new();
 
     public static void Log(string msg)
     {
@@ -25,8 +20,8 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmc);
-        InfoMessages.Push(lmc);
+        LogMessages.Add(lmc);
+        InfoMessages.Add(lmc);
     }
     public static void Warning(string msg)
     {
@@ -37,8 +32,8 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmc);
-        WarningMessages.Push(lmc);
+        LogMessages.Add(lmc);
+        WarningMessages.Add(lmc);
     }
     public static void Error(string msg)
     {
@@ -49,7 +44,7 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
-        LogMessages.Push(lmc);
-        ErrorMessages.Push(lmc);
+        LogMessages.Add(lmc);
+        ErrorMessages.Add(lmc);
     }
 }
