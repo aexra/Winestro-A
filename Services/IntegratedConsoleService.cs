@@ -13,7 +13,17 @@ namespace Winestro_A.Services;
 public class IntegratedConsoleService
 {
     public static ObservableCollection<TextBlock> ConsoleHistory { get; private set; } = new();
-    private static Dictionary<string, ConsoleCommandTemplate> CommandsMap = new();
+    private static readonly Dictionary<string, ConsoleCommandTemplate> CommandsMap = new()
+    {
+        { 
+            "test", new ConsoleCommandTemplate() { 
+                Name="test", 
+                nArgs=0, 
+                KwargsKeys=new string[]{ }, 
+                Function=Test 
+            } 
+        },
+    };
 
     public static bool TryRun(string promt, out CommandResult result)
     {
