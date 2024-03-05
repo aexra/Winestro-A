@@ -1,6 +1,7 @@
 ﻿using static Winestro_A.Services.LogService;
 using Microsoft.UI.Xaml.Controls;
 using Winestro_A.ViewModels;
+using Windows.System;
 
 namespace Winestro_A.Views;
 
@@ -26,5 +27,13 @@ public sealed partial class MaestroPage : Page
     private void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         
+    }
+
+    private void CommandInput_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+    {
+        if (e.Key == VirtualKey.Enter)
+        {
+            ((TextBox)sender).Text = string.Empty;
+        }
     }
 }
