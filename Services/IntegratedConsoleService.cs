@@ -65,7 +65,6 @@ public class IntegratedConsoleService
 
         return true;
     }
-
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
     {
         // Заранее присвоим cmd и errorMessage null 
@@ -118,7 +117,6 @@ public class IntegratedConsoleService
     {
         return Regex.IsMatch(promt, @"^[a-zA-Z]+$");
     }
-
     private static bool IsKwarg(string promt, out string? key, out string? value)
     {
         var result = Regex.IsMatch(promt, "^[a-zA-Z]+={1}.+$");
