@@ -204,7 +204,7 @@
                     </Grid.RowDefinitions>
                     
                     <TextBlock Grid.Row="0" Text="CONSOLE" Style="{StaticResource BodyTextBlockStyle}" FontWeight="Bold"/>
-                    <ListView Grid.Row="1" x:Name="ConsoleLV" SelectionMode="Single" Margin="-12 0 -12 0">
+                    <ListView Grid.Row="1" x:Name="ConsoleLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:IntegratedConsoleService.ConsoleHistory, Mode=OneWay}">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
