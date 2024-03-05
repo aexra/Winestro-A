@@ -1,5 +1,4 @@
 ﻿using Microsoft.UI.Xaml.Controls;
-using Winestro_A.Controls;
 using Winestro_A.Services;
 using Winestro_A.ViewModels;
 
@@ -27,5 +26,7 @@ public sealed partial class MaestroPage : Page
     private void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         LogService.Log("Log ehehehe");
+        LogService.Warning("THIS IS WORNIN");
+        LogService.Error("THIS IS ERROR");
     }
 }

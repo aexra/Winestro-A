@@ -62,7 +62,7 @@
                 </PivotItem>
                 <PivotItem Header="Info">
 
-                    <ListView x:Name="InfoLogsLV" SelectionMode="Single">
+                    <ListView x:Name="InfoLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.InfoMessages, Mode=OneWay}">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -73,6 +73,8 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                <Setter Property="MinHeight" Value="20"/>
                             </Style>
                         </ListView.ItemContainerStyle>
 
@@ -81,7 +83,7 @@
                 </PivotItem>
                 <PivotItem Header="Warnings">
 
-                    <ListView x:Name="WarningsLogsLV" SelectionMode="Single">
+                    <ListView x:Name="WarningsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.WarningMessages, Mode=OneWay}">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -92,6 +94,8 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                <Setter Property="MinHeight" Value="20"/>
                             </Style>
                         </ListView.ItemContainerStyle>
 
@@ -100,7 +104,7 @@
                 </PivotItem>
                 <PivotItem Header="Errors">
 
-                    <ListView x:Name="ErrorsLogsLV" SelectionMode="Single">
+                    <ListView x:Name="ErrorsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.ErrorMessages, Mode=OneWay}">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -111,6 +115,8 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                <Setter Property="MinHeight" Value="20"/>
                             </Style>
                         </ListView.ItemContainerStyle>
 
@@ -119,7 +125,7 @@
                 </PivotItem>
                 <PivotItem Header="Music Log">
 
-                    <ListView x:Name="MusicLogsLV" SelectionMode="Single">
+                    <ListView x:Name="MusicLogsLV" SelectionMode="Single" Margin="-12 0 -12 0">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -130,6 +136,8 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                <Setter Property="MinHeight" Value="20"/>
                             </Style>
                         </ListView.ItemContainerStyle>
 

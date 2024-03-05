@@ -11,6 +11,8 @@ public class LogService
     public static ObservableCollection<LogMessageControl> WarningMessages { get; private set; } = new();
     public static ObservableCollection<LogMessageControl> ErrorMessages { get; private set; } = new();
 
+    public static ObservableCollection<LogMessageControl> MusicMessages { get; private set; } = new();
+
     public static void Log(string msg)
     {
         LogMessageControl lmc = new()
