@@ -27,7 +27,7 @@ public sealed partial class MaestroPage : Page
 
     private void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        
+
     }
 
     private void CommandInput_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)

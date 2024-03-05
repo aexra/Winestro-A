@@ -17,6 +17,6 @@
 
         <Image Grid.Column="0" Source="{x:Bind IconSource}" Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBlock Grid.Column="1" Text="{x:Bind Time}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-        <TextBlock Grid.Column="2" Text="{x:Bind Text}" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+        <TextBlock Grid.Column="2" Text="{x:Bind Text}" VerticalAlignment="Top" HorizontalAlignment="Left" TextWrapping="Wrap"/>
     </Grid>
 </UserControl>
