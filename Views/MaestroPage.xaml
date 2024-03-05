@@ -37,32 +37,174 @@
             </StackPanel>
         </StackPanel>
 
-        <Border Grid.Row="3" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch">
-            <Pivot Title="LOG">
-                <PivotItem Header="All">
+        <Grid Grid.Row="3" ColumnSpacing="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch">
+                <Pivot Title="LOG">
+                    <PivotItem Header="All">
+
+                        <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.LogMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Info">
+
+                        <ListView x:Name="InfoLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.InfoMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Warnings">
+
+                        <ListView x:Name="WarningsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.WarningMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Errors">
+
+                        <ListView x:Name="ErrorsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.ErrorMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Music">
+
+                        <ListView x:Name="MusicLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.MusicMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Misc">
+
+                        <ListView x:Name="MiscLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.MiscMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                    <PivotItem Header="Debug">
+
+                        <ListView x:Name="DebugLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.DebugMessages, Mode=OneWay}">
+
+                            <ListView.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
+                                </ItemsPanelTemplate>
+                            </ListView.ItemsPanel>
+
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="Margin" Value="-13 0 -13 -1"/>
+                                    <Setter Property="MinHeight" Value="20"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                        </ListView>
+
+                    </PivotItem>
+                </Pivot>
+            </Border>
+
+            <Border Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch" Padding="10 12 10 12">
+                <Grid RowSpacing="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
                     
-                    <ListView x:Name="AllLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.LogMessages, Mode=OneWay}">
-                        
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Info">
-
-                    <ListView x:Name="InfoLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.InfoMessages, Mode=OneWay}">
+                    <TextBlock Grid.Row="0" Text="CONSOLE" Style="{StaticResource BodyTextBlockStyle}" FontWeight="Bold"/>
+                    <ListView Grid.Row="1" x:Name="ConsoleLV" SelectionMode="Single" Margin="-12 0 -12 0">
 
                         <ListView.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -73,120 +215,15 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
                                 <Setter Property="MinHeight" Value="20"/>
                             </Style>
                         </ListView.ItemContainerStyle>
 
                     </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Warnings">
-
-                    <ListView x:Name="WarningsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.WarningMessages, Mode=OneWay}">
-
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Errors">
-
-                    <ListView x:Name="ErrorsLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.ErrorMessages, Mode=OneWay}">
-
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Music">
-
-                    <ListView x:Name="MusicLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.MusicMessages, Mode=OneWay}">
-
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Misc">
-
-                    <ListView x:Name="MiscLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.MiscMessages, Mode=OneWay}">
-
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-                <PivotItem Header="Debug">
-
-                    <ListView x:Name="DebugLogsLV" SelectionMode="Single" Margin="-12 0 -12 0" ItemsSource="{x:Bind services:LogService.DebugMessages, Mode=OneWay}">
-
-                        <ListView.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Bottom"/>
-                            </ItemsPanelTemplate>
-                        </ListView.ItemsPanel>
-
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                <Setter Property="Margin" Value="-13 0 -13 -1"/>
-                                <Setter Property="MinHeight" Value="20"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                    </ListView>
-
-                </PivotItem>
-            </Pivot>
-        </Border>
+                    <TextBox Grid.Row="2" Margin="-10 0 -10 -12"/>
+                </Grid>
+            </Border>
+        </Grid>
+        
     </Grid>
 </Page>
