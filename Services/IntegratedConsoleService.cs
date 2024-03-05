@@ -27,7 +27,9 @@ public class IntegratedConsoleService
 
     public static bool TryRun(string promt, out CommandResult result)
     {
-        // Заранее зададим сообщение ошибки null
+        ConsoleHistory.Add(new TextBlock() { Text="$ " + promt });
+
+        // Заранее зададим пустой результат с необработанным исключением
         result = new CommandResult() { Success = false, OutMessage = "Unhandled exception" };
         
         // Пробуем спарсить команду
@@ -37,33 +39,35 @@ public class IntegratedConsoleService
         if (!parseResult)
         {
             result.OutMessage = error;
-            return false;
-        }
-
-        var command = cmd.Value;
-        
-        // Спарсили.
-        if (CommandsMap.Keys.ToList().Contains(command.Name))
-        {
-            var template = CommandsMap[command.Name];
-            if (template.nArgs != command.Args.Count() || template.KwargsKeys.Count() != command.Kwargs.Keys.Count())
-            {
-                result.OutMessage = $"Неверное количество аргументов команды <{command.Name}>: ожидалось {template.nArgs}/{template.KwargsKeys.Count()}, получено {command.Args.Count()}/{command.Kwargs.Keys.Count()}";
-                return false;
-            }
-            else
-            {
-                result = template.Function(command.Args, command.Kwargs);
-            }
+            result.Success = false;
         }
         else
         {
-            result.OutMessage = $"<{cmd.Value.Name}> не является внутренней командой";
-            return false;
+            var command = cmd.Value;
+
+            // Спарсили.
+            if (CommandsMap.Keys.ToList().Contains(command.Name))
+            {
+                var template = CommandsMap[command.Name];
+                if (template.nArgs != command.Args.Count() || template.KwargsKeys.Count() != command.Kwargs.Keys.Count())
+                {
+                    result.OutMessage = $"Неверное количество аргументов команды [{command.Name}]: ожидалось {template.nArgs}/{template.KwargsKeys.Count()}, получено {command.Args.Count()}/{command.Kwargs.Keys.Count()}";
+                    result.Success = false;
+                }
+                else
+                {
+                    result = template.Function(command.Args, command.Kwargs);
+                }
+            }
+            else
+            {
+                result.OutMessage = $"[{cmd.Value.Name}] не является внутренней командой";
+                result.Success = false;
+            }
         }
 
-
-        return true;
+        ConsoleHistory.Add(new TextBlock() { Text = "> " + result.OutMessage });
+        return result.Success;
     }
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
     {
@@ -84,7 +88,7 @@ public class IntegratedConsoleService
         // Проверим является ли первое слово названием команды (только латинские буквы)
         if (!IsWord(parts[0]))
         {
-            errorMesage = $"<{parts[0]}> не является именем команды";
+            errorMesage = $"[{parts[0]}] не является именем команды";
             return false;
         }
 

@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Winestro_A.ViewModels;
 using Windows.System;
+using Winestro_A.Services;
 
 namespace Winestro_A.Views;
 
@@ -33,6 +34,7 @@ public sealed partial class MaestroPage : Page
     {
         if (e.Key == VirtualKey.Enter)
         {
+            IntegratedConsoleService.TryRun(((TextBox)sender).Text, out _);
             ((TextBox)sender).Text = string.Empty;
         }
     }
