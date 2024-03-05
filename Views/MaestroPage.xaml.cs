@@ -25,8 +25,6 @@ public sealed partial class MaestroPage : Page
 
     private void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        LogService.Log("Log ehehehe");
-        LogService.Warning("THIS IS WORNIN");
-        LogService.Error("THIS IS ERROR");
+        
     }
 }
