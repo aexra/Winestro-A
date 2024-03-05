@@ -22,8 +22,15 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
+        LogMessageControl lmce = new()
+        {
+            Text = msg,
+            Type = Enums.LogMessageTypes.Info,
+            Time = TimeHelper.NowS()
+        };
+
         LogMessages.Add(lmc);
-        InfoMessages.Add(lmc);
+        InfoMessages.Add(lmce);
     }
     public static void Warning(string msg)
     {
@@ -34,8 +41,15 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
+        LogMessageControl lmce = new()
+        {
+            Text = msg,
+            Type = Enums.LogMessageTypes.Warning,
+            Time = TimeHelper.NowS()
+        };
+
         LogMessages.Add(lmc);
-        WarningMessages.Add(lmc);
+        WarningMessages.Add(lmce);
     }
     public static void Error(string msg)
     {
@@ -46,7 +60,14 @@ public class LogService
             Time = TimeHelper.NowS()
         };
 
+        LogMessageControl lmce = new()
+        {
+            Text = msg,
+            Type = Enums.LogMessageTypes.Error,
+            Time = TimeHelper.NowS()
+        };
+
         LogMessages.Add(lmc);
-        ErrorMessages.Add(lmc);
+        ErrorMessages.Add(lmce);
     }
 }

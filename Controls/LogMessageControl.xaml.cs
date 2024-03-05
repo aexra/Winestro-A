@@ -8,7 +8,7 @@ namespace Winestro_A.Controls;
 public sealed partial class LogMessageControl : UserControl
 {
     public LogMessageTypes Type { get; set; }
-    public LogMessageMetaTypes Meta { get; set; }
+    public LogMessageMetaTypes Meta { get; set; } = LogMessageMetaTypes.Default;
     public string Text { get; set; }
     public string Time { get; set; }
 

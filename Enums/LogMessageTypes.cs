@@ -15,6 +15,7 @@ public enum LogMessageTypes
 
 public enum LogMessageMetaTypes
 {
+    Default,
     Music,
     Misc,
 };
