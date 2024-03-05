@@ -12,22 +12,24 @@ public sealed partial class LogMessageControl : UserControl
     public string Text { get; set; }
     public string Time { get; set; }
 
-    public string IconSource;
+    public string IconSource 
+    { 
+        get {
+            switch (Type)
+            {
+                case LogMessageTypes.Warning:
+                    return "ms-appx:///Assets/LogMessageWarningIcon.png";
+                case LogMessageTypes.Error:
+                    return "ms-appx:///Assets/LogMessageErrorIcon.png";
+                default:
+                    return "ms-appx:///Assets/LogMessageInfoIcon.png";
+            }
+        }
+        set => IconSource = value; 
+    }
 
     public LogMessageControl()
     {
-        switch (Type)
-        {
-            case LogMessageTypes.Info:
-                IconSource = "ms-appx:///Assets/LogMessageInfoIcon.png";
-                break;
-            case LogMessageTypes.Warning:
-                IconSource = "ms-appx:///Assets/LogMessageWarningIcon.png";
-                break;
-            case LogMessageTypes.Error:
-                IconSource = "ms-appx:///Assets/LogMessageErrorIcon.png";
-                break;
-        }
         this.InitializeComponent();
     }
 }
