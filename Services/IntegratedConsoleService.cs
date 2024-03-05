@@ -18,8 +18,8 @@ public class IntegratedConsoleService
         { 
             "test", new ConsoleCommandTemplate() { 
                 Name="test", 
-                nArgs=0, 
-                KwargsKeys=new string[]{ }, 
+                nArgs=1, 
+                KwargsKeys=new string[]{ "kw1" }, 
                 Function=Test 
             } 
         },
@@ -49,14 +49,29 @@ public class IntegratedConsoleService
             if (CommandsMap.Keys.ToList().Contains(command.Name))
             {
                 var template = CommandsMap[command.Name];
-                if (template.nArgs != command.Args.Count() || template.KwargsKeys.Count() != command.Kwargs.Keys.Count())
+                if (template.nArgs != command.Args.Count())
                 {
-                    result.OutMessage = $"Неверное количество аргументов команды [{command.Name}]: ожидалось {template.nArgs}/{template.KwargsKeys.Count()}, получено {command.Args.Count()}/{command.Kwargs.Keys.Count()}";
+                    result.OutMessage = $"Неверное количество обязательных аргументов команды [{command.Name}]: ожидалось {template.nArgs}, получено {command.Args.Count()}";
                     result.Success = false;
                 }
                 else
                 {
-                    result = template.Function(command.Args, command.Kwargs);
+                    var goodKwargsKeys = true;
+
+                    foreach (var key in command.Kwargs.Keys)
+                    {
+                        if (!template.KwargsKeys.Contains(key))
+                        {
+                            result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
+                            result.Success = false;
+                            goodKwargsKeys = false;
+                        }
+                    }
+
+                    if (goodKwargsKeys)
+                    {
+                        result = template.Function(command.Args, command.Kwargs);
+                    }
                 }
             }
             else
@@ -66,7 +81,7 @@ public class IntegratedConsoleService
             }
         }
 
-        ConsoleHistory.Add(new TextBlock() { Text = "> " + result.OutMessage });
+        ConsoleHistory.Add(new TextBlock() { Text = "> " + result.OutMessage, TextWrapping=Microsoft.UI.Xaml.TextWrapping.Wrap });
         return result.Success;
     }
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
@@ -123,7 +138,7 @@ public class IntegratedConsoleService
     }
     private static bool IsKwarg(string promt, out string? key, out string? value)
     {
-        var result = Regex.IsMatch(promt, "^[a-zA-Z]+={1}.+$");
+        var result = Regex.IsMatch(promt, "^[a-zA-Z0-9]+={1}.+$");
         
         if (result)
         {
@@ -146,7 +161,7 @@ public class IntegratedConsoleService
     {
         return new CommandResult() { 
             Success = true,
-            OutMessage = "This is test command"
+            OutMessage = $"This is test command. Arg1: {args[0]}{(kwargs.ContainsKey("kw1") ? $", Kwarg1: [{kwargs.Keys.ElementAt(0)}:{kwargs.Values.ElementAt(0)}]" : "")}"
         };
     }
 }
