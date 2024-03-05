@@ -15,10 +15,10 @@ public class IntegratedConsoleService
     public static ObservableCollection<TextBlock> ConsoleHistory { get; private set; } = new();
     private static Dictionary<string, ConsoleCommandTemplate> CommandsMap = new();
 
-    public static bool TryRun(string promt, out string? errorMessage)
+    public static bool TryRun(string promt, out CommandResult result)
     {
         // Заранее зададим сообщение ошибки null
-        errorMessage = null;
+        result = new CommandResult() { Success = false, OutMessage = "Unhandled exception" };
         
         // Пробуем спарсить команду
         var parseResult = TryParse(promt, out var cmd, out var error);
@@ -26,7 +26,7 @@ public class IntegratedConsoleService
         // Не спарсили?
         if (!parseResult)
         {
-            errorMessage = error;
+            result.OutMessage = error;
             return false;
         }
 
@@ -38,21 +38,17 @@ public class IntegratedConsoleService
             var template = CommandsMap[command.Name];
             if (template.nArgs != command.Args.Count() || template.KwargsKeys.Count() != command.Kwargs.Keys.Count())
             {
-                errorMessage = $"Неверное количество аргументов команды <{command.Name}>: ожидалось {template.nArgs}/{template.KwargsKeys.Count()}, получено {command.Args.Count()}/{command.Kwargs.Keys.Count()}";
+                result.OutMessage = $"Неверное количество аргументов команды <{command.Name}>: ожидалось {template.nArgs}/{template.KwargsKeys.Count()}, получено {command.Args.Count()}/{command.Kwargs.Keys.Count()}";
                 return false;
             }
             else
             {
-                if (!template.Function(command.Args, command.Kwargs))
-                {
-                    errorMessage = $"Ошибка выполнения команды <{command.Name}>";
-                    return false;
-                }
+                result = template.Function(command.Args, command.Kwargs);
             }
         }
         else
         {
-            errorMessage = $"<{cmd.Value.Name}> не является внутренней командой";
+            result.OutMessage = $"<{cmd.Value.Name}> не является внутренней командой";
             return false;
         }
 
@@ -130,5 +126,15 @@ public class IntegratedConsoleService
         }
 
         return result;
+    }
+
+
+
+    private static CommandResult Test(List<String> args, Dictionary<string, string> kwargs)
+    {
+        return new CommandResult() { 
+            Success = true,
+            OutMessage = "This is test command"
+        };
     }
 }
