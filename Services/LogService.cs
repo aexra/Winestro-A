@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using Winestro_A.Controls;
+using Winestro_A.Enums;
 using Winestro_A.Helpers;
 
 namespace Winestro_A.Services;
@@ -12,62 +13,74 @@ public class LogService
     public static ObservableCollection<LogMessageControl> ErrorMessages { get; private set; } = new();
 
     public static ObservableCollection<LogMessageControl> MusicMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> MiscMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> DebugMessages { get; private set; } = new();
 
-    public static void Log(string msg)
+    public static void Log(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
     {
-        LogMessageControl lmc = new()
-        {
-            Text = msg,
-            Type = Enums.LogMessageTypes.Info,
-            Time = TimeHelper.NowS()
-        };
-
-        LogMessageControl lmce = new()
-        {
-            Text = msg,
-            Type = Enums.LogMessageTypes.Info,
-            Time = TimeHelper.NowS()
-        };
-
-        LogMessages.Add(lmc);
-        InfoMessages.Add(lmce);
+        _AddLog_(msg, LogMessageTypes.Info, meta);
     }
-    public static void Warning(string msg)
+    public static void Warning(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
     {
-        LogMessageControl lmc = new()
-        {
-            Text = msg,
-            Type = Enums.LogMessageTypes.Warning,
-            Time = TimeHelper.NowS()
-        };
-
-        LogMessageControl lmce = new()
-        {
-            Text = msg,
-            Type = Enums.LogMessageTypes.Warning,
-            Time = TimeHelper.NowS()
-        };
-
-        LogMessages.Add(lmc);
-        WarningMessages.Add(lmce);
+        _AddLog_(msg, LogMessageTypes.Warning, meta);
     }
-    public static void Error(string msg)
+    public static void Error(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    {
+        _AddLog_(msg, LogMessageTypes.Error, meta);
+    }
+
+    private static void _AddLog_(string msg, LogMessageTypes type, LogMessageMetaTypes meta)
     {
         LogMessageControl lmc = new()
         {
             Text = msg,
-            Type = Enums.LogMessageTypes.Error,
-            Time = TimeHelper.NowS()
+            Type = type,
+            Time = TimeHelper.NowS(),
+            Meta = meta
         };
+        LogMessages.Add(lmc);
 
         LogMessageControl lmce = new()
         {
             Text = msg,
-            Type = Enums.LogMessageTypes.Error,
-            Time = TimeHelper.NowS()
+            Type = type,
+            Time = TimeHelper.NowS(),
+            Meta = meta
         };
+        switch (type)
+        {
+            case LogMessageTypes.Warning:
+                WarningMessages.Add(lmce);
+                break;
+            case LogMessageTypes.Error:
+                ErrorMessages.Add(lmce);
+                break;
+            default:
+                if (meta == LogMessageMetaTypes.Default)
+                    InfoMessages.Add(lmce);
+                break;
+        }
 
-        LogMessages.Add(lmc);
-        ErrorMessages.Add(lmce);
+        LogMessageControl lmcmeta = new()
+        {
+            Text = msg,
+            Type = type,
+            Time = TimeHelper.NowS(),
+            Meta = meta
+        };
+        switch (meta)
+        {
+            case LogMessageMetaTypes.Music:
+                MusicMessages.Add(lmcmeta);
+                break;
+            case LogMessageMetaTypes.Misc:
+                MiscMessages.Add(lmcmeta);
+                break;
+            case LogMessageMetaTypes.Debug:
+                DebugMessages.Add(lmcmeta);
+                break;
+            default:
+                break;
+        }
     }
 }

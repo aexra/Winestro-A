@@ -18,4 +18,5 @@ public enum LogMessageMetaTypes
     Default,
     Music,
     Misc,
+    Debug,
 };

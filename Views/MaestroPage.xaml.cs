@@ -1,5 +1,5 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using Winestro_A.Services;
+﻿using static Winestro_A.Services.LogService;
+using Microsoft.UI.Xaml.Controls;
 using Winestro_A.ViewModels;
 
 namespace Winestro_A.Views;
