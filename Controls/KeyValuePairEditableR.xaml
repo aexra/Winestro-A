@@ -16,7 +16,7 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="{x:Bind Left}" VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        <TextBox Grid.Column="1" Text="{x:Bind Right}" TextChanged="TextBox_TextChanged"/>
+        <TextBox Grid.Column="1" PlaceholderText="Setting value" Text="{x:Bind Right}" TextChanged="TextBox_TextChanged"/>
         <Button Grid.Column="2" Content="X" Foreground="#FF2400" FontWeight="Bold" Click="Button_Click"/>
     </Grid>
 </UserControl>
