@@ -31,8 +31,10 @@ public sealed partial class KeyValuePairEditableR : UserControl
     public GridLength LeftWidth { get; set; } = new GridLength(400);
     public Action<object, TextChangedEventArgs>? TextChanged { get; set; }
 
-    public KeyValuePairEditableR()
+    public KeyValuePairEditableR(string left, string right)
     {
+        Left = left;
+        Right = right;
         this.InitializeComponent();
     }
 
