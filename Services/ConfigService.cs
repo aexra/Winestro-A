@@ -28,31 +28,34 @@ public class ConfigService
 
     private static void UpdateControlsList()
     {
-        foreach (var control in EditableControls)
+        try
         {
-            if (!Values.Keys.Contains(control.Left))
-            {
-                EditableControls.Remove(control);
-            }
-        }
-
-        foreach (var key in Values.Keys)
-        {
-            var found = false;
             foreach (var control in EditableControls)
             {
-                if (control.Left == key)
+                if (!Values.Keys.Contains(control.Left))
                 {
-                    found = true;
-                    break;
+                    EditableControls.Remove(control);
                 }
             }
 
-            if (!found)
+            foreach (var key in Values.Keys)
             {
-                AddControl(key, Values[key].ToString());
+                var found = false;
+                foreach (var control in EditableControls)
+                {
+                    if (control.Left == key)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    AddControl(key, Values[key].ToString());
+                }
             }
-        }
+        } catch (Exception ex) { }
     }
 
     private static void FillControlsList()
@@ -69,11 +72,14 @@ public class ConfigService
         {
             TextChanged = (s, e) => {
                 EditSetting(key, ((TextBox)s).Text);
+            },
+            OnXClick = (s, e) => {
+                DeleteSetting(key);
             }
         });
     }
 
-    public static bool CreateSetting(string key, string value)
+    public static bool AddSetting(string key, string value)
     {
         if (Values.Keys.Contains(key)) return false;
 
@@ -81,7 +87,7 @@ public class ConfigService
         return true;
     }
 
-    public static bool RemoveSetting(string key)
+    public static bool DeleteSetting(string key)
     {
         return Values.Remove(key);
     }

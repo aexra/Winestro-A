@@ -30,6 +30,7 @@ public sealed partial class KeyValuePairEditableR : UserControl
     } = string.Empty;
     public GridLength LeftWidth { get; set; } = new GridLength(400);
     public Action<object, TextChangedEventArgs>? TextChanged { get; set; }
+    public Action<object, RoutedEventArgs>? OnXClick { get; set; }
 
     public KeyValuePairEditableR(string left, string right)
     {
@@ -41,5 +42,10 @@ public sealed partial class KeyValuePairEditableR : UserControl
     private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
         TextChanged?.Invoke(sender, e);
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        OnXClick?.Invoke(sender, e);
     }
 }

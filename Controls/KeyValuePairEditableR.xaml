@@ -8,13 +8,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid BorderBrush="#404040" BorderThickness="0,0,0,1">
+    <Grid BorderBrush="#404040" BorderThickness="0,0,0,1" ColumnSpacing="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{x:Bind LeftWidth}"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Column="0" Text="{x:Bind Left}" VerticalAlignment="Center" Style="{StaticResource BodyStrongTextBlockStyle}"/>
         <TextBox Grid.Column="1" Text="{x:Bind Right}" TextChanged="TextBox_TextChanged"/>
+        <Button Grid.Column="2" Content="X" Foreground="#FF2400" FontWeight="Bold" Click="Button_Click"/>
     </Grid>
 </UserControl>
