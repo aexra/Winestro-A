@@ -18,19 +18,25 @@ public class ConfigService
 
     public static void Init()
     {
-        CreateSetting("a", "b");
         foreach (var key in Values.Keys)
         {
-            CreateSetting("a", "b");
-            LogService.Log(key.GetType().ToString());
-            LogService.Log(Values[key].GetType().ToString());
-            //EditableControls.Add(new KeyValuePairEditableR()
-            //{
-            //    Left = key,
-            //    Right = ApplicationData.Current.LocalSettings.Values[key].ToString()
-            //});
+            if (Values[key] is string str)
+            {
+                EditableControls.Add(new KeyValuePairEditableR()
+                {
+                    Left = key,
+                    Right = str
+                });
+            }
+            else
+            {
+                EditableControls.Add(new KeyValuePairEditableR()
+                {
+                    Left = key,
+                    Right = Values[key].ToString()
+                });
+            }
         }
-        RemoveSetting("a");
     }
 
     public static bool CreateSetting(string key, string value)
