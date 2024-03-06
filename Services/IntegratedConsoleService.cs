@@ -20,7 +20,8 @@ public class IntegratedConsoleService
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
         Test,
-        Log
+        Log,
+        CreateSetting,
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -52,12 +53,12 @@ public class IntegratedConsoleService
                     {
                         if (attr is ICCommandAttribute cattr)
                         {
-                            List<string> names = new List<string>{ cattr.Name };
+                            List<string> names = new List<string>{ cattr.Name.ToLower() };
                             if (cattr.Aliases != null)
                             {
                                 foreach (var alias in cattr.Aliases)
                                 {
-                                    names.Add(alias);
+                                    names.Add(alias.ToLower());
                                 }
                             }
                             if (names.Contains(input.Name))
@@ -223,6 +224,19 @@ public class IntegratedConsoleService
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
             OutMessage = "Logged to DEBUG log tab"
+        };
+    }
+
+    [ICCommand("CreateSetting", nArgs=2)]
+    private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
+    {
+        LogService.Log($"Created setting: {ctx.Args[0]}={ctx.Args[1]}", Enums.LogMessageMetaTypes.Debug);
+        ConfigService.CreateSetting(ctx.Args[0], ctx.Args[1]);
+        return new ConsoleCommandResult()
+        {
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Ok,
+            OutMessage = $"Created setting: {ctx.Args[0]}={ctx.Args[1]}"
         };
     }
 }

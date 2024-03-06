@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Winestro_A.Controls;
 
 namespace Winestro_A.Services;
@@ -14,6 +15,18 @@ public class ConfigService
 
     public static void Init()
     {
-        // TODO: Load JSON/conf and create KeyValuePairEditableRs for each line
+        foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
+        {
+            EditableControls.Add(new KeyValuePairEditableR()
+            {
+                Left = key,
+                Right = ApplicationData.Current.LocalSettings.Values[key].ToString()
+            });
+        }
+    }
+
+    public static void CreateSetting(string key, string value)
+    {
+        ApplicationData.Current.LocalSettings.Values.Add(key, value);
     }
 }
