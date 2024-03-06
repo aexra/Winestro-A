@@ -18,73 +18,8 @@ public class IntegratedConsoleService
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
-        AttribTest
+        Test
     };
-
-    //public static bool TryRun(string promt, out ConsoleCommandResult result)
-    //{
-    //    ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
-
-    //    // Заранее зададим пустой результат с необработанным исключением
-    //    result = new ConsoleCommandResult() { Success = false, OutMessage = "Unhandled exception" };
-
-    //    // Пробуем спарсить команду
-    //    var parseResult = TryParse(promt, out var cmd, out var error);
-
-    //    // Не спарсили?
-    //    if (!parseResult)
-    //    {
-    //        result.OutMessage = error;
-    //        result.Success = false;
-    //        result.Type = Enums.ConsoleMessageTypes.Fail;
-    //    }
-    //    else
-    //    {
-    //        var command = cmd.Value;
-
-    //        // Спарсили.
-    //        if (CommandsMap.Keys.ToList().Contains(command.Name))
-    //        {
-    //            var template = CommandsMap[command.Name];
-    //            if (template.nArgs != command.Args.Count())
-    //            {
-    //                result.OutMessage = $"Arguments error in command [{command.Name}]: expected {template.nArgs}, {command.Args.Count()} were given";
-    //                result.Success = false;
-    //                result.Type = Enums.ConsoleMessageTypes.Fail;
-    //            }
-    //            else
-    //            {
-    //                var goodKwargsKeys = true;
-
-    //                foreach (var key in command.Kwargs.Keys)
-    //                {
-    //                    template.KwargsKeys ??= Array.Empty<string>();
-    //                    if (!template.KwargsKeys.Contains(key))
-    //                    {
-    //                        result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
-    //                        result.Success = false;
-    //                        result.Type = Enums.ConsoleMessageTypes.Fail;
-    //                        goodKwargsKeys = false;
-    //                    }
-    //                }
-
-    //                if (goodKwargsKeys)
-    //                {
-    //                    result = template.Function(command.Args, command.Kwargs);
-    //                }
-    //            }
-    //        }
-    //        else
-    //        {
-    //            result.OutMessage = $"[{cmd.Value.Name}] command not found";
-    //            result.Success = false;
-    //            result.Type = Enums.ConsoleMessageTypes.Fail;
-    //        }
-    //    }
-
-    //    ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
-    //    return result.Success;
-    //}
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
     {
@@ -247,26 +182,17 @@ public class IntegratedConsoleService
     // HERE COMMANDS GO
 
     // EVERY COMMAND HAS TO BE LIKE
-    // ... static CommandResult CommandName(List<String>, Dictionary<string, string>) { }
+    // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
+    // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
-
-    private static ConsoleCommandResult Test(List<String> args, Dictionary<string, string> kwargs)
-    {
-        return new ConsoleCommandResult() {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world!"
-        };
-    }
-
-    [ICCommand("atest", Aliases = new string[] { "test1" })]
-    private static ConsoleCommandResult AttribTest(ConsoleCommandContext ctx)
+    [ICCommand("test")]
+    private static ConsoleCommandResult Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult()
         {
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Attrib test success!"
+            OutMessage = $"Hello, world!"
         };
     }
 }
