@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserDataTasks.DataProvider;
+using Winestro_A.Attributes;
 using Winestro_A.Controls;
 using Winestro_A.Structures;
 
@@ -14,80 +16,161 @@ namespace Winestro_A.Services;
 public class IntegratedConsoleService
 {
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
-    private static readonly Dictionary<string, ConsoleCommandTemplate> CommandsMap = new()
+    private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
-        { 
-            "test", new ConsoleCommandTemplate() { 
-                Name="test", 
-                nArgs=0, 
-                KwargsKeys=null, 
-                Function=Test 
-            } 
-        },
+        AttribTest
     };
 
-    public static bool TryRun(string promt, out CommandResult result)
-    {
-        ConsoleHistory.Add(new ConsoleMessageControl() { Type=Enums.ConsoleMessageTypes.Command, Text=promt });
+    //public static bool TryRun(string promt, out ConsoleCommandResult result)
+    //{
+    //    ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
 
-        // Заранее зададим пустой результат с необработанным исключением
-        result = new CommandResult() { Success = false, OutMessage = "Unhandled exception" };
-        
-        // Пробуем спарсить команду
+    //    // Заранее зададим пустой результат с необработанным исключением
+    //    result = new ConsoleCommandResult() { Success = false, OutMessage = "Unhandled exception" };
+
+    //    // Пробуем спарсить команду
+    //    var parseResult = TryParse(promt, out var cmd, out var error);
+
+    //    // Не спарсили?
+    //    if (!parseResult)
+    //    {
+    //        result.OutMessage = error;
+    //        result.Success = false;
+    //        result.Type = Enums.ConsoleMessageTypes.Fail;
+    //    }
+    //    else
+    //    {
+    //        var command = cmd.Value;
+
+    //        // Спарсили.
+    //        if (CommandsMap.Keys.ToList().Contains(command.Name))
+    //        {
+    //            var template = CommandsMap[command.Name];
+    //            if (template.nArgs != command.Args.Count())
+    //            {
+    //                result.OutMessage = $"Arguments error in command [{command.Name}]: expected {template.nArgs}, {command.Args.Count()} were given";
+    //                result.Success = false;
+    //                result.Type = Enums.ConsoleMessageTypes.Fail;
+    //            }
+    //            else
+    //            {
+    //                var goodKwargsKeys = true;
+
+    //                foreach (var key in command.Kwargs.Keys)
+    //                {
+    //                    template.KwargsKeys ??= Array.Empty<string>();
+    //                    if (!template.KwargsKeys.Contains(key))
+    //                    {
+    //                        result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
+    //                        result.Success = false;
+    //                        result.Type = Enums.ConsoleMessageTypes.Fail;
+    //                        goodKwargsKeys = false;
+    //                    }
+    //                }
+
+    //                if (goodKwargsKeys)
+    //                {
+    //                    result = template.Function(command.Args, command.Kwargs);
+    //                }
+    //            }
+    //        }
+    //        else
+    //        {
+    //            result.OutMessage = $"[{cmd.Value.Name}] command not found";
+    //            result.Success = false;
+    //            result.Type = Enums.ConsoleMessageTypes.Fail;
+    //        }
+    //    }
+
+    //    ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
+    //    return result.Success;
+    //}
+
+    public static bool TryRun(string promt, out ConsoleCommandResult result)
+    {
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
+        result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+
         var parseResult = TryParse(promt, out var cmd, out var error);
 
-        // Не спарсили?
         if (!parseResult)
         {
-            result.OutMessage = error;
-            result.Success = false;
-            result.Type = Enums.ConsoleMessageTypes.Fail;
+            result = new ConsoleCommandResult() { OutMessage = (error ??= "Command parsing unhandled error"), Success=false, Type = Enums.ConsoleMessageTypes.Fail };
         }
         else
         {
-            var command = cmd.Value;
-
-            // Спарсили.
-            if (CommandsMap.Keys.ToList().Contains(command.Name))
+            if (cmd != null)
             {
-                var template = CommandsMap[command.Name];
-                if (template.nArgs != command.Args.Count())
-                {
-                    result.OutMessage = $"Arguments error in command [{command.Name}]: expected {template.nArgs}, {command.Args.Count()} were given";
-                    result.Success = false;
-                    result.Type = Enums.ConsoleMessageTypes.Fail;
-                }
-                else
-                {
-                    var goodKwargsKeys = true;
+                var input = cmd.Value;
+                Func<ConsoleCommandContext, ConsoleCommandResult>? commandMethod = null;
+                ICCommandAttribute? commandInfo = null;
 
-                    foreach (var key in command.Kwargs.Keys)
+                foreach (var command in CommandsList)
+                {
+                    var attributes = command.GetMethodInfo().GetCustomAttributes();
+
+                    var foundCommand = false;
+                    foreach (Attribute attr in attributes)
                     {
-                        template.KwargsKeys ??= Array.Empty<string>();
-                        if (!template.KwargsKeys.Contains(key))
+                        if (attr is ICCommandAttribute cattr)
                         {
-                            result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
-                            result.Success = false;
-                            result.Type = Enums.ConsoleMessageTypes.Fail;
-                            goodKwargsKeys = false;
+                            if (cattr.Name == input.Name || cattr.Aliases != null && cattr.Aliases.Contains(input.Name))
+                            {
+                                foundCommand = true;
+                                commandMethod = command;
+                                commandInfo = cattr;
+                                break;
+                            }
                         }
                     }
 
-                    if (goodKwargsKeys)
+                    if (foundCommand)
                     {
-                        result = template.Function(command.Args, command.Kwargs);
+                        break;
+                    }
+                }
+
+                if (commandMethod == null)
+                {
+                    result = new ConsoleCommandResult() { OutMessage=$"Command [{input.Name}] not found", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
+                }
+                else
+                {
+                    if (input.Args.Count() != commandInfo.nArgs)
+                    {
+                        result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected {commandInfo.nArgs} positional arguments, but {input.Args.Count()} were given", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+                    }
+                    else
+                    {
+                        var goodKwargs = true;
+                        var strangeKey = "What?";
+                        foreach (var key in input.Kwargs.Keys)
+                        {
+                            if (commandInfo.KwargsKeys == null || !commandInfo.KwargsKeys.Contains(key))
+                            {
+                                goodKwargs = false;
+                                strangeKey = key;
+                            }
+                        }
+
+                        if (!goodKwargs)
+                        {
+                            result = new ConsoleCommandResult() { OutMessage = $"Keyword arguments exception. Unexpected argument key: [{strangeKey}]", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+                        }
+                        else
+                        {
+                            if (commandMethod != null)
+                            {
+                                result = commandMethod(new ConsoleCommandContext() { Args=input.Args.ToArray(), Kwargs=input.Kwargs });
+                            }
+                        }
                     }
                 }
             }
-            else
-            {
-                result.OutMessage = $"[{cmd.Value.Name}] command not found";
-                result.Success = false;
-                result.Type = Enums.ConsoleMessageTypes.Fail;
-            }
         }
 
-        ConsoleHistory.Add(new ConsoleMessageControl() { Type=result.Type, Text = result.OutMessage ??= string.Empty });
+
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
         return result.Success;
     }
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
@@ -145,7 +228,7 @@ public class IntegratedConsoleService
     private static bool IsKwarg(string promt, out string? key, out string? value)
     {
         var result = Regex.IsMatch(promt, "^[a-zA-Z0-9]+={1}.+$");
-        
+
         if (result)
         {
             var parts = promt.Split("=");
@@ -166,12 +249,24 @@ public class IntegratedConsoleService
     // EVERY COMMAND HAS TO BE LIKE
     // ... static CommandResult CommandName(List<String>, Dictionary<string, string>) { }
 
-    private static CommandResult Test(List<String> args, Dictionary<string, string> kwargs)
+
+    private static ConsoleCommandResult Test(List<String> args, Dictionary<string, string> kwargs)
     {
-        return new CommandResult() {
+        return new ConsoleCommandResult() {
             Success = true,
-            Type=Enums.ConsoleMessageTypes.Ok,
+            Type = Enums.ConsoleMessageTypes.Ok,
             OutMessage = $"Hello, world!"
+        };
+    }
+
+    [ICCommand("atest", Aliases = new string[] { "test1" })]
+    private static ConsoleCommandResult AttribTest(ConsoleCommandContext ctx)
+    {
+        return new ConsoleCommandResult()
+        {
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Ok,
+            OutMessage = $"Attrib test success!"
         };
     }
 }
