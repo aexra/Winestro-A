@@ -7,12 +7,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserDataTasks.DataProvider;
+using Winestro_A.Controls;
 using Winestro_A.Structures;
 
 namespace Winestro_A.Services;
 public class IntegratedConsoleService
 {
-    public static ObservableCollection<TextBlock> ConsoleHistory { get; private set; } = new();
+    public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly Dictionary<string, ConsoleCommandTemplate> CommandsMap = new()
     {
         { 
@@ -27,7 +28,7 @@ public class IntegratedConsoleService
 
     public static bool TryRun(string promt, out CommandResult result)
     {
-        ConsoleHistory.Add(new TextBlock() { Text="$ " + promt });
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type=Enums.ConsoleMessageTypes.Command, Text=promt });
 
         // Заранее зададим пустой результат с необработанным исключением
         result = new CommandResult() { Success = false, OutMessage = "Unhandled exception" };
@@ -40,6 +41,7 @@ public class IntegratedConsoleService
         {
             result.OutMessage = error;
             result.Success = false;
+            result.Type = Enums.ConsoleMessageTypes.Fail;
         }
         else
         {
@@ -53,6 +55,7 @@ public class IntegratedConsoleService
                 {
                     result.OutMessage = $"Arguments error in command [{command.Name}]: expected {template.nArgs}, {command.Args.Count()} were given";
                     result.Success = false;
+                    result.Type = Enums.ConsoleMessageTypes.Fail;
                 }
                 else
                 {
@@ -65,6 +68,7 @@ public class IntegratedConsoleService
                         {
                             result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
                             result.Success = false;
+                            result.Type = Enums.ConsoleMessageTypes.Fail;
                             goodKwargsKeys = false;
                         }
                     }
@@ -79,10 +83,11 @@ public class IntegratedConsoleService
             {
                 result.OutMessage = $"[{cmd.Value.Name}] command not found";
                 result.Success = false;
+                result.Type = Enums.ConsoleMessageTypes.Fail;
             }
         }
 
-        ConsoleHistory.Add(new TextBlock() { Text = "> " + result.OutMessage, TextWrapping=Microsoft.UI.Xaml.TextWrapping.Wrap });
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type=result.Type, Text = result.OutMessage ??= string.Empty });
         return result.Success;
     }
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
@@ -99,7 +104,7 @@ public class IntegratedConsoleService
         }
 
         // Разобьем всю строку на куски
-        String[] parts = promt.Split(' ');
+        var parts = promt.Split(' ');
 
         // Проверим является ли первое слово названием команды (только латинские буквы)
         if (!IsWord(parts[0]))
@@ -162,6 +167,7 @@ public class IntegratedConsoleService
     {
         return new CommandResult() {
             Success = true,
+            Type=Enums.ConsoleMessageTypes.Ok,
             OutMessage = $"Hello, world!"
         };
     }

@@ -16,6 +16,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\ConsoleMessageControl.xaml" />
     <None Remove="Controls\KeyValuePair.xaml" />
     <None Remove="Controls\KeyValuePairEditableR.xaml" />
     <None Remove="Controls\LogMessageControl.xaml" />
@@ -42,6 +43,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\ConsoleMessageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\KeyValuePairEditableR.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

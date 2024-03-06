@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Winestro_A.Controls.ConsoleMessageControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Winestro_A.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid ColumnSpacing="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Column="0" Source="{x:Bind IconSource}" Height="16" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock Grid.Column="1" Text="{x:Bind Text}" VerticalAlignment="Top" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+    </Grid>
+</UserControl>
