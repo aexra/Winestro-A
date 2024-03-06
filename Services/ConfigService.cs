@@ -81,15 +81,29 @@ public class ConfigService
 
     public static bool AddSetting(string key, string value)
     {
-        if (Values.Keys.Contains(key)) return false;
+        if (Values.Keys.Contains(key))
+        {
+            LogService.Error($"Failed creating setting [{key}={value}]");
+            return false;
+        }
 
         Values.Add(key, value);
+        LogService.Log($"Created setting [{key}={value}]");
         return true;
     }
 
     public static bool DeleteSetting(string key)
     {
-        return Values.Remove(key);
+        var ok = Values.Remove(key);
+        if (ok)
+        {
+            LogService.Log($"Removed setting [{key}]");
+        }
+        else
+        {
+            LogService.Error($"Failed removing setting [{key}]");
+        }
+        return ok;
     }
 
     public static void EditSetting(string key, string value)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Winestro_A.Controls;
 using Winestro_A.Services;
 using Winestro_A.ViewModels;
 
@@ -27,6 +28,7 @@ public sealed partial class ConfigPage : Page
 
     private async void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
+        var content = new NewConfigSettingDialog();
         ContentDialog dialog = new ContentDialog();
 
         // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
@@ -36,14 +38,33 @@ public sealed partial class ConfigPage : Page
         dialog.PrimaryButtonText = "Create";
         dialog.CloseButtonText = "Cancel";
         dialog.DefaultButton = ContentDialogButton.Primary;
-        //dialog.Content = new ContentDialogContent();
+        dialog.Content = content;
 
         var result = await dialog.ShowAsync();
 
+        if (result == ContentDialogResult.None)
+        {
+            return;
+        }
+        else
+        {
+            if (content.GetKey() != string.Empty)
+            {
+                ConfigService.AddSetting(content.GetKey(), content.GetValue());
+            }
+            else
+            {
+                ContentDialog errorDialog = new ContentDialog();
 
-        //if (!ConfigService.AddSetting("", "")) 
-        //{
-            
-        //}
+                // XamlRoot must be set in the case of a ContentDialog running in a Desktop app
+                errorDialog.XamlRoot = this.XamlRoot;
+                errorDialog.Style = Application.Current.Resources["DefaultContentDialogStyle"] as Style;
+                errorDialog.Title = "Empty setting name is not allowed";
+                errorDialog.CloseButtonText = "Ok";
+                errorDialog.DefaultButton = ContentDialogButton.Close;
+
+                await errorDialog.ShowAsync();
+            }
+        }
     }
 }
