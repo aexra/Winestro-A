@@ -37,6 +37,7 @@ public class IntegratedConsoleService
             if (cmd != null)
             {
                 var input = cmd.Value;
+                input.Name = input.Name.ToLower();
                 Func<ConsoleCommandContext, ConsoleCommandResult>? commandMethod = null;
                 ICCommandAttribute? commandInfo = null;
 
