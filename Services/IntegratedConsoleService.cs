@@ -161,7 +161,10 @@ public class IntegratedConsoleService
         return result;
     }
 
+    // HERE COMMANDS GO
 
+    // EVERY COMMAND HAS TO BE LIKE
+    // ... static CommandResult CommandName(List<String>, Dictionary<string, string>) { }
 
     private static CommandResult Test(List<String> args, Dictionary<string, string> kwargs)
     {
