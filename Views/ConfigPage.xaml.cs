@@ -23,4 +23,9 @@ public sealed partial class ConfigPage : Page
     {
         
     }
+
+    private void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+
+    }
 }

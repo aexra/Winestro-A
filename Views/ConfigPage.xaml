@@ -10,22 +10,41 @@
 
     <Grid x:Name="ContentArea" Margin="0 0 0 20">
         <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch" Padding="10 12 10 12">
-            <ListView SelectionMode="None" ItemsSource="{x:Bind services:ConfigService.EditableControls}">
+            <Grid RowSpacing="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Top"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
+                <Grid Grid.Row="0" ColumnSpacing="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        <Setter Property="MinHeight" Value="20"/>
-                    </Style>
-                </ListView.ItemContainerStyle>
+                    <TextBlock Grid.Column="0" Text="Settings count: " FontWeight="Bold"/>
+                    <TextBlock Grid.Column="1" Text="{x:Bind services:ConfigService.EditableControls.Count}" FontWeight="Bold"/>
+                    <Button Grid.Column="2" HorizontalAlignment="Right" Content="+" FontWeight="Bold" Foreground="#98FB98" Click="Button_Click"/>
+                </Grid>
+                
+                <ListView Grid.Row="1" SelectionMode="None" ItemsSource="{x:Bind services:ConfigService.EditableControls}">
 
-            </ListView>
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Top"/>
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="MinHeight" Value="40"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                </ListView>
+            </Grid>
         </Border>
     </Grid>
 </Page>
