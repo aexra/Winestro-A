@@ -9,6 +9,6 @@ public struct ConsoleCommandTemplate
 {
     public string Name;
     public int nArgs;
-    public String[] KwargsKeys;
+    public String[]? KwargsKeys;
     public Func<List<string>, Dictionary<string, string>, CommandResult> Function;
 }

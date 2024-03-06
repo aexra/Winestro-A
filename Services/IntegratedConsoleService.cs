@@ -18,8 +18,8 @@ public class IntegratedConsoleService
         { 
             "test", new ConsoleCommandTemplate() { 
                 Name="test", 
-                nArgs=1, 
-                KwargsKeys=new string[]{ "kw1" }, 
+                nArgs=0, 
+                KwargsKeys=null, 
                 Function=Test 
             } 
         },
@@ -51,7 +51,7 @@ public class IntegratedConsoleService
                 var template = CommandsMap[command.Name];
                 if (template.nArgs != command.Args.Count())
                 {
-                    result.OutMessage = $"Неверное количество обязательных аргументов команды [{command.Name}]: ожидалось {template.nArgs}, получено {command.Args.Count()}";
+                    result.OutMessage = $"Arguments error in command [{command.Name}]: expected {template.nArgs}, {command.Args.Count()} were given";
                     result.Success = false;
                 }
                 else
@@ -60,6 +60,7 @@ public class IntegratedConsoleService
 
                     foreach (var key in command.Kwargs.Keys)
                     {
+                        template.KwargsKeys ??= Array.Empty<string>();
                         if (!template.KwargsKeys.Contains(key))
                         {
                             result.OutMessage = $"Kwarg with key [{key}] not found for command [{command.Name}]";
@@ -76,7 +77,7 @@ public class IntegratedConsoleService
             }
             else
             {
-                result.OutMessage = $"[{cmd.Value.Name}] не является внутренней командой";
+                result.OutMessage = $"[{cmd.Value.Name}] command not found";
                 result.Success = false;
             }
         }
@@ -93,7 +94,7 @@ public class IntegratedConsoleService
         // Если строка пустая или состоит только из пробелов, то вернем 0
         if (String.IsNullOrWhiteSpace(promt))
         {
-            errorMesage = "Команда пустая или состоит из пустых символов.\nТы как это сделал?..";
+            errorMesage = "Empty or blank command.\nHow the fu...??";
             return false;
         }
 
@@ -103,7 +104,7 @@ public class IntegratedConsoleService
         // Проверим является ли первое слово названием команды (только латинские буквы)
         if (!IsWord(parts[0]))
         {
-            errorMesage = $"[{parts[0]}] не является именем команды";
+            errorMesage = $"Wrong command name [{parts[0]}]";
             return false;
         }
 
@@ -159,9 +160,9 @@ public class IntegratedConsoleService
 
     private static CommandResult Test(List<String> args, Dictionary<string, string> kwargs)
     {
-        return new CommandResult() { 
+        return new CommandResult() {
             Success = true,
-            OutMessage = $"This is test command. Arg1: {args[0]}{(kwargs.ContainsKey("kw1") ? $", Kwarg1: [{kwargs.Keys.ElementAt(0)}:{kwargs.Values.ElementAt(0)}]" : "")}"
+            OutMessage = $"Hello, world!"
         };
     }
 }
