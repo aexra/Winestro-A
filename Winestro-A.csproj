@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Controls\KeyValuePair.xaml" />
+    <None Remove="Controls\KeyValuePairEditableR.xaml" />
     <None Remove="Controls\LogMessageControl.xaml" />
     <None Remove="Views\MiscModulePage.xaml" />
     <None Remove="Views\MusicModulePage.xaml" />
@@ -41,6 +42,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\KeyValuePairEditableR.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\LogMessageControl.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

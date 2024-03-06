@@ -6,6 +6,8 @@ namespace Winestro_A.Views;
 
 public sealed partial class ConfigPage : Page
 {
+    public Action<object, TextChangedEventArgs> TextChanged { get; set; } = ConfigValueChanged;
+    
     public ConfigViewModel ViewModel
     {
         get;
@@ -15,5 +17,10 @@ public sealed partial class ConfigPage : Page
     {
         ViewModel = App.GetService<ConfigViewModel>();
         InitializeComponent();
+    }
+
+    private static void ConfigValueChanged(object sender, TextChangedEventArgs e)
+    {
+        
     }
 }

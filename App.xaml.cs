@@ -93,6 +93,8 @@ public partial class App : Application
 
         UnhandledException += App_UnhandledException;
 
+        ConfigService.Init();
+
         LogService.Log("Application launched");
     }
 
