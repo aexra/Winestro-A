@@ -233,21 +233,21 @@ public class IntegratedConsoleService
     [ICCommand("newset", nArgs=2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
-        LogService.Log($"Created setting [{ctx.Args[0]}={ctx.Args[1]}]");
-        ConfigService.CreateSetting(ctx.Args[0], ctx.Args[1]);
+        var ok = ConfigService.CreateSetting(ctx.Args[0], ctx.Args[1]);
+        LogService.Log(ok ? $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]" : $"Failed creating setting [{ctx.Args[0]}={ctx.Args[1]}]");
         return new ConsoleCommandResult()
         {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]"
+            Success = ok,
+            Type = ok? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail,
+            OutMessage = ok? $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]" : $"Failed creating setting [{ctx.Args[0]}={ctx.Args[1]}]"
         };
     }
 
     [ICCommand("remset", nArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
-        LogService.Log($"Removed setting [{ctx.Args[0]}]");
         var ok = ConfigService.RemoveSetting(ctx.Args[0]);
+        LogService.Log(ok ? $"Removed setting [{ctx.Args[0]}]" : $"Failed removing setting [{ctx.Args[0]}]");
         return new ConsoleCommandResult()
         {
             Success = ok,

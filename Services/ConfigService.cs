@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
+using Windows.Foundation.Collections;
 using Windows.Storage;
 using Winestro_A.Controls;
 
@@ -12,27 +14,35 @@ namespace Winestro_A.Services;
 public class ConfigService
 {
     public static ObservableCollection<KeyValuePairEditableR> EditableControls { get; private set; } = new();
+    private static IPropertySet Values = ApplicationData.Current.LocalSettings.Values;
 
     public static void Init()
     {
-        foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
+        CreateSetting("a", "b");
+        foreach (var key in Values.Keys)
         {
-            LogService.Log(key);
-            EditableControls.Add(new KeyValuePairEditableR()
-            {
-                Left = key,
-                Right = ApplicationData.Current.LocalSettings.Values[key].ToString()
-            });
+            CreateSetting("a", "b");
+            LogService.Log(key.GetType().ToString());
+            LogService.Log(Values[key].GetType().ToString());
+            //EditableControls.Add(new KeyValuePairEditableR()
+            //{
+            //    Left = key,
+            //    Right = ApplicationData.Current.LocalSettings.Values[key].ToString()
+            //});
         }
+        RemoveSetting("a");
     }
 
-    public static void CreateSetting(string key, string value)
+    public static bool CreateSetting(string key, string value)
     {
-        ApplicationData.Current.LocalSettings.Values.Add(key, value);
+        if (Values.Keys.Contains(key)) return false;
+
+        Values.Add(key, value);
+        return true;
     }
 
     public static bool RemoveSetting(string key)
     {
-        return ApplicationData.Current.LocalSettings.Values.Remove(key);
+        return Values.Remove(key);
     }
 }
