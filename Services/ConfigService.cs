@@ -18,24 +18,23 @@ public class ConfigService
 
     public static void Init()
     {
+        Values.MapChanged += (s, e) => {
+            EditableControls.Clear();
+            FillControlsList();
+        };
+
+        FillControlsList();
+    }
+
+    private static void FillControlsList()
+    {
         foreach (var key in Values.Keys)
         {
-            if (Values[key] is string str)
+            EditableControls.Add(new KeyValuePairEditableR()
             {
-                EditableControls.Add(new KeyValuePairEditableR()
-                {
-                    Left = key,
-                    Right = str
-                });
-            }
-            else
-            {
-                EditableControls.Add(new KeyValuePairEditableR()
-                {
-                    Left = key,
-                    Right = Values[key].ToString()
-                });
-            }
+                Left = key,
+                Right = Values[key].ToString()
+            });
         }
     }
 

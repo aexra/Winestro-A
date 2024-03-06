@@ -230,7 +230,7 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("newset", nArgs=2)]
+    [ICCommand("setadd", nArgs=2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.CreateSetting(ctx.Args[0], ctx.Args[1]);
@@ -243,7 +243,7 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("remset", nArgs = 1)]
+    [ICCommand("setdel", nArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.RemoveSetting(ctx.Args[0]);
