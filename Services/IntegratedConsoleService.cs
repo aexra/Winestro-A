@@ -15,6 +15,7 @@ using Winestro_A.Structures;
 namespace Winestro_A.Services;
 public class IntegratedConsoleService
 {
+    public static Stack<string> СonsolePromts = new();
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {

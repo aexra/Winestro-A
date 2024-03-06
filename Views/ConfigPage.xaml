@@ -10,7 +10,7 @@
 
     <Grid x:Name="ContentArea" Margin="0 0 0 20">
         <Border Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10" VerticalAlignment="Stretch" Padding="10 12 10 12">
-            <ListView SelectionMode="Single">
+            <ListView SelectionMode="None">
 
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>

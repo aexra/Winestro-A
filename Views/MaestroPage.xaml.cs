@@ -34,8 +34,15 @@ public sealed partial class MaestroPage : Page
     {
         if (e.Key == VirtualKey.Enter && ((TextBox)sender).Text.Length > 0)
         {
-            IntegratedConsoleService.TryRun(((TextBox)sender).Text, out _);
+            var promt = ((TextBox)sender).Text;
+            IntegratedConsoleService.СonsolePromts.Push(promt);
+            IntegratedConsoleService.TryRun(promt, out _);
             ((TextBox)sender).Text = string.Empty;
+        }
+        if (e.Key == VirtualKey.Up && IntegratedConsoleService.СonsolePromts.Count() > 0)
+        {
+            ((TextBox)sender).Text = IntegratedConsoleService.СonsolePromts.Peek();
+            ((TextBox)sender).SelectionStart = ((TextBox)sender).Text.Length;
         }
     }
 }
