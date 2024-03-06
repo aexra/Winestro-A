@@ -18,7 +18,8 @@ public class IntegratedConsoleService
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
-        Test
+        Test,
+        Log
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -80,12 +81,19 @@ public class IntegratedConsoleService
                 }
                 else
                 {
-                    if (input.Args.Count() != commandInfo.nArgs)
+                    if (input.Args.Count() != commandInfo.nArgs && commandInfo.nArgs != -1)
                     {
                         result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected {commandInfo.nArgs} positional arguments, but {input.Args.Count()} were given", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
                     }
                     else
                     {
+                        if (commandInfo.nArgs == -1)
+                        {
+                            var logarg = string.Join(" ", input.Args);
+                            input.Args.Clear();
+                            input.Args.Add(logarg);
+                        }
+
                         var goodKwargs = true;
                         var strangeKey = "What?";
                         foreach (var key in input.Kwargs.Keys)
@@ -202,6 +210,18 @@ public class IntegratedConsoleService
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
             OutMessage = $"Hello, world!"
+        };
+    }
+
+    [ICCommand("log", nArgs = -1)]
+    private static ConsoleCommandResult Log(ConsoleCommandContext ctx)
+    {
+        LogService.Log(ctx.Args[0], Enums.LogMessageMetaTypes.Debug);
+        return new ConsoleCommandResult()
+        {
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Ok,
+            OutMessage = "Logged to DEBUG log tab"
         };
     }
 }
