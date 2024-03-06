@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserDataTasks.DataProvider;
+using Windows.Storage;
 using Winestro_A.Attributes;
 using Winestro_A.Controls;
 using Winestro_A.Structures;
@@ -21,7 +22,9 @@ public class IntegratedConsoleService
     {
         Test,
         Log,
+        ShowSettings,
         CreateSetting,
+        RemoveSetting,
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -227,16 +230,45 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("CreateSetting", nArgs=2)]
+    [ICCommand("newset", nArgs=2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
-        LogService.Log($"Created setting: {ctx.Args[0]}={ctx.Args[1]}", Enums.LogMessageMetaTypes.Debug);
+        LogService.Log($"Created setting [{ctx.Args[0]}={ctx.Args[1]}]");
         ConfigService.CreateSetting(ctx.Args[0], ctx.Args[1]);
         return new ConsoleCommandResult()
         {
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Created setting: {ctx.Args[0]}={ctx.Args[1]}"
+            OutMessage = $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]"
+        };
+    }
+
+    [ICCommand("remset", nArgs = 1)]
+    private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
+    {
+        LogService.Log($"Removed setting [{ctx.Args[0]}]");
+        var ok = ConfigService.RemoveSetting(ctx.Args[0]);
+        return new ConsoleCommandResult()
+        {
+            Success = ok,
+            Type = ok? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail,
+            OutMessage = ok? $"Removed setting [{ctx.Args[0]}]" : $"Failed removing setting [{ctx.Args[0]}]"
+        };
+    }
+
+    [ICCommand("sets")]
+    private static ConsoleCommandResult ShowSettings(ConsoleCommandContext ctx)
+    {
+        var ret = ApplicationData.Current.LocalSettings.Values.Keys.Count() > 0? "Application settings:" : "No settings detected";
+        foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
+        {
+            ret += $"\n{key}={ApplicationData.Current.LocalSettings.Values[key]}";
+        }
+        return new ConsoleCommandResult()
+        {
+            OutMessage=ret,
+            Success=true,
+            Type=Enums.ConsoleMessageTypes.Info
         };
     }
 }

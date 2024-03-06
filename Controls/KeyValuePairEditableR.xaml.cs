@@ -23,13 +23,13 @@ public sealed partial class KeyValuePairEditableR : UserControl
     public string Left
     {
         get; set;
-    }
+    } = string.Empty;
     public string Right
     {
         get; set;
-    }
+    } = string.Empty;
     public GridLength LeftWidth { get; set; } = new GridLength(400);
-    public Action<object, TextChangedEventArgs> TextChanged { get; set; }
+    public Action<object, TextChangedEventArgs>? TextChanged { get; set; }
 
     public KeyValuePairEditableR()
     {

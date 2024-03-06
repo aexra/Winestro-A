@@ -17,6 +17,7 @@ public class ConfigService
     {
         foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
         {
+            LogService.Log(key);
             EditableControls.Add(new KeyValuePairEditableR()
             {
                 Left = key,
@@ -28,5 +29,10 @@ public class ConfigService
     public static void CreateSetting(string key, string value)
     {
         ApplicationData.Current.LocalSettings.Values.Add(key, value);
+    }
+
+    public static bool RemoveSetting(string key)
+    {
+        return ApplicationData.Current.LocalSettings.Values.Remove(key);
     }
 }
