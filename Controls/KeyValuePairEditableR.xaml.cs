@@ -16,29 +16,28 @@ using Microsoft.UI.Xaml.Navigation;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Winestro_A.Controls
+namespace Winestro_A.Controls;
+
+public sealed partial class KeyValuePairEditableR : UserControl
 {
-    public sealed partial class KeyValuePairEditableR : UserControl
+    public string Left
     {
-        public string Left
-        {
-            get; set;
-        }
-        public string Right
-        {
-            get; set;
-        }
-        public GridLength LeftWidth { get; set; } = new GridLength(120);
-        public Action<object, TextChangedEventArgs> TextChanged { get; set; }
+        get; set;
+    }
+    public string Right
+    {
+        get; set;
+    }
+    public GridLength LeftWidth { get; set; } = new GridLength(400);
+    public Action<object, TextChangedEventArgs> TextChanged { get; set; }
 
-        public KeyValuePairEditableR()
-        {
-            this.InitializeComponent();
-        }
+    public KeyValuePairEditableR()
+    {
+        this.InitializeComponent();
+    }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TextChanged?.Invoke(sender, e);
-        }
+    private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        TextChanged?.Invoke(sender, e);
     }
 }
