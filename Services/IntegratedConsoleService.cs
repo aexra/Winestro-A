@@ -50,7 +50,15 @@ public class IntegratedConsoleService
                     {
                         if (attr is ICCommandAttribute cattr)
                         {
-                            if (cattr.Name == input.Name || cattr.Aliases != null && cattr.Aliases.Contains(input.Name))
+                            List<string> names = new List<string>{ cattr.Name };
+                            if (cattr.Aliases != null)
+                            {
+                                foreach (var alias in cattr.Aliases)
+                                {
+                                    names.Add(alias);
+                                }
+                            }
+                            if (names.Contains(input.Name))
                             {
                                 foundCommand = true;
                                 commandMethod = command;
