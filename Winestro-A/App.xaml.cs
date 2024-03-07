@@ -102,12 +102,12 @@ public partial class App : Application
 
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
-        base.OnLaunched(args);
-
-        await App.GetService<IActivationService>().ActivateAsync(args);
-
         ConfigService.Init();
         DiscordBotService.Init();
+
+        base.OnLaunched(args);
+        await App.GetService<IActivationService>().ActivateAsync(args);
+
         LogService.Log("Application launched");
     }
 }

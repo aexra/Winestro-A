@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <Button x:Name="RunBtn" Content="{x:Bind RunBtnText, Mode=OneWay}" FontSize="24" Width="100" Click="RunBtn_Click"/>
+            <Button x:Name="RunBtn" Content="{x:Bind Data.RunBtnText, Mode=OneWay}" FontSize="24" Width="100" Click="RunBtn_Click"/>
             <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="100" HorizontalAlignment="left"/>
         </StackPanel>
 
@@ -29,11 +29,11 @@
                 Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                 Padding="5 5 5 5"
                 CornerRadius="5">
-                <local:KeyValuePair Left="Status" Right="{x:Bind ConnectionState, Mode=OneWay}"/>
-                <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind GuildsConnected}"/>
-                <local:KeyValuePair Left="Players active" Right="{x:Bind PlayersActive}"/>
-                <local:KeyValuePair Left="Current Time" Right="{x:Bind CurrentTime}"/>
-                <local:KeyValuePair Left="Running Time" Right="{x:Bind RunTime}"/>
+                <local:KeyValuePair Left="Status" Right="{x:Bind Data.ConnectionState, Mode=OneWay}"/>
+                <local:KeyValuePair Left="Guilds Connected" Right="{x:Bind Data.GuildsConnected}"/>
+                <local:KeyValuePair Left="Players active" Right="{x:Bind Data.PlayersActive}"/>
+                <local:KeyValuePair Left="Current Time" Right="{x:Bind Data.CurrentTime}"/>
+                <local:KeyValuePair Left="Running Time" Right="{x:Bind Data.RunTime}"/>
             </StackPanel>
         </StackPanel>
 

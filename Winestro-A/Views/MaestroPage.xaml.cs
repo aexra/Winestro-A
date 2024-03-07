@@ -6,19 +6,18 @@ using Winestro_A.Services;
 using System.Windows.Threading;
 using Windows.Foundation;
 using System.Reactive.Linq;
+using Winestro_A.Models;
+using Winestro_A.Helpers;
 
 namespace Winestro_A.Views;
 
 public sealed partial class MaestroPage : Page
 {
-    public string ConnectionState { get; set; }
-    public string GuildsConnected   { get; set; }
-    public string PlayersActive     { get; set; }
-    public string CurrentTime       { get; set; }
-    public string RunTime           { get; set; }
-
-    public string RunBtnText { get; set; } = "Fix me";
-    public string RunBtnColor { get; set; }
+    public MainPageDataContainer Data
+    {
+        get;
+        set;
+    } = new MainPageDataContainer();
 
     private Microsoft.UI.Dispatching.DispatcherQueueTimer ConnectionStateLoop;
 
@@ -33,26 +32,34 @@ public sealed partial class MaestroPage : Page
         InitializeComponent();
 
         CreateTimer(0.1, (t, o) => { 
-            ConnectionState = DiscordBotService.ConnectionState.ToString();
+            Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
             switch (DiscordBotService.ConnectionState)
             {
                 case Discord.ConnectionState.Connected:
-                    RunBtnText = "Stop";
+                    Data.RunBtnText = "Stop";
                     break;
                 case Discord.ConnectionState.Disconnected:
-                    RunBtnText = "Run";
+                    Data.RunBtnText = "Run";
                     break;
                 case Discord.ConnectionState.Connecting:
-                    RunBtnText = "Connecting";
+                    Data.RunBtnText = "Connecting";
                     break;
                 case Discord.ConnectionState.Disconnecting:
-                    RunBtnText = "Disconnecting";
+                    Data.RunBtnText = "Disconnecting";
                     break;
                 default:
-                    RunBtnText = "Fix me";
+                    Data.RunBtnText = "Fix me";
                     break;
             }
         });
+
+        Data.RunBtnText = "Fix Me";
+        Data.RunBtnColor = "#ffffff";
+        Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
+        Data.GuildsConnected = "0";
+        Data.PlayersActive = "0";
+        Data.CurrentTime = TimeHelper.NowS();
+        Data.RunTime = "0";
     }
 
     private async void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
