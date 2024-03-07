@@ -257,10 +257,12 @@ public class IntegratedConsoleService
     [ICCommand("sets")]
     private static ConsoleCommandResult ShowSettings(ConsoleCommandContext ctx)
     {
-        var ret = ApplicationData.Current.LocalSettings.Values.Keys.Count() > 0? "Application settings:" : "No settings detected";
+        var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
+        var ret = count > 0? $"Application settings: [{count}]" : "No settings detected";
+        var counter = 0;
         foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
         {
-            ret += $"\n{key}={ApplicationData.Current.LocalSettings.Values[key]}";
+            ret += $"\n{++counter}. {key}={ApplicationData.Current.LocalSettings.Values[key]}";
         }
         return new ConsoleCommandResult()
         {
