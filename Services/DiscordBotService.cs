@@ -16,7 +16,11 @@ public class DiscordBotService
 
     public static void Init()
     {
-        _client = new DiscordSocketClient();
+        var config = new DiscordSocketConfig()
+        {
+            GatewayIntents = GatewayIntents.All
+        };
+        _client = new DiscordSocketClient(config);
         _client.Log += Log;
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
