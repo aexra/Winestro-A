@@ -71,15 +71,15 @@ public class ConfigService
         EditableControls.Add(new KeyValuePairEditableR(key, value)
         {
             TextChanged = (s, e) => {
-                EditSetting(key, ((TextBox)s).Text);
+                Set(key, ((TextBox)s).Text);
             },
             OnXClick = (s, e) => {
-                DeleteSetting(key);
+                Delete(key);
             }
         });
     }
 
-    public static bool AddSetting(string key, string value)
+    public static bool Add(string key, string value)
     {
         if (Values.Keys.Contains(key))
         {
@@ -92,7 +92,7 @@ public class ConfigService
         return true;
     }
 
-    public static bool DeleteSetting(string key)
+    public static bool Delete(string key)
     {
         var ok = Values.Remove(key);
         if (ok)
@@ -106,8 +106,20 @@ public class ConfigService
         return ok;
     }
 
-    public static void EditSetting(string key, string value)
+    public static void Set(string key, string value)
     {
         Values[key] = value;
+    }
+
+    public static object? Get(string key)
+    {
+        if (Values.Keys.Contains(key))
+        {
+            return Values[key];
+        } 
+        else
+        {
+            return null;
+        }
     }
 }

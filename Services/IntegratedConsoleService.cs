@@ -233,7 +233,7 @@ public class IntegratedConsoleService
     [ICCommand("setadd", nArgs=2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
-        var ok = ConfigService.AddSetting(ctx.Args[0], ctx.Args[1]);
+        var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
         return new ConsoleCommandResult()
         {
             Success = ok,
@@ -245,7 +245,7 @@ public class IntegratedConsoleService
     [ICCommand("setdel", nArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
-        var ok = ConfigService.DeleteSetting(ctx.Args[0]);
+        var ok = ConfigService.Delete(ctx.Args[0]);
         return new ConsoleCommandResult()
         {
             Success = ok,

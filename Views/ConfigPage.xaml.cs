@@ -50,7 +50,7 @@ public sealed partial class ConfigPage : Page
         {
             if (content.GetKey() != string.Empty)
             {
-                ConfigService.AddSetting(content.GetKey(), content.GetValue());
+                ConfigService.Add(content.GetKey(), content.GetValue());
             }
             else
             {
