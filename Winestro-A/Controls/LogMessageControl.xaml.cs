@@ -13,7 +13,7 @@ public sealed partial class LogMessageControl : UserControl
     public string Time { get; set; }
 
     public string IconSource 
-    { 
+    {
         get {
             switch (Type)
             {

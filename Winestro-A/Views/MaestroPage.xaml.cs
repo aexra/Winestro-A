@@ -8,6 +8,7 @@ using Windows.Foundation;
 using System.Reactive.Linq;
 using Winestro_A.Models;
 using Winestro_A.Helpers;
+using System.Windows.Navigation;
 
 namespace Winestro_A.Views;
 
@@ -31,7 +32,7 @@ public sealed partial class MaestroPage : Page
         ViewModel = App.GetService<MaestroViewModel>();
         InitializeComponent();
 
-        CreateTimer(0.1, (t, o) => { 
+        ConnectionStateLoop = CreateTimer(0.1, (t, o) => { 
             Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
             switch (DiscordBotService.ConnectionState)
             {
@@ -52,6 +53,8 @@ public sealed partial class MaestroPage : Page
                     break;
             }
         });
+
+        CreateTimer(4, (t, o) => { Data.RunBtnColor = "sss"; t.Stop(); });
 
         Data.RunBtnText = "Fix Me";
         Data.RunBtnColor = "#ffffff";
@@ -83,12 +86,13 @@ public sealed partial class MaestroPage : Page
         }
     }
 
-    private void CreateTimer(double s, TypedEventHandler<Microsoft.UI.Dispatching.DispatcherQueueTimer, object> onTick, bool forceStart = true)
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer CreateTimer(double s, TypedEventHandler<Microsoft.UI.Dispatching.DispatcherQueueTimer, object> onTick, bool forceStart = true)
     {
-        ConnectionStateLoop = DispatcherQueue.CreateTimer();
-        ConnectionStateLoop.Interval = TimeSpan.FromSeconds(s);
-        ConnectionStateLoop.IsRepeating = true;
-        ConnectionStateLoop.Tick += onTick;
-        if (forceStart) ConnectionStateLoop.Start();
+        var timer = DispatcherQueue.CreateTimer();
+        timer.Interval = TimeSpan.FromSeconds(s);
+        timer.IsRepeating = true;
+        timer.Tick += onTick;
+        if (forceStart) timer.Start();
+        return timer;
     }
 }
