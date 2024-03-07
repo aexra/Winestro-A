@@ -53,6 +53,8 @@ public sealed partial class MaestroPage : Page
     private void SyncUIData(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object obj)
     {
         Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
+        Data.GuildsConnected = DiscordBotService.Guilds.Count.ToString();
+
         switch (DiscordBotService.ConnectionState)
         {
             case Discord.ConnectionState.Connected:

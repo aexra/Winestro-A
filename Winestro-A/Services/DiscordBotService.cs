@@ -12,7 +12,21 @@ namespace Winestro_A.Services;
 public class DiscordBotService
 {
     private static DiscordSocketClient _client;
-    public static Discord.ConnectionState ConnectionState => _client.ConnectionState;
+
+    public static ConnectionState ConnectionState => _client.ConnectionState;
+    public static List<IGuild> Guilds
+    {
+        get
+        {
+            if (ConnectionState != ConnectionState.Connected) return new List<IGuild> { };
+            List<IGuild> guilds = new();
+            foreach (var guild in _client.Guilds)
+            {
+                guilds.Add(guild);
+            }
+            return guilds;
+        }
+    } 
 
     public static void Init()
     {
