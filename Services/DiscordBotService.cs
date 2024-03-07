@@ -10,7 +10,7 @@ public class DiscordBotService
 {
 
 
-    public async void Run()
+    public static async Task Run()
     {
 
     }
