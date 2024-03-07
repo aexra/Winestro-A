@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Winestro-A.Core\Winestro-A.Core.csproj" />
+    <ProjectReference Include="..\Winestro_A.Core\Winestro_A.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
