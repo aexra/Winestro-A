@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -17,14 +19,49 @@ using Windows.Foundation.Collections;
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Winestro_A.Controls;
-public sealed partial class KeyValuePair : UserControl
+public sealed partial class KeyValuePair : UserControl, INotifyPropertyChanged
 {
-    public string Left { get; set; }
-    public string Right { get; set; }
+    private string leftValue;
+    private string rightValue;
+
+    public string Left
+    {
+        get => leftValue;
+        set
+        {
+            if (leftValue != value)
+            {
+                leftValue = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public string Right
+    {
+        get => rightValue;
+        set
+        {
+            if (rightValue != value)
+            {
+                rightValue = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
     public GridLength LeftWidth { get; set; } = new GridLength(120);
 
     public KeyValuePair()
     {
         this.InitializeComponent();
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+    {
+        if (PropertyChanged != null)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Text="{x:Bind Left}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-        <TextBlock Grid.Column="1" Text="{x:Bind Right}" HorizontalAlignment="Right" Style="{StaticResource BodyTextBlockStyle}"/>
+        <TextBlock Grid.Column="0" Text="{x:Bind Left, Mode=OneWay}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+        <TextBlock Grid.Column="1" Text="{x:Bind Right, Mode=OneWay}" HorizontalAlignment="Right" Style="{StaticResource BodyTextBlockStyle}"/>
     </Grid>
 </UserControl>
