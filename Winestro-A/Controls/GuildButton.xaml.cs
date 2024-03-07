@@ -32,14 +32,12 @@ namespace Winestro_A.Controls
 
         private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            var btn = (Button)sender;
-            btn.CornerRadius = new(13);
+            sbOut.Begin();
         }
 
         private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            var btn = (Button)sender;
-            btn.CornerRadius = new(30);
+            sbIn.Begin();
         }
     }
 }
