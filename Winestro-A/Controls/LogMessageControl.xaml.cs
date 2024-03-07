@@ -11,6 +11,7 @@ public sealed partial class LogMessageControl : UserControl
     public LogMessageMetaTypes Meta { get; set; } = LogMessageMetaTypes.Default;
     public string Text { get; set; }
     public string Time { get; set; }
+    public ulong Id;
 
     public string IconSource 
     {

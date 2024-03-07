@@ -2,9 +2,11 @@
 
 namespace Winestro_A.Structures;
 
-public struct LogMessage
+public struct LogMessageManifest
 {
     public LogMessageTypes Type;
+    public LogMessageMetaTypes Meta;
     public string Text;
-    public TimeSpan Time;
+    public string Time;
+    public ulong Id;
 }

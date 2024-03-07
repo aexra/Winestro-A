@@ -48,7 +48,6 @@ public class DiscordBotService
 
     public static async Task Stop()
     {
-        LogService.Log("Stopping bot...");
         await _client.LogoutAsync();
     }
 
@@ -77,12 +76,10 @@ public class DiscordBotService
 
     private static Task Ready()
     {
-        LogService.Log("Discord Bot connected successfully");
         return Task.CompletedTask;
     }
     private static Task Disconnected(Exception exception)
     {
-        LogService.Log("Discord Bot disconnected successfully");
         return Task.CompletedTask;
     }
 }

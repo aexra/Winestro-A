@@ -97,6 +97,13 @@ public class IntegratedConsoleService
                             var logarg = string.Join(" ", input.Args);
                             input.Args.Clear();
                             input.Args.Add(logarg);
+
+                            if (string.IsNullOrWhiteSpace(logarg))
+                            {
+                                result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected 1 positional argument, but 0 were given", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
+                                ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
+                                return false;
+                            }
                         }
 
                         var goodKwargs = true;

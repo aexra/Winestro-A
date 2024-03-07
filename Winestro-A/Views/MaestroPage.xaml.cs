@@ -20,7 +20,7 @@ public sealed partial class MaestroPage : Page
         set;
     } = new MainPageDataContainer();
 
-    private Microsoft.UI.Dispatching.DispatcherQueueTimer ConnectionStateLoop;
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer UIDataSyncTimer;
 
     public MaestroViewModel ViewModel
     {
@@ -32,29 +32,9 @@ public sealed partial class MaestroPage : Page
         ViewModel = App.GetService<MaestroViewModel>();
         InitializeComponent();
 
-        ConnectionStateLoop = CreateTimer(0.1, (t, o) => { 
-            Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
-            switch (DiscordBotService.ConnectionState)
-            {
-                case Discord.ConnectionState.Connected:
-                    Data.RunBtnText = "Stop";
-                    break;
-                case Discord.ConnectionState.Disconnected:
-                    Data.RunBtnText = "Run";
-                    break;
-                case Discord.ConnectionState.Connecting:
-                    Data.RunBtnText = "Connecting";
-                    break;
-                case Discord.ConnectionState.Disconnecting:
-                    Data.RunBtnText = "Disconnecting";
-                    break;
-                default:
-                    Data.RunBtnText = "Fix me";
-                    break;
-            }
-        });
+        UIDataSyncTimer = CreateTimer(0.1, SyncUIData, true);
 
-        CreateTimer(4, (t, o) => { Data.RunBtnColor = "sss"; t.Stop(); });
+
 
         Data.RunBtnText = "Fix Me";
         Data.RunBtnColor = "#ffffff";
@@ -68,6 +48,29 @@ public sealed partial class MaestroPage : Page
     private async void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         await DiscordBotService.Toggle();
+    }
+
+    private void SyncUIData(Microsoft.UI.Dispatching.DispatcherQueueTimer sender, object obj)
+    {
+        Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
+        switch (DiscordBotService.ConnectionState)
+        {
+            case Discord.ConnectionState.Connected:
+                Data.RunBtnText = "Stop";
+                break;
+            case Discord.ConnectionState.Disconnected:
+                Data.RunBtnText = "Run";
+                break;
+            case Discord.ConnectionState.Connecting:
+                Data.RunBtnText = "Connecting";
+                break;
+            case Discord.ConnectionState.Disconnecting:
+                Data.RunBtnText = "Disconnecting";
+                break;
+            default:
+                Data.RunBtnText = "Fix me";
+                break;
+        }
     }
 
     private void CommandInput_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
@@ -86,11 +89,11 @@ public sealed partial class MaestroPage : Page
         }
     }
 
-    private Microsoft.UI.Dispatching.DispatcherQueueTimer CreateTimer(double s, TypedEventHandler<Microsoft.UI.Dispatching.DispatcherQueueTimer, object> onTick, bool forceStart = true)
+    private Microsoft.UI.Dispatching.DispatcherQueueTimer CreateTimer(double s, TypedEventHandler<Microsoft.UI.Dispatching.DispatcherQueueTimer, object> onTick, bool isRepeating = false, bool forceStart = true)
     {
         var timer = DispatcherQueue.CreateTimer();
         timer.Interval = TimeSpan.FromSeconds(s);
-        timer.IsRepeating = true;
+        timer.IsRepeating = isRepeating;
         timer.Tick += onTick;
         if (forceStart) timer.Start();
         return timer;
