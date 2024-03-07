@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="Winestro_A.Controls.GuildButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Winestro_A.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid MinWidth="45" MinHeight="45" Margin="0" Padding="0">
+        <Button CornerRadius="90" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited" Margin="0" Padding="0">
+            <Image Source="{x:Bind ImageSource}"/>
+        </Button>
+    </Grid>
+</UserControl>

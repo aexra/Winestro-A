@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:Winestro_A.Controls"
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" ColumnSpacing="10" Margin="0 0 0 20">
@@ -27,14 +28,12 @@
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
                         <Setter Property="HorizontalAlignment" Value="Center"/>
-                        <Setter Property="Width" Value="45"/>
                         <Setter Property="Height" Value="45"/>
+                        <Setter Property="Width" Value="45"/>
                     </Style>
                 </ListView.ItemContainerStyle>
 
-                <Button CornerRadius="90" Padding="0" PointerEntered="GuildButton_PointerEntered" PointerExited="GuildButton_PointerExited">
-                    <Image Source="ms-appx:///Assets/LogMessageWarningIcon.png"/>
-                </Button>
+                <local:GuildButton/>
 
             </ListView>
         </Border>
