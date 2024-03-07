@@ -10,10 +10,7 @@ public class TimeHelper
 {
     public static string NowS()
     {
-        var s = string.Empty;
-        TimeSpan now = DateTime.Now.TimeOfDay;
-        s += now.Hours.ToString() + ":" + now.Minutes.ToString() + ":" + now.Seconds.ToString();
-        return s;
+        return DateTime.Now.TimeOfDay.ToString()[..8];
     }
     public static TimeSpan Now => DateTime.Now.TimeOfDay;
 }
