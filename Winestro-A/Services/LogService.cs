@@ -34,6 +34,14 @@ public class LogService
     {
         TryLog(msg, LogMessageTypes.Error, meta);
     }
+    public static void ForceUpdateControlsCollections()
+    {
+        try
+        {
+            _UpdateControlsCollections_();
+        }
+        catch { }
+    }
 
     private static void TryLog(string msg, LogMessageTypes type, LogMessageMetaTypes meta)
     {

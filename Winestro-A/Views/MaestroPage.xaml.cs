@@ -71,6 +71,11 @@ public sealed partial class MaestroPage : Page
                 Data.RunBtnText = "Fix me";
                 break;
         }
+
+        if (LogService.UpdateRequired)
+        {
+            LogService.ForceUpdateControlsCollections();
+        }
     }
 
     private void CommandInput_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
