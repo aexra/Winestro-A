@@ -107,6 +107,7 @@ public partial class App : Application
         await App.GetService<IActivationService>().ActivateAsync(args);
 
         ConfigService.Init();
+        DiscordBotService.Init();
         LogService.Log("Application launched");
     }
 }

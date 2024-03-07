@@ -24,7 +24,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBlock Grid.Column="0" Text="Settings count: " FontWeight="Bold"/>
-                    <TextBlock Grid.Column="1" Text="{x:Bind services:ConfigService.EditableControls.Count}" FontWeight="Bold"/>
+                    <TextBlock Grid.Column="1" Text="{x:Bind services:ConfigService.EditableControls.Count, Mode=OneWay}" FontWeight="Bold"/>
                     <Button Grid.Column="2" HorizontalAlignment="Right" Content="+" FontWeight="Bold" Foreground="#98FB98" Click="Button_Click"/>
                 </Grid>
                 
