@@ -45,6 +45,7 @@ public class LogService
 
     private static void TryLog(string msg, LogMessageTypes type, LogMessageMetaTypes meta)
     {
+        if (string.IsNullOrWhiteSpace(msg)) return;
         try
         {
             logs.Add(new LogMessageManifest() { Text=msg, Type=type, Meta=meta, Time=TimeHelper.NowS(), Id=(ulong)logs.Count });
