@@ -25,9 +25,7 @@
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
-            <StackPanel Grid.Row="1" x:Name="ContentStackPanel">
-                <TextBlock Text="{x:Bind Message.CleanContent}" Style="{StaticResource BodyTextBlockStyle}"/>
-            </StackPanel>
+            <StackPanel Grid.Row="1" x:Name="ContentStackPanel"/>
         </Grid>
     </Grid>
 </UserControl>

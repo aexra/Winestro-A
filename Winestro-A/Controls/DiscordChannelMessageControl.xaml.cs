@@ -15,6 +15,7 @@ using Microsoft.UI.Xaml.Navigation;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.UI.Xaml.Media.Imaging;
+using System.Windows;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -39,6 +40,14 @@ public sealed partial class DiscordChannelMessageControl : UserControl
         AvatarUrl = msg.Author.GetAvatarUrl();
         DisplayName = ((SocketGuildUser)msg.Author).DisplayName;
 
+        if (!string.IsNullOrWhiteSpace(msg.CleanContent))
+        {
+            var tb = new TextBlock();
+            tb.Text = msg.CleanContent;
+
+            ContentStackPanel.Children.Add(tb);
+        }
+
         foreach (var att in msg.Attachments)
         {
             if (att.ContentType != null)
@@ -49,6 +58,7 @@ public sealed partial class DiscordChannelMessageControl : UserControl
                     img.Source = new BitmapImage(new Uri(att.Url));
                     img.MaxHeight = 200;
                     img.MaxWidth = 500;
+                    img.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Left;
 
                     ContentStackPanel.Children.Add(img);
                 }
