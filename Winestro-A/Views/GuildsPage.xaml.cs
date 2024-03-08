@@ -127,19 +127,21 @@ public sealed partial class GuildsPage : Page
             var ch = await DiscordBotService.GetTextChannelAsync((ulong)SelectedChannelId);
             if (ch is ITextChannel tch)
             {
-                var msgs = tch.GetMessagesAsync();
+                var msgs = tch.GetMessagesAsync(limit);
 
+                var ccounter = 0;
                 await foreach (var collection in msgs)
                 {
                     foreach (var msg in collection)
                     {
-                        MessagesControls.Add(new(msg));
+                        MessagesControls.Insert(ccounter * limit, new(msg));
                     }
+                    ccounter++;
                 }
             }
         }
     }
-    private async Task UpdateChannelHistory()
+    private async Task UpdateChannelHistory(int limit = 100)
     {
         List<ulong> hasmsg = new();
 
@@ -153,7 +155,7 @@ public sealed partial class GuildsPage : Page
             var ch = await DiscordBotService.GetTextChannelAsync((ulong)SelectedChannelId);
             if (ch is ITextChannel tch)
             {
-                var msgs = tch.GetMessagesAsync();
+                var msgs = tch.GetMessagesAsync(limit);
 
                 await foreach (var collection in msgs)
                 {
