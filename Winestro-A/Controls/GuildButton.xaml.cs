@@ -13,6 +13,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Winestro_A.Services;
+using Microsoft.UI.Xaml.Media.Animation;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,19 +26,20 @@ public sealed partial class GuildButton : UserControl
     {
         get; set;
     } = "ms-appx:///Assets/LogMessageCommandIcon.png";
+    public Button Button => guildButton;
 
     public GuildButton()
     {
         this.InitializeComponent();
     }
 
-    private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
+    private void GuildButton_PointerEntered(object sender, PointerRoutedEventArgs e)
     {
-        VisualStateManager.GoToState(this, "Hovered", false);
+        VisualStateManager.GoToState(this, "Hovered", true);
     }
 
-    private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
+    private void GuildButton_PointerExited(object sender, PointerRoutedEventArgs e)
     {
-        VisualStateManager.GoToState(this, "Default", false);
+        VisualStateManager.GoToState(this, "Normal", true);
     }
 }

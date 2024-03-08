@@ -8,36 +8,37 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid MinWidth="45" MinHeight="45" Margin="0" Padding="0">
-        <VisualStateManager.VisualStateGroups>
-            <VisualStateGroup x:Name="States">
-                <VisualState x:Name="Hovered">
-                    <VisualState.Setters>
-                        <Setter Target="guildButton.CornerRadius" Value="15"/>
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="Default">
-                    <VisualState.Setters>
-                        <Setter Target="guildButton.CornerRadius" Value="30"/>
-                    </VisualState.Setters>
-                </VisualState>
+    <Button BorderThickness="0" x:Name="guildButton" Padding="0" Margin="1" CornerRadius="25" PointerEntered="GuildButton_PointerEntered" PointerExited="GuildButton_PointerExited">
+        <Grid Margin="0" Padding="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <Image Grid.Column="0" Grid.Row="0" Source="{x:Bind ImageSource}" Margin="0"/>
+            <Rectangle x:Name="mask">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="Transparent" x:Name="MaskBrush"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
 
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
                 <VisualStateGroup.Transitions>
-                    <VisualTransition To="Hovered" GeneratedDuration="0:0:1">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <QuadraticEase EasingMode="EaseOut"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
-                    <VisualTransition To="Default" GeneratedDuration="0:0:1">
-                        <VisualTransition.GeneratedEasingFunction>
-                            <QuadraticEase EasingMode="EaseIn"/>
-                        </VisualTransition.GeneratedEasingFunction>
-                    </VisualTransition>
+                    <VisualTransition To="Hovered" GeneratedDuration="0:0:0.2"/>
+                    <VisualTransition To="Normal" GeneratedDuration="0:0:0.2"/>
                 </VisualStateGroup.Transitions>
+
+                <VisualState x:Name="Normal"/>
+                <VisualState x:Name="Hovered">
+                    <Storyboard>
+                        <ColorAnimation Storyboard.TargetName="MaskBrush" Storyboard.TargetProperty="Color" To="#32d4d4d4"/>
+                    </Storyboard>
+                </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Button x:Name="guildButton" CornerRadius="30" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited" Margin="0" Padding="0">
-            <Image Source="{x:Bind ImageSource}"/>
-        </Button>
-    </Grid>
+    </Button>
 </UserControl>
