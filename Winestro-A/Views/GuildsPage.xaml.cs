@@ -86,4 +86,21 @@ public sealed partial class GuildsPage : Page
                 ChannelsButtons.Add(new(channel.Name, channel.Id));
         }
     }
+
+    private async void ChannelsLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var control = (ChannelButton)ChannelsLV.SelectedItem;
+        if (control == null) return;
+
+        var channel = await DiscordBotService.GetTextChannelAsync(control.ChannelId);
+
+        if (channel != null) 
+        {
+            ChannelNameTB.Text = channel.Name;
+        }
+        else
+        {
+            ChannelNameTB.Text = "[ERROR GETTING CHANNEL NAME]";
+        }
+    }
 }

@@ -48,7 +48,7 @@
                     <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="GuildNameTB" Text="" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 </Border>
 
-                <ListView x:Name="ChannelsLV" Grid.Row="1" SelectionMode="Single" Margin="0 0 0 0" ItemsSource="{x:Bind ChannelsButtons, Mode=OneWay}">
+                <ListView SelectionChanged="ChannelsLV_SelectionChanged" x:Name="ChannelsLV" Grid.Row="1" SelectionMode="Single" Margin="0 0 0 0" ItemsSource="{x:Bind ChannelsButtons, Mode=OneWay}">
 
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
