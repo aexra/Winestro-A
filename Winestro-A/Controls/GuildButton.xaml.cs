@@ -47,7 +47,7 @@ public sealed partial class GuildButton : UserControl
         VisualStateManager.GoToState(this, "Normal", true);
     }
 
-    private async Task GuildButton_Click(object sender, RoutedEventArgs e)
+    private async void GuildButton_Click(object sender, RoutedEventArgs e)
     {
         if (Click != null) await Click(this, e);
     }

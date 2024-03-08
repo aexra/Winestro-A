@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
@@ -26,11 +27,11 @@ public partial class DiscordBotService
     }
     public static async Task Toggle()
     {
-        if (ConnectionState == Discord.ConnectionState.Connected)
+        if (ConnectionState == ConnectionState.Connected)
         {
             await Stop();
         }
-        else if (ConnectionState == Discord.ConnectionState.Disconnected)
+        else if (ConnectionState == ConnectionState.Disconnected)
         {
             await Run();
         }

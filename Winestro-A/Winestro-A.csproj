@@ -16,6 +16,7 @@
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Controls\ChannelButton.xaml" />
     <None Remove="Controls\ConsoleMessageControl.xaml" />
     <None Remove="Controls\GuildButton.xaml" />
     <None Remove="Controls\KeyValuePair.xaml" />
@@ -46,6 +47,9 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Page Update="Controls\ChannelButton.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Update="Controls\GuildButton.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

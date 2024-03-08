@@ -14,7 +14,7 @@ public sealed partial class GuildsPage : Page
         get; set;
     } = new();
 
-    public ObservableCollection<GuildButton> ChannelsButtons
+    public ObservableCollection<ChannelButton> ChannelsButtons
     {
         get; set;
     } = new();
@@ -37,6 +37,7 @@ public sealed partial class GuildsPage : Page
 
     private void FillGuildsButtons()
     {
+        GuildsButtons.Clear();
         foreach (var guild in DiscordBotService.Guilds)
         {
             GuildsButtons.Add(new GuildButton()
@@ -54,10 +55,15 @@ public sealed partial class GuildsPage : Page
     }
     private async Task FillChannelsButtons(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        var channels = await DiscordBotService.GetGuildTextChannels(((GuildButton)sender).GuildId);
+        ChannelsButtons.Clear();
+
+        var guild = ((GuildButton)sender);
+        GuildNameTB.Text = guild.Name;
+
+        var channels = await DiscordBotService.GetGuildTextChannelsAsync(guild.GuildId);
         foreach (var channel in channels)
         {
-
+            ChannelsButtons.Add(new(channel.Name, channel.Id));
         }
     }
 }

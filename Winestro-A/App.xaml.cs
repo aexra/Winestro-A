@@ -6,6 +6,7 @@ using Winestro_A.Activation;
 using Winestro_A.Contracts.Services;
 using Winestro_A.Core.Contracts.Services;
 using Winestro_A.Core.Services;
+using Winestro_A.Discord;
 using Winestro_A.Helpers;
 using Winestro_A.Models;
 using Winestro_A.Services;

@@ -9,6 +9,8 @@ using System.Reactive.Linq;
 using Winestro_A.Models;
 using Winestro_A.Helpers;
 using System.Windows.Navigation;
+using Winestro_A.Discord;
+using Discord;
 
 namespace Winestro_A.Views;
 
@@ -57,16 +59,16 @@ public sealed partial class MaestroPage : Page
 
         switch (DiscordBotService.ConnectionState)
         {
-            case Discord.ConnectionState.Connected:
+            case ConnectionState.Connected:
                 Data.RunBtnText = "Stop";
                 break;
-            case Discord.ConnectionState.Disconnected:
+            case ConnectionState.Disconnected:
                 Data.RunBtnText = "Run";
                 break;
-            case Discord.ConnectionState.Connecting:
+            case ConnectionState.Connecting:
                 Data.RunBtnText = "Connecting";
                 break;
-            case Discord.ConnectionState.Disconnecting:
+            case ConnectionState.Disconnecting:
                 Data.RunBtnText = "Disconnecting";
                 break;
             default:
