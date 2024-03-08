@@ -24,6 +24,7 @@ public partial class DiscordBotService
         }
     }
 
+    public static IGuild GetGuild(ulong guild) => _client.GetGuild(guild);
     public static List<IGuild> GetGuilds() => Guilds;
     public static async Task<List<IGuildChannel>> GetGuildChannelsAsync(IGuild guild) => (await guild.GetChannelsAsync()).ToList();
     public static async Task<List<IGuildChannel>> GetGuildChannelsAsync(ulong guild) => (await ((IGuild)_client.GetGuild(guild)).GetChannelsAsync()).ToList();

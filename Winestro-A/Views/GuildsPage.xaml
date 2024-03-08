@@ -40,11 +40,13 @@
         <Border Grid.Column="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock x:Name="GuildNameTB" Text="" Grid.Row="0"/>
+                <Border Grid.Row="0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource ButtonBackgroundThemeBrush}">
+                    <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="GuildNameTB" Text="" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                </Border>
 
                 <ListView x:Name="ChannelsLV" Grid.Row="1" SelectionMode="Single" Margin="0 0 0 0" ItemsSource="{x:Bind ChannelsButtons, Mode=OneWay}">
 

@@ -58,7 +58,7 @@ public sealed partial class GuildsPage : Page
         ChannelsButtons.Clear();
 
         var guild = ((GuildButton)sender);
-        GuildNameTB.Text = guild.Name;
+        GuildNameTB.Text = DiscordBotService.GetGuild(guild.GuildId).Name;
 
         var channels = await DiscordBotService.GetGuildTextChannelsAsync(guild.GuildId);
         foreach (var channel in channels)
