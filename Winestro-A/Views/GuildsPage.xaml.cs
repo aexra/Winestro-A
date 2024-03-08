@@ -169,7 +169,7 @@ public sealed partial class GuildsPage : Page
             }
         }
     }
-    private async Task DeselectTextChannel ()
+    private async Task DeselectTextChannel()
     {
         MessagesControls.Clear();
         SelectedChannelId = null;
