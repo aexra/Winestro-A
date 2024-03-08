@@ -96,8 +96,7 @@ public sealed partial class GuildsPage : Page
         var control = (ChannelButton)ChannelsLV.SelectedItem;
         if (control == null)
         {
-            SelectedChannelId = null;
-            await LoadSelectedChannelIfNotNull();
+            await DeselectTextChannel();
             return;
         }
 
@@ -105,58 +104,42 @@ public sealed partial class GuildsPage : Page
 
         if (channel != null) 
         {
-            if (channel.Id == SelectedChannelId)
+            if (channel.Id != SelectedChannelId)
             {
-                await UpdateSelectedChannel();
-                return;
+                SelectedChannelId = channel.Id;
+                MessagesControls.Clear();
+                await FillChannelHistory();
             }
-            SelectedChannelId = channel.Id;
-            ChannelNameTB.Text = channel.Name;
+            else
+            {
+                await UpdateChannelHistory();
+            }
         }
         else
         {
-            SelectedChannelId = null;
-            ChannelNameTB.Text = "[ERROR GETTING CHANNEL NAME]";
+            await DeselectTextChannel();
         }
-
-        await LoadSelectedChannelIfNotNull();
     }
-    private void EmptyChannelHistory()
+    private async Task FillChannelHistory(int limit = 100)
     {
-        MessagesControls.Clear();
-    }
-    private async Task FillChannelHistory(ulong channel, int limit = 100)
-    {
-        var ch = await DiscordBotService.GetTextChannelAsync(channel);
-        if (ch is ITextChannel tch)
+        if (SelectedChannelId != null)
         {
-            var msgs = tch.GetMessagesAsync();
-
-            await foreach (var collection in msgs)
+            var ch = await DiscordBotService.GetTextChannelAsync((ulong)SelectedChannelId);
+            if (ch is ITextChannel tch)
             {
-                foreach (var msg in collection)
+                var msgs = tch.GetMessagesAsync();
+
+                await foreach (var collection in msgs)
                 {
-                    MessagesControls.Add(new(msg));
+                    foreach (var msg in collection)
+                    {
+                        MessagesControls.Add(new(msg));
+                    }
                 }
             }
         }
     }
-    private async Task LoadSelectedChannelIfNotNull()
-    {
-        MessageBox.Text = string.Empty;
-        if (SelectedChannelId == null)
-        {
-            EmptyChannelHistory();
-            MessageBox.IsReadOnly = true;
-            return;
-        }
-        else
-        {
-            MessageBox.IsReadOnly = false;
-            await FillChannelHistory((ulong)SelectedChannelId);
-        }
-    }
-    private async Task UpdateSelectedChannel()
+    private async Task UpdateChannelHistory()
     {
         List<ulong> hasmsg = new();
 
@@ -177,10 +160,19 @@ public sealed partial class GuildsPage : Page
                     foreach (var msg in collection)
                     {
                         if (!hasmsg.Contains(msg.Id))
+                        {
                             MessagesControls.Add(new(msg));
+                        }
+                            
                     }
                 }
             }
         }
+    }
+    private async Task DeselectTextChannel ()
+    {
+        MessagesControls.Clear();
+        SelectedChannelId = null;
+        ChannelNameTB.Text = string.Empty;
     }
 }
