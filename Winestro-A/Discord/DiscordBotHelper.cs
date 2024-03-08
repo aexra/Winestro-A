@@ -28,5 +28,5 @@ public partial class DiscordBotService
     public static async Task<List<IGuildChannel>> GetGuildChannelsAsync(IGuild guild) => (await guild.GetChannelsAsync()).ToList();
     public static async Task<List<IGuildChannel>> GetGuildChannelsAsync(ulong guild) => (await ((IGuild)_client.GetGuild(guild)).GetChannelsAsync()).ToList();
     public static async Task<List<ITextChannel>> GetGuildTextChannelsAsync(IGuild guild) => (await guild.GetTextChannelsAsync()).ToList();
-    public static async Task<List<ITextChannel>> GetGuildTextChannelsAsync(ulong guild) => (await ((IGuild)_client.GetGuild(guild)).GetTextChannelsAsync()).ToList();
+    public static async Task<List<ITextChannel>> GetGuildTextChannelsAsync(ulong guild) => (await ((IGuild)_client.GetGuild(guild)).GetTextChannelsAsync()).Where(x => x.GetChannelType() == ChannelType.Text).ToList();
 }

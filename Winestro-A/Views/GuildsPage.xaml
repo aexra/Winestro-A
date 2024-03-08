@@ -46,18 +46,20 @@
 
                 <TextBlock x:Name="GuildNameTB" Text="" Grid.Row="0"/>
 
-                <ListView Grid.Row="1" SelectionMode="None" Margin="0 10 0 10" ItemsSource="{x:Bind ChannelsButtons, Mode=OneWay}">
+                <ListView x:Name="ChannelsLV" Grid.Row="1" SelectionMode="Single" Margin="0 10 0 10" ItemsSource="{x:Bind ChannelsButtons, Mode=OneWay}">
 
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <ItemsStackPanel ItemsUpdatingScrollMode="KeepLastItemInView" VerticalAlignment="Top" HorizontalAlignment="Center"/>
+                            <ItemsStackPanel 
+                                ItemsUpdatingScrollMode="KeepLastItemInView" 
+                                VerticalAlignment="Top" 
+                                />
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
 
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         </Style>
                     </ListView.ItemContainerStyle>
 
