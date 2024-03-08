@@ -17,28 +17,27 @@ using Winestro_A.Services;
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
-namespace Winestro_A.Controls
+namespace Winestro_A.Controls;
+
+public sealed partial class GuildButton : UserControl
 {
-    public sealed partial class GuildButton : UserControl
+    public string ImageSource
     {
-        public string ImageSource
-        {
-            get; set;
-        } = "ms-appx:///Assets/LogMessageCommandIcon.png";
+        get; set;
+    } = "ms-appx:///Assets/LogMessageCommandIcon.png";
 
-        public GuildButton()
-        {
-            this.InitializeComponent();
-        }
+    public GuildButton()
+    {
+        this.InitializeComponent();
+    }
 
-        private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
-        {
-            VisualStateManager.GoToState(this, "Hovered", false);
-        }
+    private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
+    {
+        VisualStateManager.GoToState(this, "Hovered", false);
+    }
 
-        private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
-        {
-            VisualStateManager.GoToState(this, "Default", false);
-        }
+    private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
+    {
+        VisualStateManager.GoToState(this, "Default", false);
     }
 }

@@ -13,17 +13,30 @@
             <VisualStateGroup x:Name="States">
                 <VisualState x:Name="Hovered">
                     <VisualState.Setters>
-                        <Setter Target="guildButton.CornerRadius" Value="17"/>
+                        <Setter Target="guildButton.CornerRadius" Value="15"/>
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="Default">
                     <VisualState.Setters>
-                        <Setter Target="guildButton.CornerRadius" Value="45"/>
+                        <Setter Target="guildButton.CornerRadius" Value="30"/>
                     </VisualState.Setters>
                 </VisualState>
+
+                <VisualStateGroup.Transitions>
+                    <VisualTransition To="Hovered" GeneratedDuration="0:0:1">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseOut"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                    <VisualTransition To="Default" GeneratedDuration="0:0:1">
+                        <VisualTransition.GeneratedEasingFunction>
+                            <QuadraticEase EasingMode="EaseIn"/>
+                        </VisualTransition.GeneratedEasingFunction>
+                    </VisualTransition>
+                </VisualStateGroup.Transitions>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
-        <Button x:Name="guildButton" CornerRadius="90" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited" Margin="0" Padding="0">
+        <Button x:Name="guildButton" CornerRadius="30" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited" Margin="0" Padding="0">
             <Image Source="{x:Bind ImageSource}"/>
         </Button>
     </Grid>
