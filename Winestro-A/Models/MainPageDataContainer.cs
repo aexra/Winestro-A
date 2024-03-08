@@ -17,6 +17,7 @@ public class MainPageDataContainer : INotifyPropertyChanged
     private string runTime = "0";
     private string runBtnText = "Fix me";
     private string runBtnColor = "#ffffff";
+    private bool isRunBtnEnabled = true;
 
     public string RunBtnText 
     { 
@@ -98,6 +99,18 @@ public class MainPageDataContainer : INotifyPropertyChanged
             if (value != runTime)
             {
                 runTime = value;
+                NotifyPropertyChanged();
+            }
+        }
+    }
+    public bool IsRunButtonEnabled
+    {
+        get => isRunBtnEnabled;
+        set
+        {
+            if (value != isRunBtnEnabled)
+            {
+                isRunBtnEnabled = value;
                 NotifyPropertyChanged();
             }
         }

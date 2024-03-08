@@ -60,18 +60,23 @@ public sealed partial class MaestroPage : Page
         switch (DiscordBotService.ConnectionState)
         {
             case ConnectionState.Connected:
+                Data.IsRunButtonEnabled = true;
                 Data.RunBtnText = "Stop";
                 break;
             case ConnectionState.Disconnected:
+                Data.IsRunButtonEnabled = true;
                 Data.RunBtnText = "Run";
                 break;
             case ConnectionState.Connecting:
+                Data.IsRunButtonEnabled = false;
                 Data.RunBtnText = "Connecting";
                 break;
             case ConnectionState.Disconnecting:
+                Data.IsRunButtonEnabled = false;
                 Data.RunBtnText = "Disconnecting";
                 break;
             default:
+                Data.IsRunButtonEnabled = false;
                 Data.RunBtnText = "Fix me";
                 break;
         }

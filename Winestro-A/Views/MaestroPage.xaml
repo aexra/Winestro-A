@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0">
-            <Button x:Name="RunBtn" Content="{x:Bind Data.RunBtnText, Mode=OneWay}" FontSize="24" Width="160" Click="RunBtn_Click"/>
+            <Button x:Name="RunBtn" IsEnabled="{x:Bind Data.IsRunButtonEnabled, Mode=OneWay}" Content="{x:Bind Data.RunBtnText, Mode=OneWay}" FontSize="24" Width="160" Click="RunBtn_Click"/>
             <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="160" HorizontalAlignment="left"/>
         </StackPanel>
 
