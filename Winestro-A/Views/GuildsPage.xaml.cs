@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using Discord.Rest;
 using Microsoft.UI.Xaml.Controls;
 using Winestro_A.Controls;
 using Winestro_A.Discord;
@@ -9,6 +10,8 @@ namespace Winestro_A.Views;
 
 public sealed partial class GuildsPage : Page
 {
+    public ulong SelectedGuildId { get; set; }
+
     public ObservableCollection<GuildButton> GuildsButtons
     {
         get; set;
@@ -55,15 +58,36 @@ public sealed partial class GuildsPage : Page
     }
     private async Task FillChannelsButtons(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
-        ChannelsButtons.Clear();
-
         var guild = ((GuildButton)sender);
+        if (guild.GuildId == SelectedGuildId)
+        {
+            await UpdateChannelsButtons(guild.GuildId);
+            return;
+        }
+
+        ChannelsButtons.Clear();
         GuildNameTB.Text = DiscordBotService.GetGuild(guild.GuildId).Name;
 
         var channels = await DiscordBotService.GetGuildTextChannelsAsync(guild.GuildId);
         foreach (var channel in channels)
         {
             ChannelsButtons.Add(new(channel.Name, channel.Id));
+        }
+    }
+    private async Task UpdateChannelsButtons(ulong guild)
+    {
+        var channels = await DiscordBotService.GetGuildTextChannelsAsync(guild);
+        List<ulong> channelIds = new();
+
+        foreach (var control in ChannelsButtons)
+        {
+            channelIds.Add(control.ChannelId);
+        }
+
+        foreach (var channel in channels)
+        {
+            if (!channelIds.Contains(channel.Id))
+                ChannelsButtons.Add(new(channel.Name, channel.Id));
         }
     }
 }
