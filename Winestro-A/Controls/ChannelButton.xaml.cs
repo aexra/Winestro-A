@@ -26,7 +26,7 @@ public sealed partial class ChannelButton : UserControl
     public ChannelButton(string channelName, ulong channelId)
     {
         this.InitializeComponent();
-        ChannelName = "# " + channelName;
+        ChannelName = channelName;
         ChannelId = channelId;
     }
 }
