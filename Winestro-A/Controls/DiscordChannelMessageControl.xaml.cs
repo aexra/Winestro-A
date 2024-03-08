@@ -27,6 +27,7 @@ public sealed partial class DiscordChannelMessageControl : UserControl
     public IMessage Message { get; set; }
     public string AvatarUrl { get; set; }
     public string DisplayName { get; set; }
+    public string TimeStamp { get; set; }
 
     public DiscordChannelMessageControl(IMessage msg)
     {
@@ -39,6 +40,8 @@ public sealed partial class DiscordChannelMessageControl : UserControl
         Message = msg;
         AvatarUrl = msg.Author.GetAvatarUrl();
         DisplayName = ((SocketGuildUser)msg.Author).DisplayName;
+        var localtime = msg.Timestamp.ToLocalTime();
+        TimeStamp = localtime.TimeOfDay.ToString()[..5] + ", " + localtime.Day.ToString() + "." + localtime.Month.ToString() + "." + localtime.Year.ToString();
 
         if (!string.IsNullOrWhiteSpace(msg.CleanContent))
         {

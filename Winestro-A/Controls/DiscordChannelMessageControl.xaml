@@ -24,7 +24,10 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" FlowDirection="LeftToRight" Spacing="20">
+                <TextBlock Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+                <TextBlock Text="{x:Bind TimeStamp}" Style="{StaticResource CaptionTextBlockStyle}" Opacity="0.5" VerticalAlignment="Center" FontWeight="Bold"/>
+            </StackPanel>
             <StackPanel Grid.Row="1" x:Name="ContentStackPanel"/>
         </Grid>
     </Grid>
