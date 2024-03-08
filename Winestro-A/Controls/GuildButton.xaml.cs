@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Winestro_A.Services;
 using Microsoft.UI.Xaml.Media.Animation;
+using System.Reflection.Metadata;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -22,11 +23,14 @@ namespace Winestro_A.Controls;
 
 public sealed partial class GuildButton : UserControl
 {
+    public ulong GuildId { get; set; }
     public string ImageSource
     {
         get; set;
     } = "ms-appx:///Assets/LogMessageCommandIcon.png";
     public Button Button => guildButton;
+
+    public Func<object, RoutedEventArgs, Task> Click;
 
     public GuildButton()
     {
@@ -41,5 +45,10 @@ public sealed partial class GuildButton : UserControl
     private void GuildButton_PointerExited(object sender, PointerRoutedEventArgs e)
     {
         VisualStateManager.GoToState(this, "Normal", true);
+    }
+
+    private async Task GuildButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (Click != null) await Click(this, e);
     }
 }

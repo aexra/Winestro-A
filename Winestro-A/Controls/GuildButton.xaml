@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Button BorderThickness="0" x:Name="guildButton" Padding="0" Margin="1" CornerRadius="25" PointerEntered="GuildButton_PointerEntered" PointerExited="GuildButton_PointerExited">
+    <Button Click="GuildButton_Click" BorderThickness="0" x:Name="guildButton" Padding="0" Margin="1" CornerRadius="25" PointerEntered="GuildButton_PointerEntered" PointerExited="GuildButton_PointerExited">
         <Grid Margin="0" Padding="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
