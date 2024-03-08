@@ -47,6 +47,8 @@ public sealed partial class DiscordChannelMessageControl : UserControl
                 {
                     var img = new Microsoft.UI.Xaml.Controls.Image();
                     img.Source = new BitmapImage(new Uri(att.Url));
+                    img.MaxHeight = 200;
+                    img.MaxWidth = 500;
 
                     ContentStackPanel.Children.Add(img);
                 }
