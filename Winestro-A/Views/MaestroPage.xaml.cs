@@ -35,9 +35,16 @@ public sealed partial class MaestroPage : Page
         ViewModel = App.GetService<MaestroViewModel>();
         InitializeComponent();
 
+        if (DiscordBotService.ConnectionState == ConnectionState.Connected)
+        {
+            Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", true);
+        } 
+        else
+        {
+            Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", true);
+        }
+
         UIDataSyncTimer = CreateTimer(0.1, SyncUIData, true);
-
-
 
         Data.RunBtnText = "Fix Me";
         Data.RunBtnColor = "#ffffff";
@@ -49,12 +56,12 @@ public sealed partial class MaestroPage : Page
 
         DiscordBotService.OnReadyEventListener += () => {
             DispatcherQueue.TryEnqueue(() => {
-                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", true);
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", false);
             });
         };
         DiscordBotService.OnDisconnectedEventListener += () => {
             DispatcherQueue.TryEnqueue(() => {
-                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", true);
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", false);
             });
         };
     }
