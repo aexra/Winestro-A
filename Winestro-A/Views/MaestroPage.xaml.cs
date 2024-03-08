@@ -11,6 +11,7 @@ using Winestro_A.Helpers;
 using System.Windows.Navigation;
 using Winestro_A.Discord;
 using Discord;
+using System.Windows;
 
 namespace Winestro_A.Views;
 
@@ -45,6 +46,17 @@ public sealed partial class MaestroPage : Page
         Data.PlayersActive = "0";
         Data.CurrentTime = TimeHelper.NowS();
         Data.RunTime = "0";
+
+        DiscordBotService.OnReadyEventListener += () => {
+            DispatcherQueue.TryEnqueue(() => {
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", true);
+            });
+        };
+        DiscordBotService.OnDisconnectedEventListener += () => {
+            DispatcherQueue.TryEnqueue(() => {
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", true);
+            });
+        };
     }
 
     private async void RunBtn_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)

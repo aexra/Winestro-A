@@ -9,6 +9,22 @@
     mc:Ignorable="d">
 
     <Grid x:Name="ContentArea" Margin="0 0 0 20" RowSpacing="5">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualStateGroup.Transitions>
+                    <VisualTransition To="On" GeneratedDuration="0:0:0.2"/>
+                    <VisualTransition To="Off" GeneratedDuration="0:0:0.2"/>
+                </VisualStateGroup.Transitions>
+
+                <VisualState x:Name="Off"/>
+                <VisualState x:Name="On">
+                    <Storyboard>
+                        <ColorAnimation Storyboard.TargetName="RectStatusBrush" Storyboard.TargetProperty="Color" To="LightGreen"/>
+                    </Storyboard>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="auto"/>
@@ -18,7 +34,11 @@
 
         <StackPanel Grid.Row="0">
             <Button x:Name="RunBtn" IsEnabled="{x:Bind Data.IsRunButtonEnabled, Mode=OneWay}" Content="{x:Bind Data.RunBtnText, Mode=OneWay}" FontSize="24" Width="160" Click="RunBtn_Click"/>
-            <Rectangle x:Name="StatusColoredRectangle" Height="2" Fill="red" Width="160" HorizontalAlignment="left"/>
+            <Rectangle x:Name="StatusColoredRectangle" Height="2" Width="160" HorizontalAlignment="left">
+                <Rectangle.Fill>
+                    <SolidColorBrush Color="red" x:Name="RectStatusBrush"/>
+                </Rectangle.Fill>
+            </Rectangle>
         </StackPanel>
 
         <StackPanel Grid.Row="1" Spacing="5">
