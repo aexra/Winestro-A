@@ -44,7 +44,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource ButtonBackgroundThemeBrush}">
+                <Border Grid.Row="0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource ButtonPointerOverBackgroundThemeBrush}">
                     <TextBlock HorizontalAlignment="Center" Margin="10" x:Name="GuildNameTB" Text="" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 </Border>
 
@@ -71,7 +71,36 @@
         </Border>
 
         <Border Grid.Column="2" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10">
-            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" BorderThickness="0 0 0 1" BorderBrush="{StaticResource ButtonPointerOverBackgroundThemeBrush}">
+                    <TextBlock HorizontalAlignment="Left" Margin="10" x:Name="ChannelNameTB" Text="" Style="{StaticResource SubtitleTextBlockStyle}"/>
+                </Border>
+
+                <ListView x:Name="MessagesLV" Grid.Row="1" SelectionMode="Single" Margin="0 0 0 0" ItemsSource="{x:Bind MessagesControls, Mode=OneWay}">
+
+                    <ListView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <ItemsStackPanel 
+                                ItemsUpdatingScrollMode="KeepLastItemInView" 
+                                VerticalAlignment="Top" 
+                                />  
+                        </ItemsPanelTemplate>
+                    </ListView.ItemsPanel>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Margin" Value="-5 0 -5 0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                </ListView>
+            </Grid>
         </Border>
 
         <Border Grid.Column="3" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" CornerRadius="10">

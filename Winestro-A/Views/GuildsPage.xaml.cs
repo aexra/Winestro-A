@@ -12,15 +12,9 @@ public sealed partial class GuildsPage : Page
 {
     public ulong SelectedGuildId { get; set; }
 
-    public ObservableCollection<GuildButton> GuildsButtons
-    {
-        get; set;
-    } = new();
-
-    public ObservableCollection<ChannelButton> ChannelsButtons
-    {
-        get; set;
-    } = new();
+    public ObservableCollection<GuildButton> GuildsButtons { get; set; } = new();
+    public ObservableCollection<ChannelButton> ChannelsButtons { get; set; } = new();
+    public ObservableCollection<ChannelButton> MessagesControls { get; set; } = new();
 
 
     public GuildsViewModel ViewModel
