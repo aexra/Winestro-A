@@ -65,6 +65,8 @@ public sealed partial class GuildsPage : Page
             return;
         }
 
+        SelectedGuildId = guild.GuildId;
+
         ChannelsButtons.Clear();
         GuildNameTB.Text = DiscordBotService.GetGuild(guild.GuildId).Name;
 
