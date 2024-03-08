@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Windows.ApplicationModel;
 
 namespace Winestro_A.Discord;
 
@@ -37,5 +38,11 @@ public partial class DiscordBotService
         var ch = await _client.GetChannelAsync(channel);
         if (ch is ITextChannel tch) return tch;
         else return null;
+    }
+
+    public static async Task SendTextMessageAsync(ulong channelId, string msg)
+    {
+        var channel = await GetTextChannelAsync(channelId);
+        if (channel != null) await channel.SendMessageAsync(msg);
     }
 }

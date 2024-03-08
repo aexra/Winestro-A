@@ -24,7 +24,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Text="{x:Bind Message.Author.Username}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
+            <TextBlock Grid.Row="0" Text="{x:Bind DisplayName}" Style="{StaticResource BodyStrongTextBlockStyle}"/>
             <TextBlock Grid.Row="1" Text="{x:Bind Message.CleanContent}" Style="{StaticResource BodyTextBlockStyle}"/>
         </Grid>
     </Grid>

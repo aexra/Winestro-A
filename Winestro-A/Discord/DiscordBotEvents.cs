@@ -4,12 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
 public partial class DiscordBotService
 {
+    public static Action<SocketMessage>? ChatOnMessageEventListener { get; set; }
+
     private static Task Ready()
     {
         return Task.CompletedTask;
@@ -38,6 +41,12 @@ public partial class DiscordBotService
                 LogService.Log(msg.Message, Enums.LogMessageMetaTypes.Debug);
                 break;
         }
+        return Task.CompletedTask;
+    }
+
+    private static Task MessageRecieved(SocketMessage msg)
+    {
+        ChatOnMessageEventListener?.Invoke(msg);
         return Task.CompletedTask;
     }
 }

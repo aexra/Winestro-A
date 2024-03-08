@@ -102,7 +102,7 @@
 
                 </ListView>
 
-                <TextBox Grid.Row="2" x:Name="MessageBox" IsReadOnly="True" Margin="-5 0 -5 0" TextWrapping="Wrap"/>
+                <TextBox Grid.Row="2" x:Name="MessageBox" IsReadOnly="True" Margin="-5 0 -5 0" TextWrapping="Wrap" KeyDown="MessageBox_KeyDown"/>
             </Grid>
         </Border>
 

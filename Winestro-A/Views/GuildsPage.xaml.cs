@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using System.Windows;
 using Discord;
 using Discord.Rest;
+using Discord.WebSocket;
 using Microsoft.UI.Xaml.Controls;
 using Winestro_A.Controls;
 using Winestro_A.Discord;
@@ -30,6 +31,8 @@ public sealed partial class GuildsPage : Page
     {
         ViewModel = App.GetService<GuildsViewModel>();
         InitializeComponent();
+
+        DiscordBotService.ChatOnMessageEventListener += OnMessageEvent;
 
         FillGuildsButtons();
     }
@@ -107,11 +110,13 @@ public sealed partial class GuildsPage : Page
             if (channel.Id != SelectedChannelId)
             {
                 SelectedChannelId = channel.Id;
+                MessageBox.IsReadOnly = false;
                 MessagesControls.Clear();
                 await FillChannelHistory();
             }
             else
             {
+                MessageBox.IsReadOnly = false;
                 await UpdateChannelHistory();
             }
         }
@@ -175,6 +180,28 @@ public sealed partial class GuildsPage : Page
     {
         MessagesControls.Clear();
         SelectedChannelId = null;
+        MessageBox.IsReadOnly = true;
         ChannelNameTB.Text = string.Empty;
+    }
+
+    private void OnMessageEvent(SocketMessage msg)
+    {
+        if (msg.Channel.Id == SelectedChannelId)
+        {
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                MessagesControls.Add(new(msg));
+            });
+        }
+    }
+
+    private async void MessageBox_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+    {
+        var tb = (TextBox)sender;
+        if (e.Key == Windows.System.VirtualKey.Enter && !string.IsNullOrWhiteSpace(tb.Text) && SelectedChannelId != null)
+        {
+            await DiscordBotService.SendTextMessageAsync((ulong)SelectedChannelId, tb.Text);
+            tb.Text = string.Empty;
+        }
     }
 }

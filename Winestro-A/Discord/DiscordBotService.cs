@@ -24,6 +24,7 @@ public partial class DiscordBotService
         _client.Log += Log;
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
+        _client.MessageReceived += MessageRecieved;
     }
     public static async Task Toggle()
     {
