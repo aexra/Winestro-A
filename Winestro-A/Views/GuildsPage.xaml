@@ -82,13 +82,13 @@
                     <TextBlock HorizontalAlignment="Left" Margin="10" x:Name="ChannelNameTB" Text="" Style="{StaticResource SubtitleTextBlockStyle}"/>
                 </Border>
 
-                <ListView x:Name="MessagesLV" Grid.Row="1" SelectionMode="Single" Margin="0 0 0 0" ItemsSource="{x:Bind MessagesControls, Mode=OneWay}">
+                <ListView x:Name="MessagesLV" Grid.Row="1" SelectionMode="None" Margin="0 0 0 0" ItemsSource="{x:Bind MessagesControls, Mode=OneWay}">
 
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <ItemsStackPanel 
                                 ItemsUpdatingScrollMode="KeepLastItemInView" 
-                                VerticalAlignment="Top" 
+                                VerticalAlignment="Bottom" 
                                 />  
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
@@ -96,7 +96,7 @@
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Margin" Value="-5 0 -5 0"/>
+                            <Setter Property="Margin" Value="-5 0 -5 20"/>
                         </Style>
                     </ListView.ItemContainerStyle>
 

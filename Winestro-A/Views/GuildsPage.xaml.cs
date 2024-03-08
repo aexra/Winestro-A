@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Channels;
 using System.Windows;
+using Discord;
 using Discord.Rest;
 using Microsoft.UI.Xaml.Controls;
 using Winestro_A.Controls;
@@ -16,7 +18,7 @@ public sealed partial class GuildsPage : Page
 
     public ObservableCollection<GuildButton> GuildsButtons { get; set; } = new();
     public ObservableCollection<ChannelButton> ChannelsButtons { get; set; } = new();
-    public ObservableCollection<ChannelButton> MessagesControls { get; set; } = new();
+    public ObservableCollection<DiscordChannelMessageControl> MessagesControls { get; set; } = new();
 
 
     public GuildsViewModel ViewModel
@@ -103,6 +105,11 @@ public sealed partial class GuildsPage : Page
 
         if (channel != null) 
         {
+            if (channel.Id == SelectedChannelId)
+            {
+                await UpdateSelectedChannel();
+                return;
+            }
             SelectedChannelId = channel.Id;
             ChannelNameTB.Text = channel.Name;
         }
@@ -118,9 +125,21 @@ public sealed partial class GuildsPage : Page
     {
         MessagesControls.Clear();
     }
-    private async Task FillChannelHistory(ulong channel)
+    private async Task FillChannelHistory(ulong channel, int limit = 100)
     {
-        
+        var ch = await DiscordBotService.GetTextChannelAsync(channel);
+        if (ch is ITextChannel tch)
+        {
+            var msgs = tch.GetMessagesAsync();
+
+            await foreach (var collection in msgs)
+            {
+                foreach (var msg in collection)
+                {
+                    MessagesControls.Add(new(msg));
+                }
+            }
+        }
     }
     private async Task LoadSelectedChannelIfNotNull()
     {
@@ -135,6 +154,33 @@ public sealed partial class GuildsPage : Page
         {
             MessageBox.IsReadOnly = false;
             await FillChannelHistory((ulong)SelectedChannelId);
+        }
+    }
+    private async Task UpdateSelectedChannel()
+    {
+        List<ulong> hasmsg = new();
+
+        foreach (var control in MessagesControls)
+        {
+            hasmsg.Add(control.Message.Id);
+        }
+
+        if (SelectedChannelId != null)
+        {
+            var ch = await DiscordBotService.GetTextChannelAsync((ulong)SelectedChannelId);
+            if (ch is ITextChannel tch)
+            {
+                var msgs = tch.GetMessagesAsync();
+
+                await foreach (var collection in msgs)
+                {
+                    foreach (var msg in collection)
+                    {
+                        if (!hasmsg.Contains(msg.Id))
+                            MessagesControls.Add(new(msg));
+                    }
+                }
+            }
         }
     }
 }
