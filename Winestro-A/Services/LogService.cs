@@ -26,13 +26,25 @@ public class LogService
     {
         TryLog(msg, LogMessageTypes.Info, meta);
     }
+    public static void Log(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    {
+        TryLog(obj.ToString(), LogMessageTypes.Info, meta);
+    }
     public static void Warning(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
     {
         TryLog(msg, LogMessageTypes.Warning, meta);
     }
+    public static void Warning(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    {
+        TryLog(obj.ToString(), LogMessageTypes.Warning, meta);
+    }
     public static void Error(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
     {
         TryLog(msg, LogMessageTypes.Error, meta);
+    }
+    public static void Error(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    {
+        TryLog(obj.ToString(), LogMessageTypes.Error, meta);
     }
     public static void ForceUpdateControlsCollections()
     {

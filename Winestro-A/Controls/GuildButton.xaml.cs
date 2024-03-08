@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using Winestro_A.Services;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -32,12 +33,12 @@ namespace Winestro_A.Controls
 
         private void Button_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            sbOut.Begin();
+            VisualStateManager.GoToState(this, "Hovered", false);
         }
 
         private void Button_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            sbIn.Begin();
+            VisualStateManager.GoToState(this, "Default", false);
         }
     }
 }

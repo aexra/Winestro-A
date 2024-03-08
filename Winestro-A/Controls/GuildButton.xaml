@@ -8,29 +8,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <UserControl.Resources>
-        <Storyboard x:Name="sbOut">
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="guildButton" Storyboard.TargetProperty="CornerRadius">
-                <ObjectAnimationUsingKeyFrames.KeyFrames>
-                    <DiscreteObjectKeyFrame KeyTime="0:0:0">
-                        <DiscreteObjectKeyFrame.Value>
-                            <CornerRadius BottomLeft="30" BottomRight="30" TopLeft="30" TopRight="30"/>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                    <DiscreteObjectKeyFrame KeyTime="0:0:1">
-                        <DiscreteObjectKeyFrame.Value>
-                            <CornerRadius BottomLeft="13" BottomRight="13" TopLeft="13" TopRight="13"/>
-                        </DiscreteObjectKeyFrame.Value>
-                    </DiscreteObjectKeyFrame>
-                </ObjectAnimationUsingKeyFrames.KeyFrames>
-            </ObjectAnimationUsingKeyFrames>
-        </Storyboard>
-        <Storyboard x:Name="sbIn">
-            
-        </Storyboard>
-    </UserControl.Resources>
-
     <Grid MinWidth="45" MinHeight="45" Margin="0" Padding="0">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="States">
+                <VisualState x:Name="Hovered">
+                    <VisualState.Setters>
+                        <Setter Target="guildButton.CornerRadius" Value="17"/>
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="Default">
+                    <VisualState.Setters>
+                        <Setter Target="guildButton.CornerRadius" Value="45"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Button x:Name="guildButton" CornerRadius="90" PointerEntered="Button_PointerEntered" PointerExited="Button_PointerExited" Margin="0" Padding="0">
             <Image Source="{x:Bind ImageSource}"/>
         </Button>
