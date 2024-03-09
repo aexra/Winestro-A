@@ -11,6 +11,7 @@ using Windows.ApplicationModel.UserDataTasks.DataProvider;
 using Windows.Storage;
 using Winestro_A.Attributes;
 using Winestro_A.Controls;
+using Winestro_A.Enums;
 using Winestro_A.Structures;
 
 namespace Winestro_A.Services;
@@ -30,13 +31,13 @@ public class IntegratedConsoleService
     public static bool TryRun(string promt, out ConsoleCommandResult result)
     {
         ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
-        result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+        result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
 
         var parseResult = TryParse(promt, out var cmd, out var error);
 
         if (!parseResult)
         {
-            result = new ConsoleCommandResult() { OutMessage = (error ??= "Command parsing unhandled error"), Success=false, Type = Enums.ConsoleMessageTypes.Fail };
+            result = new ConsoleCommandResult() { OutMessage = (error ??= "Command parsing unhandled error"), Success = false, Type = Enums.ConsoleMessageTypes.Fail };
         }
         else
         {
@@ -56,7 +57,7 @@ public class IntegratedConsoleService
                     {
                         if (attr is ICCommandAttribute cattr)
                         {
-                            List<string> names = new List<string>{ cattr.Name.ToLower() };
+                            List<string> names = new List<string> { cattr.Name.ToLower() };
                             if (cattr.Aliases != null)
                             {
                                 foreach (var alias in cattr.Aliases)
@@ -82,30 +83,16 @@ public class IntegratedConsoleService
 
                 if (commandMethod == null)
                 {
-                    result = new ConsoleCommandResult() { OutMessage=$"Command [{input.Name}] not found", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
+                    result = new ConsoleCommandResult() { OutMessage = $"Command [{input.Name}] not found", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
                 }
                 else
                 {
-                    if (input.Args.Count() != commandInfo.nArgs && commandInfo.nArgs != -1)
+                    if (input.Args.Count() < commandInfo.RequiredArgs)
                     {
-                        result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected {commandInfo.nArgs} positional arguments, but {input.Args.Count()} were given", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+                        result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected {commandInfo.RequiredArgs} positional arguments, but {input.Args.Count()} were given", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
                     }
                     else
                     {
-                        if (commandInfo.nArgs == -1)
-                        {
-                            var logarg = string.Join(" ", input.Args);
-                            input.Args.Clear();
-                            input.Args.Add(logarg);
-
-                            if (string.IsNullOrWhiteSpace(logarg))
-                            {
-                                result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected 1 positional argument, but 0 were given", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
-                                ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
-                                return false;
-                            }
-                        }
-
                         var goodKwargs = true;
                         var strangeKey = "What?";
                         foreach (var key in input.Kwargs.Keys)
@@ -119,13 +106,13 @@ public class IntegratedConsoleService
 
                         if (!goodKwargs)
                         {
-                            result = new ConsoleCommandResult() { OutMessage = $"Keyword arguments exception. Unexpected argument key: [{strangeKey}]", Success=false, Type=Enums.ConsoleMessageTypes.Fail };
+                            result = new ConsoleCommandResult() { OutMessage = $"Keyword arguments exception. Unexpected argument key: [{strangeKey}]", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
                         }
                         else
                         {
                             if (commandMethod != null)
                             {
-                                result = commandMethod(new ConsoleCommandContext() { Args=input.Args.ToArray(), Kwargs=input.Kwargs });
+                                result = commandMethod(new ConsoleCommandContext() { Args = input.Args.ToArray(), Kwargs = input.Kwargs });
                             }
                         }
                     }
@@ -225,19 +212,90 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("log", nArgs = -1)]
+    [ICCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
     private static ConsoleCommandResult Log(ConsoleCommandContext ctx)
     {
-        LogService.Log(ctx.Args[0], Enums.LogMessageMetaTypes.Debug);
-        return new ConsoleCommandResult()
+        LogMessageTypes? type = null;
+        LogMessageMetaTypes? meta = null;
+
+        if (ctx.Kwargs.ContainsKey("type"))
         {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = "Logged to DEBUG log tab"
-        };
+            switch (ctx.Kwargs["type"])
+            {
+                case "info":
+                    type = LogMessageTypes.Info;
+                    break;
+                case "warning":
+                    type = LogMessageTypes.Warning;
+                    break;
+                case "error":
+                    type = LogMessageTypes.Error;
+                    break;
+                default:
+                    return new ConsoleCommandResult()
+                    {
+                        Success = false,
+                        Type = Enums.ConsoleMessageTypes.Fail,
+                        OutMessage = "Wrong type argument. Available args: [info, warning, error]"
+                    };
+            }
+        }
+        if (ctx.Kwargs.ContainsKey("meta"))
+        {
+            switch (ctx.Kwargs["meta"])
+            {
+                case "default":
+                    meta = LogMessageMetaTypes.Default;
+                    break;
+                case "music":
+                    meta = LogMessageMetaTypes.Music;
+                    break;
+                case "misc":
+                    meta = LogMessageMetaTypes.Misc;
+                    break;
+                case "debug":
+                    meta = LogMessageMetaTypes.Debug;
+                    break;
+                default:
+                    return new ConsoleCommandResult()
+                    {
+                        Success = false,
+                        Type = Enums.ConsoleMessageTypes.Fail,
+                        OutMessage = "Wrong meta-type argument. Available args: [music, misc, debug]"
+                    };
+            }
+        }
+
+        switch (type)
+        {
+            case LogMessageTypes.Warning:
+                LogService.Warning(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+                return new ConsoleCommandResult()
+                {
+                    Success = true,
+                    Type = Enums.ConsoleMessageTypes.Ok,
+                    OutMessage = $"Reported warning to {meta} log tab"
+                };
+            case LogMessageTypes.Error:
+                LogService.Error(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+                return new ConsoleCommandResult()
+                {
+                    Success = true,
+                    Type = Enums.ConsoleMessageTypes.Ok,
+                    OutMessage = $"Reported error to {meta} log tab"
+                };
+            default:
+                LogService.Log(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+                return new ConsoleCommandResult()
+                {
+                    Success = true,
+                    Type = Enums.ConsoleMessageTypes.Ok,
+                    OutMessage = $"Logged to {meta} log tab"
+                };
+        }
     }
 
-    [ICCommand("setadd", nArgs=2)]
+    [ICCommand("setadd", RequiredArgs = 2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
@@ -249,7 +307,7 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("setdel", nArgs = 1)]
+    [ICCommand("setdel", RequiredArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);

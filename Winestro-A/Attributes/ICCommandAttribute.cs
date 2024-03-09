@@ -10,7 +10,7 @@ namespace Winestro_A.Attributes;
 class ICCommandAttribute : Attribute
 {
     public string Name { get; }
-    public int nArgs { get; set; } = 0;
+    public int RequiredArgs { get; set; } = 0;
     public string[]? KwargsKeys { get; set; } = null;
     public string[]? Aliases { get; set; } = null;
 
