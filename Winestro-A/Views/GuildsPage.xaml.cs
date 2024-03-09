@@ -200,8 +200,9 @@ public sealed partial class GuildsPage : Page
         var tb = (TextBox)sender;
         if (e.Key == Windows.System.VirtualKey.Enter && !string.IsNullOrWhiteSpace(tb.Text) && SelectedChannelId != null)
         {
+            var msg = tb.Text;
             tb.Text = string.Empty;
-            await DiscordBotService.SendTextMessageAsync((ulong)SelectedChannelId, tb.Text);
+            await DiscordBotService.SendTextMessageAsync((ulong)SelectedChannelId, msg);
         }
     }
 }
