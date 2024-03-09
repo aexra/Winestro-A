@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,95 +34,16 @@ public class IntegratedConsoleService
         ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
         result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
 
-        var parseResult = TryParse(promt, out var cmd, out var error);
-
-        if (!parseResult)
+        ICCommandAttribute? attr;
+        if (!IsCommandExist(promt, out attr))
         {
-            result = new ConsoleCommandResult() { OutMessage = (error ??= "Command parsing unhandled error"), Success = false, Type = Enums.ConsoleMessageTypes.Fail };
-        }
-        else
-        {
-            if (cmd != null)
-            {
-                var input = cmd.Value;
-                input.Name = input.Name.ToLower();
-                Func<ConsoleCommandContext, ConsoleCommandResult>? commandMethod = null;
-                ICCommandAttribute? commandInfo = null;
-
-                foreach (var command in CommandsList)
-                {
-                    var attributes = command.GetMethodInfo().GetCustomAttributes();
-
-                    var foundCommand = false;
-                    foreach (Attribute attr in attributes)
-                    {
-                        if (attr is ICCommandAttribute cattr)
-                        {
-                            List<string> names = new List<string> { cattr.Name.ToLower() };
-                            if (cattr.Aliases != null)
-                            {
-                                foreach (var alias in cattr.Aliases)
-                                {
-                                    names.Add(alias.ToLower());
-                                }
-                            }
-                            if (names.Contains(input.Name))
-                            {
-                                foundCommand = true;
-                                commandMethod = command;
-                                commandInfo = cattr;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (foundCommand)
-                    {
-                        break;
-                    }
-                }
-
-                if (commandMethod == null)
-                {
-                    result = new ConsoleCommandResult() { OutMessage = $"Command [{input.Name}] not found", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
-                }
-                else
-                {
-                    if (input.Args.Count() < commandInfo.RequiredArgs)
-                    {
-                        result = new ConsoleCommandResult() { OutMessage = $"Arguments exception. Expected {commandInfo.RequiredArgs} positional arguments, but {input.Args.Count()} were given", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
-                    }
-                    else
-                    {
-                        var goodKwargs = true;
-                        var strangeKey = "What?";
-                        foreach (var key in input.Kwargs.Keys)
-                        {
-                            if (commandInfo.KwargsKeys == null || !commandInfo.KwargsKeys.Contains(key))
-                            {
-                                goodKwargs = false;
-                                strangeKey = key;
-                            }
-                        }
-
-                        if (!goodKwargs)
-                        {
-                            result = new ConsoleCommandResult() { OutMessage = $"Keyword arguments exception. Unexpected argument key: [{strangeKey}]", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
-                        }
-                        else
-                        {
-                            if (commandMethod != null)
-                            {
-                                result = commandMethod(new ConsoleCommandContext() { Args = input.Args.ToArray(), Kwargs = input.Kwargs });
-                            }
-                        }
-                    }
-                }
-            }
+            ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Fail, Text = "Command not found" });
+            return false;
         }
 
+        result.OutMessage = "COMMAND EXISTS!!!";
 
-        ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Ok, Text = result.OutMessage ??= string.Empty });
         return result.Success;
     }
     private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
@@ -193,6 +115,47 @@ public class IntegratedConsoleService
         }
 
         return result;
+    }
+    private static bool IsCommandExist(string promt, out ICCommandAttribute? attr)
+    {
+        attr = null;
+
+        var splitted = promt.Split(' ');
+
+        for (var name_len = splitted.Length; name_len > 0; name_len--)
+        {
+            var test_name = splitted[..name_len];
+            if (IsCommandExistFlat(string.Join(" ", test_name), out var cattr))
+            {
+                attr = cattr;
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+    private static bool IsCommandExistFlat(string promt, out ICCommandAttribute? cmdattr)
+    {
+        cmdattr = null;
+        foreach (var command in CommandsList)
+        {
+            var attributes = command.GetMethodInfo().GetCustomAttributes();
+
+            foreach (Attribute attr in attributes)
+            {
+                if (attr is ICCommandAttribute cattr)
+                {
+                    if (cattr.IsNameEqual(promt))
+                    {
+                        cmdattr = cattr;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     // HERE COMMANDS GO
