@@ -22,9 +22,7 @@ public class IntegratedConsoleService
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
-        Test1,
-        Test0,
-        Test2,
+        Test,
         Log,
         ShowSettings,
         CreateSetting,
@@ -232,36 +230,14 @@ public class IntegratedConsoleService
     // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
-    [ICCommand("test", RequiredArgs = 1)]
-    private static ConsoleCommandResult Test1(ConsoleCommandContext ctx)
-    {
-        return new ConsoleCommandResult()
-        {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world! 1"
-        };
-    }
-
     [ICCommand("test")]
-    private static ConsoleCommandResult Test0(ConsoleCommandContext ctx)
+    private static ConsoleCommandResult Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult()
         {
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world! 0"
-        };
-    }
-
-    [ICCommand("test", RequiredArgs = 2)]
-    private static ConsoleCommandResult Test2(ConsoleCommandContext ctx)
-    {
-        return new ConsoleCommandResult()
-        {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world! 2"
+            OutMessage = $"Hello, world!"
         };
     }
 
