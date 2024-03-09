@@ -8,6 +8,6 @@ namespace Winestro_A.Structures;
 
 public struct ConsoleCommandContext
 {
-    public string[] Args;
+    public List<string> Args;
     public Dictionary<string, string> Kwargs;
 }

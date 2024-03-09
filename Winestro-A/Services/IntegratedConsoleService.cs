@@ -34,62 +34,47 @@ public class IntegratedConsoleService
         ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
         result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
 
-        ICCommandAttribute? attr;
-        if (!IsCommandExist(promt, out attr))
+        Func<ConsoleCommandContext, ConsoleCommandResult>? method;
+        ConsoleCommandContext? ctx;
+        var validationResult = IsCommandValid(promt, out ctx, out method);
+        if (!validationResult.Success)
         {
-            ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Fail, Text = "Command not found" });
+            ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Fail, Text = validationResult.ErrorMessage });
             return false;
         }
 
-        result.OutMessage = "COMMAND EXISTS!!!";
+        var r = method?.Invoke(ctx.Value);
+        result = r.Value;
 
-        ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Ok, Text = result.OutMessage ??= string.Empty });
+        ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
         return result.Success;
     }
-    private static bool TryParse(string promt, out ConsoleCommand? cmd, out string? errorMesage)
+    private static bool TryParse(string[] promt, out ConsoleCommandContext? ctx, out string? errorMessage)
     {
-        // Заранее присвоим cmd и errorMessage null 
-        cmd = null;
-        errorMesage = null;
+        ctx = null;
+        errorMessage = null;
 
-        // Если строка пустая или состоит только из пробелов, то вернем 0
-        if (String.IsNullOrWhiteSpace(promt))
+        List<string> Args = new();
+        Dictionary<string, string> Kwargs = new();
+
+        foreach (var arg in promt)
         {
-            errorMesage = "Empty or blank command.\nHow the fu...??";
-            return false;
-        }
-
-        // Разобьем всю строку на куски
-        var parts = promt.Split(' ');
-
-        // Проверим является ли первое слово названием команды (только латинские буквы)
-        if (!IsWord(parts[0]))
-        {
-            errorMesage = $"Wrong command name [{parts[0]}]";
-            return false;
-        }
-
-        // Если является, создадим пустую команду с этим именем
-        cmd = new ConsoleCommand()
-        {
-            Name = parts[0],
-            Args = new List<string>(),
-            Kwargs = new Dictionary<string, string>()
-        };
-
-        // Пройдем по всем оставшимся частям
-        // Проверим чем он является и засунем в нужный контейнер
-        for (var i = 1; i < parts.Length; i++)
-        {
-            if (IsKwarg(parts[i], out var key, out var value))
+            if (IsWord(arg))
             {
-                cmd.Value.Kwargs.Add(key, value);
+                Args.Add(arg);
+            }
+            else if (IsKwarg(arg, out var key, out var value))
+            {
+                Kwargs.Add(key, value);
             }
             else
             {
-                cmd.Value.Args.Add(parts[i]);
+                errorMessage = $"Unexpected argument: {arg}";
+                return false;
             }
         }
+
+        ctx = new ConsoleCommandContext() { Args=Args, Kwargs=Kwargs };
 
         return true;
     }
@@ -116,16 +101,17 @@ public class IntegratedConsoleService
 
         return result;
     }
-    private static bool IsCommandExist(string promt, out ICCommandAttribute? attr)
+    private static bool IsCommandExist(string promt, out ICCommandAttribute? attr, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
     {
         attr = null;
+        method = null;
 
         var splitted = promt.Split(' ');
 
         for (var name_len = splitted.Length; name_len > 0; name_len--)
         {
             var test_name = splitted[..name_len];
-            if (IsCommandExistFlat(string.Join(" ", test_name), out var cattr))
+            if (IsCommandExistFlat(string.Join(" ", test_name), out var cattr, out method))
             {
                 attr = cattr;
                 return true;
@@ -135,9 +121,10 @@ public class IntegratedConsoleService
 
         return false;
     }
-    private static bool IsCommandExistFlat(string promt, out ICCommandAttribute? cmdattr)
+    private static bool IsCommandExistFlat(string promt, out ICCommandAttribute? cmdattr, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
     {
         cmdattr = null;
+        method = null;
         foreach (var command in CommandsList)
         {
             var attributes = command.GetMethodInfo().GetCustomAttributes();
@@ -149,6 +136,7 @@ public class IntegratedConsoleService
                     if (cattr.IsNameEqual(promt))
                     {
                         cmdattr = cattr;
+                        method = command;
                         return true;
                     }
                 }
@@ -156,6 +144,52 @@ public class IntegratedConsoleService
         }
 
         return false;
+    }
+    private static ConsoleCommandValidationInfo IsCommandValid(string promt, out ConsoleCommandContext? promt_ctx, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
+    {
+        method = null;
+        promt_ctx = null;
+
+        if (IsCommandExist(promt, out var attr, out var tmethod))
+        {
+            var arguments = promt.Split(' ')[attr.Name.Split(' ').Length..];
+            if (TryParse(arguments, out var tctx, out var errorMsg))
+            {
+                if (tctx.Value.Args.Count() < attr.RequiredArgs)
+                {
+                    return new() { 
+                        Success = false, 
+                        ErrorMessage=$"Args error: expected {attr.RequiredArgs} positional arguments, but {tctx.Value.Args.Count()} were given" 
+                    };
+                }
+                
+                foreach (var kwarg in tctx.Value.Kwargs.Keys)
+                {
+                    if (!attr.KwargsKeys.Contains(kwarg))
+                    {
+                        return new()
+                        {
+                            Success = false,
+                            ErrorMessage = $"Key-word args error: unexpected key-word argument: {kwarg}"
+                        };
+                    }
+                }
+
+                promt_ctx = tctx;
+                method = tmethod;
+            }
+            else
+            {
+                return new() {
+                    Success=false,
+                    ErrorMessage=errorMsg??"Unhandled exception"
+                };
+            }
+        }
+        
+        return new() {
+            Success = true
+        };
     }
 
     // HERE COMMANDS GO
