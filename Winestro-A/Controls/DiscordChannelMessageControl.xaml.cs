@@ -13,16 +13,18 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Discord;
+using Color = Windows.UI.Color;
 using Discord.WebSocket;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Windows;
+using System.Windows.Controls;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace Winestro_A.Controls;
 
-public sealed partial class DiscordChannelMessageControl : UserControl
+public sealed partial class DiscordChannelMessageControl : Microsoft.UI.Xaml.Controls.UserControl
 {
     public IMessage Message { get; set; }
     public string AvatarUrl { get; set; }
@@ -43,9 +45,27 @@ public sealed partial class DiscordChannelMessageControl : UserControl
         var localtime = msg.Timestamp.ToLocalTime();
         TimeStamp = localtime.TimeOfDay.ToString()[..5] + ", " + localtime.Day.ToString() + "." + localtime.Month.ToString() + "." + localtime.Year.ToString();
 
+        //var roleIndex = ((SocketGuildUser)msg.Author).Hierarchy;
+        //var guild = ((SocketGuildChannel)msg.Channel).Guild;
+        //SocketRole role = guild.Roles.ElementAt(0);
+
+        //if (roleIndex == int.MaxValue)
+        //{
+        //    roleIndex = guild.Roles.Count() - 1;
+        //}
+        //foreach (var rolel in guild.Roles.ToArray())
+        //{
+        //    if (rolel.Position == roleIndex)
+        //    {
+        //        role = rolel;
+        //    }
+        //}
+
+        //NameTB.Foreground = new SolidColorBrush(Color.FromArgb(255, role.Color.R, role.Color.G, role.Color.B));
+
         if (!string.IsNullOrWhiteSpace(msg.CleanContent))
         {
-            var tb = new TextBlock();
+            var tb = new Microsoft.UI.Xaml.Controls.TextBlock();
             tb.Text = msg.CleanContent;
 
             ContentStackPanel.Children.Add(tb);
