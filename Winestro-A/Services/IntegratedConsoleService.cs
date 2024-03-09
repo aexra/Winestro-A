@@ -59,9 +59,10 @@ public class IntegratedConsoleService
 
         foreach (var arg in promt)
         {
-            if (IsWord(arg))
+            if (string.IsNullOrWhiteSpace(arg))
             {
-                Args.Add(arg);
+                errorMessage = $"Unexpected argument: {arg}";
+                return false;
             }
             else if (IsKwarg(arg, out var key, out var value))
             {
@@ -69,8 +70,7 @@ public class IntegratedConsoleService
             }
             else
             {
-                errorMessage = $"Unexpected argument: {arg}";
-                return false;
+                Args.Add(arg);
             }
         }
 
@@ -292,7 +292,25 @@ public class IntegratedConsoleService
         }
     }
 
-    [ICCommand("setadd", RequiredArgs = 2)]
+    [ICCommand("conf")]
+    private static ConsoleCommandResult ShowSettings(ConsoleCommandContext ctx)
+    {
+        var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
+        var ret = count > 0 ? $"Application settings: [{count}]" : "No settings detected";
+        var counter = 0;
+        foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
+        {
+            ret += $"\n{++counter}. {key}={ApplicationData.Current.LocalSettings.Values[key]}";
+        }
+        return new ConsoleCommandResult()
+        {
+            OutMessage = ret,
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Info
+        };
+    }
+
+    [ICCommand("conf add", RequiredArgs = 2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
@@ -304,7 +322,7 @@ public class IntegratedConsoleService
         };
     }
 
-    [ICCommand("setdel", RequiredArgs = 1)]
+    [ICCommand("conf del", RequiredArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);
@@ -313,24 +331,6 @@ public class IntegratedConsoleService
             Success = ok,
             Type = ok? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail,
             OutMessage = ok? $"Removed setting [{ctx.Args[0]}]" : $"Failed removing setting [{ctx.Args[0]}]"
-        };
-    }
-
-    [ICCommand("sets")]
-    private static ConsoleCommandResult ShowSettings(ConsoleCommandContext ctx)
-    {
-        var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
-        var ret = count > 0? $"Application settings: [{count}]" : "No settings detected";
-        var counter = 0;
-        foreach (var key in ApplicationData.Current.LocalSettings.Values.Keys)
-        {
-            ret += $"\n{++counter}. {key}={ApplicationData.Current.LocalSettings.Values[key]}";
-        }
-        return new ConsoleCommandResult()
-        {
-            OutMessage=ret,
-            Success=true,
-            Type=Enums.ConsoleMessageTypes.Info
         };
     }
 }
