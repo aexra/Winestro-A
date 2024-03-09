@@ -12,6 +12,7 @@ using Windows.ApplicationModel.UserDataTasks.DataProvider;
 using Windows.Storage;
 using Winestro_A.Attributes;
 using Winestro_A.Controls;
+using Winestro_A.Discord;
 using Winestro_A.Enums;
 using Winestro_A.Structures;
 
@@ -27,6 +28,8 @@ public class IntegratedConsoleService
         ShowSettings,
         CreateSetting,
         RemoveSetting,
+        BotRun,
+        BotStop
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -88,6 +91,7 @@ public class IntegratedConsoleService
         var splitted_promt = promt.Split(' ');
         var depth = 1;
         var finalName = string.Empty;
+        var finalArgs = new string[0];
 
         while (depth <= splitted_promt.Length)
         {
@@ -95,13 +99,10 @@ public class IntegratedConsoleService
             if (TryGetCommandByName(name, out var attr).Success)
             {
                 finalName = name;
+                finalArgs = splitted_promt[depth..];
                 cattr = attr;
-                depth++;
             }
-            else
-            {
-                break;
-            }
+            depth++;
         }
 
         if (finalName == string.Empty)
@@ -109,7 +110,7 @@ public class IntegratedConsoleService
             return new(false, "Cannot find command");
         }
 
-        var overloadSearchResult = TryGetAppropriateCommandOverload(finalName, splitted_promt[(depth-1)..], out method, out ctx);
+        var overloadSearchResult = TryGetAppropriateCommandOverload(finalName, finalArgs, out method, out ctx);
         if (overloadSearchResult.Success)
         {
             return new(true);
@@ -233,12 +234,7 @@ public class IntegratedConsoleService
     [ICCommand("test")]
     private static ConsoleCommandResult Test(ConsoleCommandContext ctx)
     {
-        return new ConsoleCommandResult()
-        {
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world!"
-        };
+        return new ConsoleCommandResult($"Hello, world!");
     }
 
     [ICCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
@@ -334,35 +330,42 @@ public class IntegratedConsoleService
         {
             ret += $"\n{++counter}. {key}={ApplicationData.Current.LocalSettings.Values[key]}";
         }
-        return new ConsoleCommandResult()
-        {
-            OutMessage = ret,
-            Success = true,
-            Type = Enums.ConsoleMessageTypes.Info
-        };
+        return new ConsoleCommandResult(ret, true, ConsoleMessageTypes.Info);
     }
 
     [ICCommand("conf add", RequiredArgs = 2)]
     private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
-        return new ConsoleCommandResult()
-        {
-            Success = ok,
-            Type = ok? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail,
-            OutMessage = ok? $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]" : $"Failed creating setting [{ctx.Args[0]}={ctx.Args[1]}]"
-        };
+        return new ConsoleCommandResult(
+            ok ? $"Created setting [{ctx.Args[0]}={ctx.Args[1]}]" : $"Failed creating setting [{ctx.Args[0]}={ctx.Args[1]}]",
+            ok,
+            ok ? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail
+        );
     }
 
     [ICCommand("conf del", RequiredArgs = 1)]
     private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);
-        return new ConsoleCommandResult()
-        {
-            Success = ok,
-            Type = ok? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail,
-            OutMessage = ok? $"Removed setting [{ctx.Args[0]}]" : $"Failed removing setting [{ctx.Args[0]}]"
-        };
+        return new ConsoleCommandResult(
+            ok ? $"Removed setting [{ctx.Args[0]}]" : $"Failed removing setting [{ctx.Args[0]}]",
+            ok,
+            ok ? Enums.ConsoleMessageTypes.Ok : Enums.ConsoleMessageTypes.Fail
+        );
+    }
+
+    [ICCommand("bot run")]
+    private static ConsoleCommandResult BotRun(ConsoleCommandContext ctx)
+    {
+        Task.Run(DiscordBotService.Run);
+        return new ConsoleCommandResult($"Launching bot...");
+    }
+
+    [ICCommand("bot stop")]
+    private static ConsoleCommandResult BotStop(ConsoleCommandContext ctx)
+    {
+        Task.Run(DiscordBotService.Stop);
+        return new ConsoleCommandResult($"Stopping bot...");
     }
 }
