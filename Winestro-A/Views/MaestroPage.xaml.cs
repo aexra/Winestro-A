@@ -56,12 +56,12 @@ public sealed partial class MaestroPage : Page
 
         DiscordBotService.OnReadyEventListener += () => {
             DispatcherQueue.TryEnqueue(() => {
-                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", false);
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "On", true);
             });
         };
         DiscordBotService.OnDisconnectedEventListener += () => {
             DispatcherQueue.TryEnqueue(() => {
-                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", false);
+                Microsoft.UI.Xaml.VisualStateManager.GoToState(this, "Off", true);
             });
         };
     }
