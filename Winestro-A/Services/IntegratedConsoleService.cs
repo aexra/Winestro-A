@@ -22,7 +22,9 @@ public class IntegratedConsoleService
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
     {
-        Test,
+        Test1,
+        Test0,
+        Test2,
         Log,
         ShowSettings,
         CreateSetting,
@@ -36,47 +38,21 @@ public class IntegratedConsoleService
 
         Func<ConsoleCommandContext, ConsoleCommandResult>? method;
         ConsoleCommandContext? ctx;
-        var validationResult = IsCommandValid(promt, out ctx, out method);
-        if (!validationResult.Success)
-        {
-            ConsoleHistory.Add(new ConsoleMessageControl() { Type = ConsoleMessageTypes.Fail, Text = validationResult.ErrorMessage });
-            return false;
-        }
 
-        var r = method?.Invoke(ctx.Value);
-        result = r.Value;
+        var r = TryGetAppropriateCommand(promt, out method, out ctx);
+        if (r.Success)
+        {
+            result = method.Invoke((ConsoleCommandContext)ctx);
+        }
+        else
+        {
+            result.Success = r.Success;
+            result.OutMessage = r.Message;
+            result.Type = ConsoleMessageTypes.Fail;
+        }
 
         ConsoleHistory.Add(new ConsoleMessageControl() { Type = result.Type, Text = result.OutMessage ??= string.Empty });
         return result.Success;
-    }
-    private static bool TryParse(string[] promt, out ConsoleCommandContext? ctx, out string? errorMessage)
-    {
-        ctx = null;
-        errorMessage = null;
-
-        List<string> Args = new();
-        Dictionary<string, string> Kwargs = new();
-
-        foreach (var arg in promt)
-        {
-            if (string.IsNullOrWhiteSpace(arg))
-            {
-                errorMessage = $"Unexpected argument: {arg}";
-                return false;
-            }
-            else if (IsKwarg(arg, out var key, out var value))
-            {
-                Kwargs.Add(key, value);
-            }
-            else
-            {
-                Args.Add(arg);
-            }
-        }
-
-        ctx = new ConsoleCommandContext() { Args=Args, Kwargs=Kwargs };
-
-        return true;
     }
 
     private static bool IsWord(string promt)
@@ -101,111 +77,191 @@ public class IntegratedConsoleService
 
         return result;
     }
-    private static bool IsCommandExist(string promt, out ICCommandAttribute? attr, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
+    private static ResultManifest TryGetAppropriateCommand(string promt, out Func<ConsoleCommandContext, ConsoleCommandResult>? method, out ConsoleCommandContext? ctx)
     {
-        attr = null;
         method = null;
-
-        var splitted = promt.Split(' ');
-
-        for (var name_len = splitted.Length; name_len > 0; name_len--)
+        ctx = null;
+        ICCommandAttribute? cattr = null;
+        if (string.IsNullOrWhiteSpace(promt))
         {
-            var test_name = splitted[..name_len];
-            if (IsCommandExistFlat(string.Join(" ", test_name), out var cattr, out method))
-            {
-                attr = cattr;
-                return true;
-            }
-
+            return new(false, "The command promt is empty");
         }
 
-        return false;
-    }
-    private static bool IsCommandExistFlat(string promt, out ICCommandAttribute? cmdattr, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
-    {
-        cmdattr = null;
-        method = null;
-        foreach (var command in CommandsList)
+        var splitted_promt = promt.Split(' ');
+        var depth = 1;
+        var finalName = string.Empty;
+
+        while (depth <= splitted_promt.Length)
         {
-            var attributes = command.GetMethodInfo().GetCustomAttributes();
-
-            foreach (Attribute attr in attributes)
+            var name = string.Join(" ", splitted_promt[..depth]);
+            if (TryGetCommandByName(name, out var attr).Success)
             {
-                if (attr is ICCommandAttribute cattr)
-                {
-                    if (cattr.IsNameEqual(promt))
-                    {
-                        cmdattr = cattr;
-                        method = command;
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-    private static ConsoleCommandValidationInfo IsCommandValid(string promt, out ConsoleCommandContext? promt_ctx, out Func<ConsoleCommandContext, ConsoleCommandResult>? method)
-    {
-        method = null;
-        promt_ctx = null;
-
-        if (IsCommandExist(promt, out var attr, out var tmethod))
-        {
-            var arguments = promt.Split(' ')[attr.Name.Split(' ').Length..];
-            if (TryParse(arguments, out var tctx, out var errorMsg))
-            {
-                if (tctx.Value.Args.Count() < attr.RequiredArgs)
-                {
-                    return new() { 
-                        Success = false, 
-                        ErrorMessage=$"Args error: expected {attr.RequiredArgs} positional arguments, but {tctx.Value.Args.Count()} were given" 
-                    };
-                }
-                
-                foreach (var kwarg in tctx.Value.Kwargs.Keys)
-                {
-                    if (!attr.KwargsKeys.Contains(kwarg))
-                    {
-                        return new()
-                        {
-                            Success = false,
-                            ErrorMessage = $"Key-word args error: unexpected key-word argument: {kwarg}"
-                        };
-                    }
-                }
-
-                promt_ctx = tctx;
-                method = tmethod;
+                finalName = name;
+                cattr = attr;
+                depth++;
             }
             else
             {
-                return new() {
-                    Success=false,
-                    ErrorMessage=errorMsg??"Unhandled exception"
-                };
+                break;
             }
         }
-        
-        return new() {
-            Success = true
-        };
-    }
 
+        if (finalName == string.Empty)
+        {
+            return new(false, "Cannot find command");
+        }
+
+        var overloadSearchResult = TryGetAppropriateCommandOverload(finalName, splitted_promt[(depth-1)..], out method, out ctx);
+        if (overloadSearchResult.Success)
+        {
+            return new(true);
+        }
+        else
+        {
+            return new(false, overloadSearchResult.Message);
+        }
+    }
+    private static ResultManifest TryGetCommandByName(string name, out ICCommandAttribute? cattr)
+    {
+        cattr = null;
+
+        foreach (var command in CommandsList)
+        {
+            var attributes = command.GetMethodInfo().GetCustomAttributes();
+            foreach (Attribute attr in attributes)
+            {
+                if (attr is ICCommandAttribute tcattr)
+                {
+                    if (tcattr.IsNameEqual(name))
+                    {
+                        cattr = tcattr;
+                        return new(true);
+                    }
+                }
+            }
+        }
+
+        return new(false, $"Cannot find command [{name}]");
+    }
+    private static ResultManifest TryGetAppropriateCommandOverload(string name, string[] args_query, out Func<ConsoleCommandContext, ConsoleCommandResult>? method, out ConsoleCommandContext? ctx)
+    {
+        method = null;
+        ctx = null;
+
+        List<string> Args = new();
+        Dictionary<string, string> Kwargs = new();
+
+        foreach (var arg in args_query)
+        {
+            if (IsKwarg(arg, out var vkey, out var value))
+            {
+                Kwargs.Add(vkey, value);
+            }
+            else
+            {
+                Args.Add(arg);
+            }
+        }
+
+        Dictionary<ICCommandAttribute, Func<ConsoleCommandContext, ConsoleCommandResult>> Overloads = new();
+
+        foreach (var command in CommandsList)
+        {
+            var attributes = command.GetMethodInfo().GetCustomAttributes();
+            foreach (Attribute attr in attributes)
+            {
+                if (attr is ICCommandAttribute tcattr)
+                {
+                    if (tcattr.IsNameEqual(name))
+                    {
+                        Overloads.Add(tcattr, command);
+                    }
+                }
+            }
+        }
+
+        ICCommandAttribute? key = null;
+
+        if (Overloads.Keys.Count == 1)
+        {
+            key = Overloads.Keys.First();
+        }
+        else
+        {
+            foreach (var att in Overloads.Keys)
+            {
+                if (att.RequiredArgs == Args.Count)
+                {
+                    key = att;
+                }
+            }
+        }
+
+        if (key != null)
+        {
+            if (key.RequiredArgs <= Args.Count)
+            {
+                if (key.KwargsKeys == null && Kwargs.Keys.Count != 0)
+                {
+                    return new(false, $"Keyword argument exception: this command has no keyword arguments");
+                }
+                foreach (var kwarg in Kwargs.Keys)
+                {
+                    if (!key.KwargsKeys.Contains(kwarg))
+                    {
+                        return new(false, $"Keyword argument exception: unexpected keyword: [{kwarg}]");
+                    }
+                }
+
+                method = Overloads[key];
+                ctx = new() { Args=Args, Kwargs=Kwargs };
+                return new(true);
+            }
+            else
+            {
+                return new(false, $"Arguments exception: expected {key.RequiredArgs} positional arguments, but {Args.Count} were given");
+            }
+        }
+
+        return new(false, $"Cannot find appropriate overload for [{name}]");
+    }
+    
     // HERE COMMANDS GO
 
     // EVERY COMMAND HAS TO BE LIKE
     // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
-    [ICCommand("test")]
-    private static ConsoleCommandResult Test(ConsoleCommandContext ctx)
+    [ICCommand("test", RequiredArgs = 1)]
+    private static ConsoleCommandResult Test1(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult()
         {
             Success = true,
             Type = Enums.ConsoleMessageTypes.Ok,
-            OutMessage = $"Hello, world!"
+            OutMessage = $"Hello, world! 1"
+        };
+    }
+
+    [ICCommand("test")]
+    private static ConsoleCommandResult Test0(ConsoleCommandContext ctx)
+    {
+        return new ConsoleCommandResult()
+        {
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Ok,
+            OutMessage = $"Hello, world! 0"
+        };
+    }
+
+    [ICCommand("test", RequiredArgs = 2)]
+    private static ConsoleCommandResult Test2(ConsoleCommandContext ctx)
+    {
+        return new ConsoleCommandResult()
+        {
+            Success = true,
+            Type = Enums.ConsoleMessageTypes.Ok,
+            OutMessage = $"Hello, world! 2"
         };
     }
 

@@ -21,25 +21,6 @@ class ICCommandAttribute : Attribute
 
     public bool IsNameEqual(string promt)
     {
-        var splitted_promt = promt.ToLower().Split(' ');
-        var splitted_name = Name.ToLower().Split(' ');
-
-        if (splitted_name.Length != splitted_promt.Length)
-        {
-            return false;
-        }
-
-        for (var i = 0; i < splitted_name.Length; i++)
-        {
-            var name_part = splitted_name[i];
-            var promt_part = splitted_promt[i];
-
-            if (name_part != promt_part)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return promt.ToLower() == Name.ToLower();
     }
 }
