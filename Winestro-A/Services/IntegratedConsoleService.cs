@@ -17,23 +17,46 @@ using Winestro_A.Enums;
 using Winestro_A.Structures;
 
 namespace Winestro_A.Services;
-public class IntegratedConsoleService
+public static class IntegratedConsoleService
 {
     public static Stack<string> СonsolePromts = new();
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
     private static readonly ObservableCollection<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> CommandsList = new()
     {
-        Test,
-        Log,
-        ShowSettings,
-        CreateSetting,
-        RemoveSetting,
-        BotRun,
-        BotStop,
-        BotRegisterSlashCommands,
-        BotRegisterTestSlashCommands,
-        BotDeleteAllGlobalSlashCommands,
+        //Test,
+        //Log,
+        //ShowSettings,
+        //CreateSetting,
+        //RemoveSetting,
+        //BotRun,
+        //BotStop,
+        //BotRegisterSlashCommands,
+        //BotRegisterTestSlashCommands,
+        //BotDeleteAllGlobalSlashCommands,
     };
+
+    public static void Init()
+    {
+        var methods = typeof(IntegratedConsoleService).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+
+        foreach (var method in methods)
+        {
+            var found = false;
+            foreach (var attrib in method.GetCustomAttributes())
+            {
+                if (attrib is ICCommandAttribute)
+                {
+                    found = true; 
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                CommandsList.Add(method.CreateDelegate<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>>());
+            }
+        }
+    }
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
     {

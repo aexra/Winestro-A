@@ -25,19 +25,6 @@ public partial class DiscordBotService
     }
     public static async Task<bool> RegisterTestSlashCommands()
     {
-        // TRY GETTING MY TEST SERVER
-        IGuild guild;
-        try
-        {
-            guild = GetGuild(ulong.Parse(ConfigService.Get("DiscordTestGuildID").ToString()));
-        }
-        catch 
-        {
-            LogService.Error("Cannot find DiscordTestGuildID setting in config");
-            return false; 
-        }
-            
-
         // TRY REGISTER ALL COMMANDS FROM COMMANDS DICT
         try
         {

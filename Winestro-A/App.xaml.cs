@@ -104,6 +104,7 @@ public partial class App : Application
     protected async override void OnLaunched(LaunchActivatedEventArgs args)
     {
         ConfigService.Init();
+        IntegratedConsoleService.Init();
         DiscordBotService.Init();
 
         base.OnLaunched(args);
