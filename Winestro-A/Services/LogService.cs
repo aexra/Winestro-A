@@ -12,6 +12,7 @@ public class LogService
     private static List<LogMessageManifest> logs = new();
 
     public static ObservableCollection<LogMessageControl> LogMessages { get; private set; } = new();
+    public static ObservableCollection<LogMessageControl> MainMessages { get; private set; } = new();
     public static ObservableCollection<LogMessageControl> InfoMessages { get; private set; } = new();
     public static ObservableCollection<LogMessageControl> WarningMessages { get; private set; } = new();
     public static ObservableCollection<LogMessageControl> ErrorMessages { get; private set; } = new();
@@ -77,6 +78,19 @@ public class LogService
             Id = log.Id,
         };
         LogMessages.Add(lmc);
+
+        if (log.Meta == LogMessageMetaTypes.Default)
+        {
+            LogMessageControl lmcmain = new()
+            {
+                Text = log.Text,
+                Type = log.Type,
+                Time = log.Time,
+                Meta = log.Meta,
+                Id = log.Id,
+            };
+            MainMessages.Add(lmcmain);
+        }
 
         LogMessageControl lmce = new()
         {
