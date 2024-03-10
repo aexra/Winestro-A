@@ -10,7 +10,7 @@ using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
-public class CommandComponent
+public class SlashCommand
 {
     public string Name { get; set; }
     public string Description { get; set; }
@@ -18,7 +18,7 @@ public class CommandComponent
 
     private Func<SocketSlashCommand, Task> Handler { get; set; }
 
-    public CommandComponent(string name, string description, Func<SocketSlashCommand, Task> handler, bool isGlobal = false)
+    public SlashCommand(string name, string description, Func<SocketSlashCommand, Task> handler, bool isGlobal = false)
     {
         Name = name;
         Description = description;

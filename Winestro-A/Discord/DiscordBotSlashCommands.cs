@@ -11,7 +11,7 @@ namespace Winestro_A.Discord;
 
 public partial class DiscordBotService
 {
-    private static Dictionary<string, CommandComponent> Commands = new()
+    private static Dictionary<string, SlashCommand> Commands = new()
     {
         { "test", new("test", "This is test command for debug", HandleTest) }
     };
