@@ -8,7 +8,7 @@ using Winestro_A.Services;
 namespace Winestro_A.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
-class ICCommandAttribute : Attribute
+public class ICCommandAttribute : Attribute
 {
     public string Name { get; }
     public int RequiredArgs { get; set; } = 0;

@@ -8,7 +8,7 @@ using Windows.ApplicationModel;
 
 namespace Winestro_A.Discord;
 
-public partial class DiscordBotService
+public static partial class DiscordBotService
 {
     public static ConnectionState ConnectionState => _client.ConnectionState;
     public static List<IGuild> Guilds

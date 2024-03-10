@@ -9,7 +9,7 @@ using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
-public partial class DiscordBotService
+public static partial class DiscordBotService
 {
     public static Action<SocketMessage>? ChatOnMessageEventListener { get; set; }
     public static Action? OnReadyEventListener { get; set; }

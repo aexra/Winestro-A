@@ -10,7 +10,7 @@ using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
-public partial class DiscordBotService
+public static partial class DiscordBotService
 {
     private static DiscordSocketClient _client;
 
@@ -26,6 +26,8 @@ public partial class DiscordBotService
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
         _client.SlashCommandExecuted += SlashCommandHandler;
+
+        InitSlashCommands();
     }
     public static async Task Toggle()
     {
