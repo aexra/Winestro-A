@@ -15,4 +15,10 @@ public partial class DiscordBotService
 
         LogService.Log("Discord Bot slash commands have been registered");
     }
+    public static async Task RegisterTestSlashCommands()
+    {
+
+
+        LogService.Log("Discord Bot *TEST* slash commands have been registered");
+    }
 }

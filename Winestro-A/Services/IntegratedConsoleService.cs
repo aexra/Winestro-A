@@ -30,7 +30,8 @@ public class IntegratedConsoleService
         RemoveSetting,
         BotRun,
         BotStop,
-        BotRegisterSlashCommands
+        BotRegisterSlashCommands,
+        BotRegisterTestSlashCommands,
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -370,10 +371,17 @@ public class IntegratedConsoleService
         return new ConsoleCommandResult($"Stopping bot...");
     }
 
-    [ICCommand("bot slash register")]
+    [ICCommand("bot slash reg")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
         await DiscordBotService.RegisterSlashCommands();
+        return new("Console commands have been registered");
+    }
+
+    [ICCommand("bot slashtest reg")]
+    private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
+    {
+        await DiscordBotService.RegisterTestSlashCommands();
         return new("Console commands have been registered");
     }
 }
