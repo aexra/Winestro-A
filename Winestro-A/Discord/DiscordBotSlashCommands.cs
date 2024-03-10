@@ -61,4 +61,9 @@ public partial class DiscordBotService
     {
         await command.RespondAsync("Hello, world!");
     }
+
+    public static async Task DeleteSlashCommands()
+    {
+        await _client.Rest.DeleteAllGlobalCommandsAsync();
+    }
 }

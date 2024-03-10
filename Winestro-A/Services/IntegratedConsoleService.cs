@@ -32,6 +32,7 @@ public class IntegratedConsoleService
         BotStop,
         BotRegisterSlashCommands,
         BotRegisterTestSlashCommands,
+        BotDeleteAllGlobalSlashCommands,
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -389,5 +390,12 @@ public class IntegratedConsoleService
         {
             return new("Exception raised when registering *TEST* slash commands");
         }
+    }
+
+    [ICCommand("sudo bot slash delete all")]
+    private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
+    {
+        await DiscordBotService.DeleteSlashCommands();
+        return new("Global slash commands will be deleted in ~1 hour");
     }
 }
