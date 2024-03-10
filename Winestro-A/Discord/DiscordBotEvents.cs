@@ -56,6 +56,13 @@ public partial class DiscordBotService
 
     private static async Task SlashCommandHandler(SocketSlashCommand command)
     {
-        await command.RespondAsync("suc ma bolz");
+        if (!Commands.Keys.Contains(command.Data.Name))
+        {
+            await command.RespondAsync($"Unknown command **{command.Data.Name}**. Probably this feature was removed but the removement wasn't registered.");
+        }
+        else
+        {
+            await Commands[command.Data.Name].Handle(command);
+        }
     }
 }

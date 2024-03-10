@@ -381,7 +381,13 @@ public class IntegratedConsoleService
     [ICCommand("bot slashtest reg")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
-        await DiscordBotService.RegisterTestSlashCommands();
-        return new("Console commands have been registered");
+        if (await DiscordBotService.RegisterTestSlashCommands())
+        {
+            return new("Console commands have been registered");
+        }
+        else
+        {
+            return new("Exception raised when registering *TEST* slash commands");
+        }
     }
 }

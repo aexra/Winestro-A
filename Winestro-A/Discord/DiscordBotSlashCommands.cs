@@ -4,41 +4,61 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
 public partial class DiscordBotService
 {
-    public static async Task RegisterSlashCommands()
+    private static Dictionary<string, CommandComponent> Commands = new()
+    {
+        { "test", new("test", "This is test command for debug", HandleTest) }
+    };
+
+    public static async Task<bool> RegisterSlashCommands()
     {
 
 
         LogService.Log("Discord Bot slash commands have been registered");
+        return true;
     }
-    public static async Task RegisterTestSlashCommands()
+    public static async Task<bool> RegisterTestSlashCommands()
     {
+        // TRY GETTING MY TEST SERVER
         IGuild guild;
         try
         {
             guild = GetGuild(ulong.Parse(ConfigService.Get("DiscordTestGuildID").ToString()));
         }
-        catch { return; }
-
-        var guildCommand = new SlashCommandBuilder();
-        guildCommand.WithName("winestro-test");
-        guildCommand.WithDescription("This is my first guild slash command!");
-
-        try
-        {
-            await guild.CreateApplicationCommandAsync(guildCommand.Build());
-        }
         catch 
         {
-            LogService.Error("Error registering Discord Bot *TEST* slash commands");
-            return; 
+            LogService.Error("Cannot find DiscordTestGuildID setting in config");
+            return false; 
+        }
+            
+
+        // TRY REGISTER ALL COMMANDS FROM COMMANDS DICT
+        try
+        {
+            foreach (var command in Commands.Values)
+            {
+                await command.Register(_client);
+            }
+        }
+        catch (Exception ex)
+        {
+            LogService.Error("Error registering Discord Bot *TEST* slash commands.\n" + ex.ToString());
+            return false; 
         }
 
+        // LOG IF SUCCESSFUL
         LogService.Log("Discord Bot *TEST* slash commands have been registered");
+        return true;
+    }
+
+    private static async Task HandleTest(SocketSlashCommand command)
+    {
+        await command.RespondAsync("Hello, world!");
     }
 }
