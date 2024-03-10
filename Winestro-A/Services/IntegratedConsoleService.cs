@@ -38,15 +38,18 @@ public static class IntegratedConsoleService
     public static void Init()
     {
         var methods = typeof(IntegratedConsoleService).GetMethods(BindingFlags.Static | BindingFlags.NonPublic);
+        var counter = 0;
 
         foreach (var method in methods)
         {
             var found = false;
+            ICCommandAttribute? iccattr = null;
             foreach (var attrib in method.GetCustomAttributes())
             {
-                if (attrib is ICCommandAttribute)
+                if (attrib is ICCommandAttribute _iccattr)
                 {
                     found = true; 
+                    iccattr = _iccattr;
                     break;
                 }
             }
@@ -54,8 +57,12 @@ public static class IntegratedConsoleService
             if (found)
             {
                 CommandsList.Add(method.CreateDelegate<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>>());
+                LogService.Log($"Console command [{iccattr.Name}] compiled", Enums.LogMessageMetaTypes.Debug);
+                counter++;
             }
         }
+
+        LogService.Log($"All console commands successfully compiled: {counter}");
     }
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)

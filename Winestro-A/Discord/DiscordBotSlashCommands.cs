@@ -44,11 +44,12 @@ public static partial class DiscordBotService
                     method.CreateDelegate<Func<SocketSlashCommand, Task>>(),
                     scattr.IsGlobal
                 ));
+                LogService.Log($"Slash command [{scattr.Name}] compiled", Enums.LogMessageMetaTypes.Debug);
                 counter++;
             }
         }
 
-        LogService.Log($"Slash commands successfully initiated: {counter}");
+        LogService.Log($"All slash commands successfully compiled: {counter}");
     }
 
     public static async Task<bool> RegisterSlashCommands()
