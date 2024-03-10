@@ -21,7 +21,7 @@ public class IntegratedConsoleService
 {
     public static Stack<string> СonsolePromts = new();
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
-    private static readonly ObservableCollection<Func<ConsoleCommandContext, ConsoleCommandResult>> CommandsList = new()
+    private static readonly ObservableCollection<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> CommandsList = new()
     {
         Test,
         Log,
@@ -29,7 +29,8 @@ public class IntegratedConsoleService
         CreateSetting,
         RemoveSetting,
         BotRun,
-        BotStop
+        BotStop,
+        BotRegisterSlashCommands
     };
 
     public static bool TryRun(string promt, out ConsoleCommandResult result)
@@ -37,13 +38,13 @@ public class IntegratedConsoleService
         ConsoleHistory.Add(new ConsoleMessageControl() { Type = Enums.ConsoleMessageTypes.Command, Text = promt });
         result = new ConsoleCommandResult() { OutMessage = "Unhandled exception", Success = false, Type = Enums.ConsoleMessageTypes.Fail };
 
-        Func<ConsoleCommandContext, ConsoleCommandResult>? method;
+        Func<ConsoleCommandContext, Task<ConsoleCommandResult>>? method;
         ConsoleCommandContext? ctx;
 
         var r = TryGetAppropriateCommand(promt, out method, out ctx);
         if (r.Success)
         {
-            result = method.Invoke((ConsoleCommandContext)ctx);
+            result = Task.Run(async() => await method.Invoke((ConsoleCommandContext)ctx)).Result;
         }
         else
         {
@@ -78,7 +79,7 @@ public class IntegratedConsoleService
 
         return result;
     }
-    private static ResultManifest TryGetAppropriateCommand(string promt, out Func<ConsoleCommandContext, ConsoleCommandResult>? method, out ConsoleCommandContext? ctx)
+    private static ResultManifest TryGetAppropriateCommand(string promt, out Func<ConsoleCommandContext, Task<ConsoleCommandResult>>? method, out ConsoleCommandContext? ctx)
     {
         method = null;
         ctx = null;
@@ -142,7 +143,7 @@ public class IntegratedConsoleService
 
         return new(false, $"Cannot find command [{name}]");
     }
-    private static ResultManifest TryGetAppropriateCommandOverload(string name, string[] args_query, out Func<ConsoleCommandContext, ConsoleCommandResult>? method, out ConsoleCommandContext? ctx)
+    private static ResultManifest TryGetAppropriateCommandOverload(string name, string[] args_query, out Func<ConsoleCommandContext, Task<ConsoleCommandResult>>? method, out ConsoleCommandContext? ctx)
     {
         method = null;
         ctx = null;
@@ -162,7 +163,7 @@ public class IntegratedConsoleService
             }
         }
 
-        Dictionary<ICCommandAttribute, Func<ConsoleCommandContext, ConsoleCommandResult>> Overloads = new();
+        Dictionary<ICCommandAttribute, Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> Overloads = new();
 
         foreach (var command in CommandsList)
         {
@@ -232,13 +233,13 @@ public class IntegratedConsoleService
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
     [ICCommand("test")]
-    private static ConsoleCommandResult Test(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult($"Hello, world!");
     }
 
     [ICCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
-    private static ConsoleCommandResult Log(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> Log(ConsoleCommandContext ctx)
     {
         LogMessageTypes? type = null;
         LogMessageMetaTypes? meta = null;
@@ -321,7 +322,7 @@ public class IntegratedConsoleService
     }
 
     [ICCommand("conf")]
-    private static ConsoleCommandResult ShowSettings(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> ShowSettings(ConsoleCommandContext ctx)
     {
         var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
         var ret = count > 0 ? $"Application settings: [{count}]" : "No settings detected";
@@ -334,7 +335,7 @@ public class IntegratedConsoleService
     }
 
     [ICCommand("conf add", RequiredArgs = 2)]
-    private static ConsoleCommandResult CreateSetting(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
         return new ConsoleCommandResult(
@@ -345,7 +346,7 @@ public class IntegratedConsoleService
     }
 
     [ICCommand("conf del", RequiredArgs = 1)]
-    private static ConsoleCommandResult RemoveSetting(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);
         return new ConsoleCommandResult(
@@ -356,16 +357,23 @@ public class IntegratedConsoleService
     }
 
     [ICCommand("bot run")]
-    private static ConsoleCommandResult BotRun(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> BotRun(ConsoleCommandContext ctx)
     {
-        Task.Run(DiscordBotService.Run);
+        await DiscordBotService.Run();
         return new ConsoleCommandResult($"Launching bot...");
     }
 
     [ICCommand("bot stop")]
-    private static ConsoleCommandResult BotStop(ConsoleCommandContext ctx)
+    private static async Task<ConsoleCommandResult> BotStop(ConsoleCommandContext ctx)
     {
-        Task.Run(DiscordBotService.Stop);
+        await DiscordBotService.Stop();
         return new ConsoleCommandResult($"Stopping bot...");
+    }
+
+    [ICCommand("bot slash register")]
+    private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
+    {
+        await DiscordBotService.RegisterSlashCommands();
+        return new("Console commands have been registered");
     }
 }

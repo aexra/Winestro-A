@@ -53,4 +53,9 @@ public partial class DiscordBotService
         ChatOnMessageEventListener?.Invoke(msg);
         return Task.CompletedTask;
     }
+
+    private static async Task SlashCommandHandler(SocketSlashCommand command)
+    {
+        await command.RespondAsync("suc ma bolz");
+    }
 }
