@@ -43,10 +43,10 @@ public static class IntegratedConsoleService
         foreach (var method in methods)
         {
             var found = false;
-            ICCommandAttribute? iccattr = null;
+            ConsoleCommandAttribute? iccattr = null;
             foreach (var attrib in method.GetCustomAttributes())
             {
-                if (attrib is ICCommandAttribute _iccattr)
+                if (attrib is ConsoleCommandAttribute _iccattr)
                 {
                     found = true; 
                     iccattr = _iccattr;
@@ -115,7 +115,7 @@ public static class IntegratedConsoleService
     {
         method = null;
         ctx = null;
-        ICCommandAttribute? cattr = null;
+        ConsoleCommandAttribute? cattr = null;
         if (string.IsNullOrWhiteSpace(promt))
         {
             return new(false, "The command promt is empty");
@@ -153,7 +153,7 @@ public static class IntegratedConsoleService
             return new(false, overloadSearchResult.Message);
         }
     }
-    private static ResultManifest TryGetCommandByName(string name, out ICCommandAttribute? cattr)
+    private static ResultManifest TryGetCommandByName(string name, out ConsoleCommandAttribute? cattr)
     {
         cattr = null;
 
@@ -162,7 +162,7 @@ public static class IntegratedConsoleService
             var attributes = command.GetMethodInfo().GetCustomAttributes();
             foreach (Attribute attr in attributes)
             {
-                if (attr is ICCommandAttribute tcattr)
+                if (attr is ConsoleCommandAttribute tcattr)
                 {
                     if (tcattr.IsNameEqual(name))
                     {
@@ -195,14 +195,14 @@ public static class IntegratedConsoleService
             }
         }
 
-        Dictionary<ICCommandAttribute, Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> Overloads = new();
+        Dictionary<ConsoleCommandAttribute, Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> Overloads = new();
 
         foreach (var command in CommandsList)
         {
             var attributes = command.GetMethodInfo().GetCustomAttributes();
             foreach (Attribute attr in attributes)
             {
-                if (attr is ICCommandAttribute tcattr)
+                if (attr is ConsoleCommandAttribute tcattr)
                 {
                     if (tcattr.IsNameEqual(name))
                     {
@@ -212,7 +212,7 @@ public static class IntegratedConsoleService
             }
         }
 
-        ICCommandAttribute? key = null;
+        ConsoleCommandAttribute? key = null;
 
         if (Overloads.Keys.Count == 1)
         {
@@ -264,13 +264,13 @@ public static class IntegratedConsoleService
     // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
-    [ICCommand("test")]
+    [ConsoleCommand("test")]
     private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult($"Hello, world!");
     }
 
-    [ICCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
+    [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
     private static async Task<ConsoleCommandResult> Log(ConsoleCommandContext ctx)
     {
         LogMessageTypes? type = null;
@@ -353,7 +353,7 @@ public static class IntegratedConsoleService
         }
     }
 
-    [ICCommand("conf")]
+    [ConsoleCommand("conf")]
     private static async Task<ConsoleCommandResult> ShowSettings(ConsoleCommandContext ctx)
     {
         var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
@@ -366,7 +366,7 @@ public static class IntegratedConsoleService
         return new ConsoleCommandResult(ret, true, ConsoleMessageTypes.Info);
     }
 
-    [ICCommand("conf add", RequiredArgs = 2)]
+    [ConsoleCommand("conf add", RequiredArgs = 2)]
     private static async Task<ConsoleCommandResult> CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
@@ -377,7 +377,7 @@ public static class IntegratedConsoleService
         );
     }
 
-    [ICCommand("conf del", RequiredArgs = 1)]
+    [ConsoleCommand("conf del", RequiredArgs = 1)]
     private static async Task<ConsoleCommandResult> RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);
@@ -388,28 +388,28 @@ public static class IntegratedConsoleService
         );
     }
 
-    [ICCommand("bot run")]
+    [ConsoleCommand("bot run")]
     private static async Task<ConsoleCommandResult> BotRun(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Run();
         return new ConsoleCommandResult($"Launching bot...");
     }
 
-    [ICCommand("bot stop")]
+    [ConsoleCommand("bot stop")]
     private static async Task<ConsoleCommandResult> BotStop(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Stop();
         return new ConsoleCommandResult($"Stopping bot...");
     }
 
-    [ICCommand("bot slash reg")]
+    [ConsoleCommand("bot slash reg")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
         await DiscordBotService.RegisterSlashCommands();
         return new("Console commands have been registered");
     }
 
-    [ICCommand("bot slashtest reg")]
+    [ConsoleCommand("bot slashtest reg")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
         if (await DiscordBotService.RegisterTestSlashCommands())
@@ -422,7 +422,7 @@ public static class IntegratedConsoleService
         }
     }
 
-    [ICCommand("sudo bot slash delete all")]
+    [ConsoleCommand("sudo bot slash delete all")]
     private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
     {
         await DiscordBotService.DeleteSlashCommands();

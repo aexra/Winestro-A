@@ -8,13 +8,13 @@ using Winestro_A.Services;
 namespace Winestro_A.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class ICCommandAttribute : Attribute
+public class ConsoleCommandAttribute : Attribute
 {
     public string Name { get; }
     public int RequiredArgs { get; set; } = 0;
     public string[]? KwargsKeys { get; set; } = null;
 
-    public ICCommandAttribute(string name)
+    public ConsoleCommandAttribute(string name)
     {
         Name = name;
     }
