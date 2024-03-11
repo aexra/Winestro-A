@@ -21,19 +21,7 @@ public static class IntegratedConsoleService
 {
     public static Stack<string> СonsolePromts = new();
     public static ObservableCollection<ConsoleMessageControl> ConsoleHistory { get; private set; } = new();
-    private static readonly ObservableCollection<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> CommandsList = new()
-    {
-        //Test,
-        //Log,
-        //ShowSettings,
-        //CreateSetting,
-        //RemoveSetting,
-        //BotRun,
-        //BotStop,
-        //BotRegisterSlashCommands,
-        //BotRegisterTestSlashCommands,
-        //BotDeleteAllGlobalSlashCommands,
-    };
+    private static readonly ObservableCollection<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>> CommandsList = new();
 
     public static void Init()
     {
