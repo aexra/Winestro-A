@@ -57,6 +57,7 @@ public static partial class DiscordBotService
         return Task.CompletedTask;
     }
 
+
     private static async Task SlashCommandHandler(SocketSlashCommand command)
     {
         if (!Commands.Keys.Contains(command.Data.Name))
