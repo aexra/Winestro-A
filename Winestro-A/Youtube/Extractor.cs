@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Winestro_A.Services;
 using YoutubeExplode;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
@@ -20,17 +21,21 @@ public static class Extractor
         Task.Run(async () => await GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM"));
     }
 
-    public static async Task<Video> GetVideoAsync(string url)
+    public static async Task<Video?> GetVideoAsync(string url)
     {
         return await client.Videos.GetAsync(url);
     }
-    public static async Task<StreamManifest> GetVideoStreamManifest(string url)
+    public static async Task<StreamManifest?> GetVideoStreamManifest(string url)
     {
         return await client.Videos.Streams.GetManifestAsync(url);
     }
-    public static async Task<IStreamInfo> GetAudioStreamHighestQuality(string url)
+    public static async Task<IStreamInfo?> GetAudioStreamHighestQuality(string url)
     {
         var manifest = await GetVideoStreamManifest(url);
+        if (manifest == null)
+        {
+            return null;
+        }
         return manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
     }
 }
