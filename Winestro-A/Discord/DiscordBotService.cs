@@ -1,10 +1,12 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Winestro_A.Services;
@@ -30,6 +32,8 @@ public static partial class DiscordBotService
         _client.SlashCommandExecuted += SlashCommandHandler;
 
         _interactionService = new(_client.Rest);
+
+        _interactionService.AddModuleAsync<DiscordSlashCommandsModule>(null);
 
         InitSlashCommands();
     }
