@@ -256,9 +256,7 @@ public static class IntegratedConsoleService
     [ConsoleCommand("test")]
     private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
-        //return new ConsoleCommandResult($"Hello, world!");
-        var info = await Extractor.GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=Z5UOSGYMVoQ");
-        return new(info.Url);
+        return new ConsoleCommandResult($"Hello, world!");
     }
 
     [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
