@@ -9,12 +9,17 @@ using Discord.WebSocket;
 using Winestro_A.Attributes;
 using Winestro_A.Services;
 using Winestro_A.Structures;
+using Winestro_A.Youtube;
 
 namespace Winestro_A.Discord;
 
 public static partial class DiscordBotService
 {
     private static Dictionary<string, SlashCommand> Commands = new();
+    private static Dictionary<string, Func<SlashCommandBuilder, SlashCommandBuilder>> CustomPropertiesBuilders = new()
+    {
+        { "gasu", (SlashCommandBuilder builder) => builder.AddOption("url", ApplicationCommandOptionType.String, "URL to video to search", true) },
+    };
 
     public static void InitSlashCommands()
     {
@@ -38,12 +43,17 @@ public static partial class DiscordBotService
 
             if (found)
             {
-                Commands.Add(scattr.Name, new(
+                SlashCommand command = new(
                     scattr.Name,
                     scattr.Description,
                     method.CreateDelegate<Func<SocketSlashCommand, Task>>(),
                     scattr.IsGlobal
-                ));
+                );
+                if (CustomPropertiesBuilders.TryGetValue(command.Name, out var builder))
+                {
+                    command.PropertiesBuilder = builder;
+                }
+                Commands.Add(scattr.Name, command);
                 LogService.Log($"Slash command [{scattr.Name}] compiled", Enums.LogMessageMetaTypes.Debug);
                 counter++;
             }
@@ -85,8 +95,23 @@ public static partial class DiscordBotService
     }
 
     [SlashCommand("test", "This is test command for debug")]
-    private static async Task HandleTest(SocketSlashCommand command)
+    private static async Task Test(SocketSlashCommand command)
     {
         await command.RespondAsync("Hello, world!");
+    }
+
+    [SlashCommand("gasu", "Returns audio stream url")]
+    private static async Task GetAudioStreamUrl(SocketSlashCommand command)
+    {
+        await command.DeferAsync();
+        var info = await Extractor.GetAudioStreamHighestQuality((string)command.Data.Options.First().Value);
+        if (info == null)
+        {
+            await command.ModifyOriginalResponseAsync((p) => p.Content = $"📛 Cannot find video by URL **{(string)command.Data.Options.First().Value}**");
+        }
+        else
+        {
+            await command.ModifyOriginalResponseAsync((p) => p.Content = "✅ Your URL: " + info.Url);
+        }
     }
 }

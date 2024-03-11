@@ -16,6 +16,8 @@ public class SlashCommand
     public string Description { get; set; }
     public bool IsGlobal { get; set; }
 
+    public Func<SlashCommandBuilder, SlashCommandBuilder>? PropertiesBuilder { get; set; }
+
     private Func<SocketSlashCommand, Task> Handler { get; set; }
 
     public SlashCommand(string name, string description, Func<SocketSlashCommand, Task> handler, bool isGlobal = false)
@@ -31,6 +33,11 @@ public class SlashCommand
         var command = new SlashCommandBuilder()
             .WithName(Name)
             .WithDescription(Description);
+
+        if (PropertiesBuilder != null)
+        {
+            command = PropertiesBuilder(command);
+        }
 
         if (IsGlobal)
         {

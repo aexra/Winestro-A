@@ -31,11 +31,14 @@ public static class Extractor
     }
     public static async Task<IStreamInfo?> GetAudioStreamHighestQuality(string url)
     {
-        var manifest = await GetVideoStreamManifest(url);
-        if (manifest == null)
+        try
+        {
+            var manifest = await GetVideoStreamManifest(url);
+            return manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
+        }
+        catch (Exception ex)
         {
             return null;
         }
-        return manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
     }
 }
