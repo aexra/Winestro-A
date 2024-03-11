@@ -5,11 +5,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Winestro_A.Attributes;
 using Winestro_A.Services;
 using Winestro_A.Structures;
 using Winestro_A.Youtube;
+using Ints = Discord.Interactions;
 
 namespace Winestro_A.Discord;
 
@@ -113,5 +115,19 @@ public static partial class DiscordBotService
         {
             await command.ModifyOriginalResponseAsync((p) => p.Content = "✅ Your URL: " + info.Url);
         }
+    }
+
+    [SlashCommand("join", "joins a voice channel")]
+    [Ints.SlashCommand("join", "joins a voice channel", runMode:Ints.RunMode.Async)]
+    private static async Task JoinChannel(SocketSlashCommand command)
+    {
+        var channel = (command.User as IGuildUser)?.VoiceChannel;
+        if (channel == null)
+        {
+            await command.RespondAsync("⚠️ User **must** be in a voice channel to use this command");
+            return;
+        }
+
+        var audioClient = await channel.ConnectAsync();
     }
 }
