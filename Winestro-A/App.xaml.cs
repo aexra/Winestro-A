@@ -12,6 +12,7 @@ using Winestro_A.Models;
 using Winestro_A.Services;
 using Winestro_A.ViewModels;
 using Winestro_A.Views;
+using Winestro_A.Youtube;
 
 namespace Winestro_A;
 
@@ -105,6 +106,7 @@ public partial class App : Application
     {
         ConfigService.Init();
         IntegratedConsoleService.Init();
+        Extractor.Init();
         DiscordBotService.Init();
 
         base.OnLaunched(args);
