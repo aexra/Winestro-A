@@ -118,7 +118,6 @@ public static partial class DiscordBotService
     }
 
     [SlashCommand("join", "joins a voice channel")]
-    [Ints.SlashCommand("join", "joins a voice channel", runMode:Ints.RunMode.Async)]
     private static async Task JoinChannel(SocketSlashCommand command)
     {
         var channel = (command.User as IGuildUser)?.VoiceChannel;
