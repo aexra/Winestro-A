@@ -51,7 +51,7 @@ public sealed partial class MaestroPage : Page
         Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
         Data.GuildsConnected = "0";
         Data.PlayersActive = "0";
-        Data.CurrentTime = TimeHelper.NowS();
+        Data.CurrentTime = TimeHelper.GetNowString();
         Data.RunTime = "0";
 
         DiscordBotService.OnReadyEventListener += () => {
@@ -75,6 +75,16 @@ public sealed partial class MaestroPage : Page
     {
         Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
         Data.GuildsConnected = DiscordBotService.Guilds.Count.ToString();
+        Data.CurrentTime = TimeHelper.GetNowString();
+
+        if (DiscordBotService.RunnedAt != null)
+        {
+            Data.RunTime = TimeHelper.ToTimeString((TimeSpan)(TimeHelper.Now - DiscordBotService.RunnedAt));
+        }
+        else
+        {
+            Data.RunTime = "00:00:00";        
+        }
 
         switch (DiscordBotService.ConnectionState)
         {

@@ -13,7 +13,7 @@ public class MainPageDataContainer : INotifyPropertyChanged
     private string connectionState = "fix me";
     private string guildsConnected = "0";
     private string playersActive = "0";
-    private string currentTime = TimeHelper.NowS();
+    private string currentTime = TimeHelper.GetNowString();
     private string runTime = "0";
     private string runBtnText = "Fix me";
     private string runBtnColor = "#ffffff";

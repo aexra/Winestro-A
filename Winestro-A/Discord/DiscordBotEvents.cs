@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Winestro_A.Helpers;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
@@ -17,11 +18,13 @@ public static partial class DiscordBotService
 
     private static Task Ready()
     {
+        RunnedAt = TimeHelper.Now;
         OnReadyEventListener?.Invoke();
         return Task.CompletedTask;
     }
     private static Task Disconnected(Exception exception)
     {
+        RunnedAt = null;
         OnDisconnectedEventListener?.Invoke();
         return Task.CompletedTask;
     }

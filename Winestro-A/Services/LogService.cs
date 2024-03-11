@@ -61,7 +61,7 @@ public class LogService
         if (string.IsNullOrWhiteSpace(msg)) return;
         try
         {
-            logs.Add(new LogMessageManifest() { Text=msg, Type=type, Meta=meta, Time=TimeHelper.NowS(), Id=(ulong)logs.Count });
+            logs.Add(new LogMessageManifest() { Text=msg, Type=type, Meta=meta, Time=TimeHelper.GetNowString(), Id=(ulong)logs.Count });
             _UpdateControlsCollections_();
         } catch (Exception e) { UpdateRequired = true; return; }
         UpdateRequired = false;
