@@ -52,7 +52,7 @@ public static partial class DiscordBotService
         LogService.Log($"All slash commands successfully compiled: {counter}");
     }
 
-    public static async Task<bool> RegisterSlashCommands()
+    public static async Task<bool> RegisterGlobalSlashCommands()
     {
 
 

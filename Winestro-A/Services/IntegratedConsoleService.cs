@@ -405,7 +405,7 @@ public static class IntegratedConsoleService
     [ConsoleCommand("bot slash reg")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
-        await DiscordBotService.RegisterSlashCommands();
+        await DiscordBotService.RegisterGlobalSlashCommands();
         return new("Console commands have been registered");
     }
 
