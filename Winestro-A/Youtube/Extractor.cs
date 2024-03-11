@@ -16,6 +16,8 @@ public static class Extractor
     public static void Init()
     {
         client = new();
+
+        Task.Run(async () => await GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM"));
     }
 
     public static async Task<Video> GetVideoAsync(string url)
