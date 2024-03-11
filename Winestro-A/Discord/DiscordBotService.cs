@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Newtonsoft.Json.Linq;
 using System;
@@ -13,6 +14,7 @@ namespace Winestro_A.Discord;
 public static partial class DiscordBotService
 {
     private static DiscordSocketClient _client;
+    private static InteractionService _interactionService;
 
     public static void Init()
     {
@@ -26,6 +28,8 @@ public static partial class DiscordBotService
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
         _client.SlashCommandExecuted += SlashCommandHandler;
+
+        _interactionService = new(_client.Rest);
 
         InitSlashCommands();
     }
