@@ -15,6 +15,7 @@ using Winestro_A.Controls;
 using Winestro_A.Discord;
 using Winestro_A.Enums;
 using Winestro_A.Structures;
+using Winestro_A.Youtube;
 
 namespace Winestro_A.Services;
 public static class IntegratedConsoleService
@@ -255,7 +256,9 @@ public static class IntegratedConsoleService
     [ConsoleCommand("test")]
     private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
-        return new ConsoleCommandResult($"Hello, world!");
+        //return new ConsoleCommandResult($"Hello, world!");
+        var info = await Extractor.GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=Z5UOSGYMVoQ");
+        return new(info.Url);
     }
 
     [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
@@ -415,5 +418,5 @@ public static class IntegratedConsoleService
     {
         await DiscordBotService.DeleteSlashCommands();
         return new("Global slash commands will be deleted in ~1 hour");
-    }
+    }    
 }

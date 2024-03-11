@@ -26,7 +26,7 @@ public static class Extractor
     {
         return await client.Videos.Streams.GetManifestAsync(url);
     }
-    public static async Task<IStreamInfo> GetVideoAudioStreamHighestQuality(string url)
+    public static async Task<IStreamInfo> GetAudioStreamHighestQuality(string url)
     {
         var manifest = await GetVideoStreamManifest(url);
         return manifest.GetAudioOnlyStreams().GetWithHighestBitrate();
