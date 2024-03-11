@@ -13,6 +13,6 @@ public static class Extractor
 
     public static void Init()
     {
-        
+        client = new();
     }
 }
