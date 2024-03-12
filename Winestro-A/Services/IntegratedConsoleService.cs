@@ -377,41 +377,41 @@ public static class IntegratedConsoleService
         );
     }
 
-    [ConsoleCommand("bot run")]
+    [ConsoleCommand("discord bot run")]
     private static async Task<ConsoleCommandResult> BotRun(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Run();
         return new ConsoleCommandResult($"Launching bot...");
     }
 
-    [ConsoleCommand("bot stop")]
+    [ConsoleCommand("discord bot stop")]
     private static async Task<ConsoleCommandResult> BotStop(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Stop();
         return new ConsoleCommandResult($"Stopping bot...");
     }
 
-    [ConsoleCommand("bot slash reg")]
+    [ConsoleCommand("discord bot commands reg")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
         //await DiscordBotService.RegisterGlobalSlashCommands();
         return new("Console commands have been registered");
     }
 
-    [ConsoleCommand("bot slashtest reg")]
+    [ConsoleCommand("discord bot commands reg test")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
-        //if (await DiscordBotService.RegisterTestSlashCommands())
-        //{
-        //    return new("Console commands have been registered");
-        //}
-        //else
+        if (await DiscordBotService.RegisterTestCommands())
+        {
+            return new("Console commands have been registered");
+        }
+        else
         {
             return new("Exception raised when registering *TEST* slash commands");
         }
     }
 
-    [ConsoleCommand("sudo bot slash delete all")]
+    [ConsoleCommand("sudo discord bot slash delete all")]
     private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
     {
         //await DiscordBotService.DeleteSlashCommands();

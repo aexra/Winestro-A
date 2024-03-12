@@ -59,6 +59,10 @@ public sealed partial class KeyValuePair : UserControl, INotifyPropertyChanged
 
     private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
     {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        try
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+        catch { }
     }
 }

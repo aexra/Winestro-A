@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Winestro_A.Helpers;
 using Winestro_A.Services;
@@ -18,8 +20,19 @@ public static partial class DiscordBotService
 
     private static Task Ready()
     {
+        _interactionService = new(Client.Rest);
+
+        Client.InteractionCreated += async (x) =>
+        {
+            var ctx = new SocketInteractionContext(_client, x);
+            await InteractionService.ExecuteCommandAsync(ctx, null);
+        };
+
+        InteractionService.AddModuleAsync<SlashTestModule>(null);
+
         RunnedAt = TimeHelper.Now;
         OnReadyEventListener?.Invoke();
+
         return Task.CompletedTask;
     }
     private static Task Disconnected(Exception exception)
@@ -56,6 +69,4 @@ public static partial class DiscordBotService
         ChatOnMessageEventListener?.Invoke(msg);
         return Task.CompletedTask;
     }
-
-
 }

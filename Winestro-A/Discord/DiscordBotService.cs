@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
@@ -30,9 +31,6 @@ public static partial class DiscordBotService
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
-
-        _interactionService = new(_client.Rest);
-        _interactionService.AddModuleAsync<SlashTestModule>(null);
     }
     public static async Task Toggle()
     {
@@ -55,5 +53,14 @@ public static partial class DiscordBotService
     public static async Task Stop()
     {
         await _client.LogoutAsync();
+    }
+
+    public static async Task<bool> RegisterTestCommands()
+    {
+        try
+        {
+            await InteractionService.RegisterCommandsToGuildAsync(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID")), true);
+            return true;
+        } catch (Exception ex) { return false; }
     }
 }

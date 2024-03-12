@@ -18,4 +18,10 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext<So
 
         LogService.Log("Slash test commands module loaded successfully");
     }
+
+    [SlashCommand("echo", "Echo an input")]
+    public async Task Echo(string input)
+    {
+        await RespondAsync(input);
+    }
 }
