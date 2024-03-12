@@ -269,27 +269,27 @@ public static class IntegratedConsoleService
     // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
-    [ConsoleCommand("test")]
+    [ConsoleCommand("test", Description = "Test command for testing console")]
     private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult($"Hello, world!");
     }
 
-    [ConsoleCommand("help")]
+    [ConsoleCommand("help", Description = "Lists all console commands")]
     private static async Task<ConsoleCommandResult> Help(ConsoleCommandContext ctx)
     {
         var attrs = GetCommandsAttributes();
-        var output = $"Console commands ({attrs.Count})\n";
+        var output = $"Console commands ({attrs.Count})";
 
         for (var i = 0; i < attrs.Count; i++)
         {
-            output += $"{i+1}. [{attrs[i].Name}] -> {attrs[i].Description ?? "No description"}\n";
+            output += $"\n{i+1}. [{attrs[i].Name}] -> {attrs[i].Description ?? "No description"}";
         }
 
         return new(output, true, ConsoleMessageTypes.Info);
     }
 
-    [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]
+    [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"}, Description = "Log to log panel. Syntax: log <word1> ... [type=info|warning|error] [meta=music|misc|debug]")]
     private static async Task<ConsoleCommandResult> Log(ConsoleCommandContext ctx)
     {
         LogMessageTypes? type = null;
@@ -372,7 +372,7 @@ public static class IntegratedConsoleService
         }
     }
 
-    [ConsoleCommand("conf")]
+    [ConsoleCommand("conf", Description = "Lists all config settngs")]
     private static async Task<ConsoleCommandResult> ShowSettings(ConsoleCommandContext ctx)
     {
         var count = ApplicationData.Current.LocalSettings.Values.Keys.Count();
@@ -385,7 +385,7 @@ public static class IntegratedConsoleService
         return new ConsoleCommandResult(ret, true, ConsoleMessageTypes.Info);
     }
 
-    [ConsoleCommand("conf add", RequiredArgs = 2)]
+    [ConsoleCommand("conf add", RequiredArgs = 2, Description = "Add setting to config. Syntax: conf add <key> <value>")]
     private static async Task<ConsoleCommandResult> CreateSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Add(ctx.Args[0], ctx.Args[1]);
@@ -396,7 +396,7 @@ public static class IntegratedConsoleService
         );
     }
 
-    [ConsoleCommand("conf del", RequiredArgs = 1)]
+    [ConsoleCommand("conf del", RequiredArgs = 1, Description = "Removed setting from config. Syntax: conf del <key>")]
     private static async Task<ConsoleCommandResult> RemoveSetting(ConsoleCommandContext ctx)
     {
         var ok = ConfigService.Delete(ctx.Args[0]);
@@ -407,28 +407,28 @@ public static class IntegratedConsoleService
         );
     }
 
-    [ConsoleCommand("discord bot run")]
+    [ConsoleCommand("discord bot run", Description = "Runs discord bot")]
     private static async Task<ConsoleCommandResult> BotRun(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Run();
         return new ConsoleCommandResult($"Launching bot...");
     }
 
-    [ConsoleCommand("discord bot stop")]
+    [ConsoleCommand("discord bot stop", Description = "Stops discord bot")]
     private static async Task<ConsoleCommandResult> BotStop(ConsoleCommandContext ctx)
     {
         await DiscordBotService.Stop();
         return new ConsoleCommandResult($"Stopping bot...");
     }
 
-    [ConsoleCommand("discord bot commands reg")]
+    [ConsoleCommand("discord bot commands reg", Description = "Registers all global discord commands")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
         //await DiscordBotService.RegisterGlobalSlashCommands();
         return new("Console commands have been registered");
     }
 
-    [ConsoleCommand("discord bot commands reg test")]
+    [ConsoleCommand("discord bot commands reg test", Description = "Registers all test discord commands to test server")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
         if (await DiscordBotService.RegisterTestCommandsAsync())
@@ -441,7 +441,7 @@ public static class IntegratedConsoleService
         }
     }
 
-    [ConsoleCommand("sudo discord bot slash delete all")]
+    [ConsoleCommand("sudo discord bot slash delete all", Description = "Deletes ALL global commands from the discord")]
     private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
     {
         //await DiscordBotService.DeleteSlashCommands();
