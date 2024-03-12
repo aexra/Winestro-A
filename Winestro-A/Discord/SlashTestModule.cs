@@ -12,23 +12,16 @@ namespace Winestro_A.Discord;
 
 public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 {
-    //public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
-    //{
-    //    base.OnModuleBuilding(commandService, module);
-
-    //    LogService.Log("Slash test commands module loaded successfully");
-    //}
-
-    [SlashCommand("echo", "Echo an input")]
-    public async Task Echo(string input)
+    public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
     {
-        LogService.Log("EXECUTED");
-        await RespondAsync(input);
+        base.OnModuleBuilding(commandService, module);
+
+        LogService.Log("Slash test commands module loaded successfully");
     }
 
-    [SlashCommand("test", "TEEEEEEST")]
+    [SlashCommand("test", "Test slash command")]
     public async Task Test()
     {
-        await RespondAsync("GOTCHA BITCH");
+        await RespondAsync("Hello, world!");
     }
 }

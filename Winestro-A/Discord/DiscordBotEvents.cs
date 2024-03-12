@@ -21,13 +21,7 @@ public static partial class DiscordBotService
 
     private static async Task Ready()
     {
-        await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
-
-        Client.InteractionCreated += async (x) =>
-        {
-            var ctx = new SocketInteractionContext(Client, x);
-            var res = await InteractionService.ExecuteCommandAsync(ctx, ServiceProvider);
-        };
+        await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
         RunnedAt = TimeHelper.Now;
         OnReadyEventListener?.Invoke();

@@ -17,17 +17,23 @@ public static partial class DiscordBotService
 {
     public static DiscordSocketClient Client => _client;
     public static InteractionService InteractionService => _interactionService;
-    public static IServiceProvider ServiceProvider => _serviceProvider;
+
+    private static readonly DiscordSocketConfig socketConf = new()
+    {
+        GatewayIntents = GatewayIntents.All,
+    };
+    private static readonly InteractionServiceConfig intsConf = new()
+    {
+        AutoServiceScopes = true
+    };
 
     private static DiscordSocketClient _client;
     private static InteractionService _interactionService;
-    private static IServiceProvider _serviceProvider;
 
     public static void Init()
     {
-        _serviceProvider = CreateProvider();
-        _client = ServiceProvider.GetRequiredService<DiscordSocketClient>();
-        _interactionService = ServiceProvider.GetRequiredService<InteractionService>();
+        _client = new(socketConf);
+        _interactionService = new(_client, intsConf);
 
         SetupEvents();
     }
@@ -54,34 +60,17 @@ public static partial class DiscordBotService
         await _client.LogoutAsync();
     }
 
-    private static IServiceProvider CreateProvider()
-    {
-        var config = new DiscordSocketConfig()
-        {
-            GatewayIntents = GatewayIntents.All,
-            //UseInteractionSnowflakeDate = false
-        };
-
-        var servConfig = new InteractionServiceConfig() 
-        { 
-            AutoServiceScopes = true 
-        };
-
-        var collection = new ServiceCollection()
-            .AddSingleton(config)
-            .AddSingleton<DiscordSocketClient>()
-            .AddSingleton(servConfig)
-            .AddSingleton<InteractionService>();
-
-        return collection.BuildServiceProvider();
-    }
-
     public static void SetupEvents()
     {
         _client.Log += Log;
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
+        _client.InteractionCreated += async (x) =>
+        {
+            var ctx = new SocketInteractionContext(Client, x);
+            var res = await InteractionService.ExecuteCommandAsync(ctx, null);
+        };
     }
 
     public static async Task<bool> RegisterTestCommandsAsync()
