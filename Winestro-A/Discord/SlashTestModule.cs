@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Discord;
 using Discord.Interactions;
-using Discord.WebSocket;
 using Winestro_A.Services;
+
 
 namespace Winestro_A.Discord;
 
@@ -19,9 +14,37 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         LogService.Log("Slash test commands module loaded successfully");
     }
 
-    [SlashCommand("test", "Test slash command")]
+    [SlashCommand("test", "Команда для теста")]
     public async Task Test()
     {
-        await RespondAsync("Hello, world!");
+        await RespondAsync("✅ Ы");
+    }
+
+    [SlashCommand("join", "Заходит в голосовой канал", runMode: RunMode.Async)]
+    public async Task JoinChannel(IVoiceChannel channel = null)
+    {
+        // Get the audio channel
+        channel = channel ?? (Context.User as IGuildUser)?.VoiceChannel;
+        if (channel == null) { await RespondAsync("📛 Ты или сам зайди в канал, или скажи в какой мне зайти 👺"); return; }
+
+        // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
+        var audioClient = await channel.ConnectAsync();
+
+        await RespondAsync($"✅ Зашел в {channel.Mention}");
+    }
+
+    [SlashCommand("leave", "Ухожу из голосового канала", runMode: RunMode.Async)]
+    public async Task LeaveChannel()
+    {
+        if (Context.Guild.CurrentUser.VoiceChannel != null)
+        {
+            var channel = Context.Guild.CurrentUser.VoiceChannel;
+            await channel.DisconnectAsync();
+            await RespondAsync($"✅ Вышел из {channel.Mention}");
+        }
+        else
+        {
+            await RespondAsync($"📛 Чтобы выйти откуда-то, надо быть где-то ☝️");
+        }
     }
 }
