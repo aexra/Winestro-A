@@ -401,7 +401,7 @@ public static class IntegratedConsoleService
     [ConsoleCommand("discord bot commands reg test")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
-        if (await DiscordBotService.RegisterTestCommands())
+        if (await DiscordBotService.RegisterTestCommandsAsync())
         {
             return new("Console commands have been registered");
         }

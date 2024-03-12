@@ -10,18 +10,25 @@ using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
-public class SlashTestModule : InteractionModuleBase<SocketInteractionContext<SocketMessageComponent>>
+public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 {
-    public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
-    {
-        base.OnModuleBuilding(commandService, module);
+    //public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
+    //{
+    //    base.OnModuleBuilding(commandService, module);
 
-        LogService.Log("Slash test commands module loaded successfully");
-    }
+    //    LogService.Log("Slash test commands module loaded successfully");
+    //}
 
     [SlashCommand("echo", "Echo an input")]
     public async Task Echo(string input)
     {
+        LogService.Log("EXECUTED");
         await RespondAsync(input);
+    }
+
+    [SlashCommand("test", "TEEEEEEST")]
+    public async Task Test()
+    {
+        await RespondAsync("GOTCHA BITCH");
     }
 }

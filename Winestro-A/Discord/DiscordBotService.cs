@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using Windows.Devices.Geolocation;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
@@ -16,21 +17,19 @@ public static partial class DiscordBotService
 {
     public static DiscordSocketClient Client => _client;
     public static InteractionService InteractionService => _interactionService;
+    public static IServiceProvider ServiceProvider => _serviceProvider;
 
     private static DiscordSocketClient _client;
     private static InteractionService _interactionService;
+    private static IServiceProvider _serviceProvider;
 
     public static void Init()
     {
-        var config = new DiscordSocketConfig()
-        {
-            GatewayIntents = GatewayIntents.All
-        };
-        _client = new DiscordSocketClient(config);
-        _client.Log += Log;
-        _client.Ready += Ready;
-        _client.Disconnected += Disconnected;
-        _client.MessageReceived += MessageRecieved;
+        _serviceProvider = CreateProvider();
+        _client = ServiceProvider.GetRequiredService<DiscordSocketClient>();
+        _interactionService = ServiceProvider.GetRequiredService<InteractionService>();
+
+        SetupEvents();
     }
     public static async Task Toggle()
     {
@@ -55,11 +54,42 @@ public static partial class DiscordBotService
         await _client.LogoutAsync();
     }
 
-    public static async Task<bool> RegisterTestCommands()
+    private static IServiceProvider CreateProvider()
+    {
+        var config = new DiscordSocketConfig()
+        {
+            GatewayIntents = GatewayIntents.All,
+            //UseInteractionSnowflakeDate = false
+        };
+
+        var servConfig = new InteractionServiceConfig() 
+        { 
+            AutoServiceScopes = true 
+        };
+
+        var collection = new ServiceCollection()
+            .AddSingleton(config)
+            .AddSingleton<DiscordSocketClient>()
+            .AddSingleton(servConfig)
+            .AddSingleton<InteractionService>();
+
+        return collection.BuildServiceProvider();
+    }
+
+    public static void SetupEvents()
+    {
+        _client.Log += Log;
+        _client.Ready += Ready;
+        _client.Disconnected += Disconnected;
+        _client.MessageReceived += MessageRecieved;
+    }
+
+    public static async Task<bool> RegisterTestCommandsAsync()
     {
         try
         {
-            await InteractionService.RegisterCommandsToGuildAsync(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID")), true);
+            var commands = await InteractionService.RegisterCommandsToGuildAsync(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID")), true);
+            LogService.Log($"Test command registered successfully: {commands.Count}");
             return true;
         } catch (Exception ex) { return false; }
     }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Microsoft.Extensions.DependencyInjection;
 using Winestro_A.Helpers;
 using Winestro_A.Services;
 
@@ -18,22 +19,18 @@ public static partial class DiscordBotService
     public static Action? OnReadyEventListener { get; set; }
     public static Action? OnDisconnectedEventListener { get; set; }
 
-    private static Task Ready()
+    private static async Task Ready()
     {
-        _interactionService = new(Client.Rest);
+        await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), ServiceProvider);
 
         Client.InteractionCreated += async (x) =>
         {
-            var ctx = new SocketInteractionContext(_client, x);
-            await InteractionService.ExecuteCommandAsync(ctx, null);
+            var ctx = new SocketInteractionContext(Client, x);
+            var res = await InteractionService.ExecuteCommandAsync(ctx, ServiceProvider);
         };
-
-        InteractionService.AddModuleAsync<SlashTestModule>(null);
 
         RunnedAt = TimeHelper.Now;
         OnReadyEventListener?.Invoke();
-
-        return Task.CompletedTask;
     }
     private static Task Disconnected(Exception exception)
     {
