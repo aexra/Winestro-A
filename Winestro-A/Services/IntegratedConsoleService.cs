@@ -394,18 +394,18 @@ public static class IntegratedConsoleService
     [ConsoleCommand("bot slash reg")]
     private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
     {
-        await DiscordBotService.RegisterGlobalSlashCommands();
+        //await DiscordBotService.RegisterGlobalSlashCommands();
         return new("Console commands have been registered");
     }
 
     [ConsoleCommand("bot slashtest reg")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
-        if (await DiscordBotService.RegisterTestSlashCommands())
-        {
-            return new("Console commands have been registered");
-        }
-        else
+        //if (await DiscordBotService.RegisterTestSlashCommands())
+        //{
+        //    return new("Console commands have been registered");
+        //}
+        //else
         {
             return new("Exception raised when registering *TEST* slash commands");
         }
@@ -414,7 +414,7 @@ public static class IntegratedConsoleService
     [ConsoleCommand("sudo bot slash delete all")]
     private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
     {
-        await DiscordBotService.DeleteSlashCommands();
+        //await DiscordBotService.DeleteSlashCommands();
         return new("Global slash commands will be deleted in ~1 hour");
     }    
 }

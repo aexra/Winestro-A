@@ -7,14 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Winestro_A.Services;
 
 namespace Winestro_A.Discord;
 
 public static partial class DiscordBotService
 {
+    public static DiscordSocketClient Client => _client;
+    public static InteractionService InteractionService => _interactionService;
+
     private static DiscordSocketClient _client;
     private static InteractionService _interactionService;
 
@@ -29,13 +30,9 @@ public static partial class DiscordBotService
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
-        _client.SlashCommandExecuted += SlashCommandHandler;
 
         _interactionService = new(_client.Rest);
-
-        _interactionService.AddModuleAsync<DiscordSlashCommandsModule>(null);
-
-        InitSlashCommands();
+        //_interactionService.AddModuleAsync<DiscordSlashCommandsModule>(null);
     }
     public static async Task Toggle()
     {
