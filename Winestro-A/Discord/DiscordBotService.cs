@@ -32,7 +32,7 @@ public static partial class DiscordBotService
         _client.MessageReceived += MessageRecieved;
 
         _interactionService = new(_client.Rest);
-        //_interactionService.AddModuleAsync<DiscordSlashCommandsModule>(null);
+        _interactionService.AddModuleAsync<SlashTestModule>(null);
     }
     public static async Task Toggle()
     {
