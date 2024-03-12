@@ -246,7 +246,23 @@ public static class IntegratedConsoleService
 
         return new(false, $"Cannot find appropriate overload for [{name}]");
     }
-    
+    private static List<ConsoleCommandAttribute> GetCommandsAttributes()
+    {
+        var list = new List<ConsoleCommandAttribute>();
+        foreach (var command in CommandsList)
+        {
+            var attributes = command.GetMethodInfo().GetCustomAttributes();
+            foreach (Attribute attr in attributes)
+            {
+                if (attr is ConsoleCommandAttribute tcattr)
+                {
+                    list.Add(tcattr);
+                }
+            }
+        }
+        return list;
+    }
+
     // HERE COMMANDS GO
 
     // EVERY COMMAND HAS TO BE LIKE
@@ -257,6 +273,20 @@ public static class IntegratedConsoleService
     private static async Task<ConsoleCommandResult> Test(ConsoleCommandContext ctx)
     {
         return new ConsoleCommandResult($"Hello, world!");
+    }
+
+    [ConsoleCommand("help")]
+    private static async Task<ConsoleCommandResult> Help(ConsoleCommandContext ctx)
+    {
+        var attrs = GetCommandsAttributes();
+        var output = $"Console commands ({attrs.Count})\n";
+
+        for (var i = 0; i < attrs.Count; i++)
+        {
+            output += $"{i+1}. [{attrs[i].Name}] -> {attrs[i].Description ?? "No description"}\n";
+        }
+
+        return new(output, true, ConsoleMessageTypes.Info);
     }
 
     [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"})]

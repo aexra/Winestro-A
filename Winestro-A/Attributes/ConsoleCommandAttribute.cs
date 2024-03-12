@@ -13,6 +13,7 @@ public class ConsoleCommandAttribute : Attribute
     public string Name { get; }
     public int RequiredArgs { get; set; } = 0;
     public string[]? KwargsKeys { get; set; } = null;
+    public string Description { get; set; }
 
     public ConsoleCommandAttribute(string name)
     {
