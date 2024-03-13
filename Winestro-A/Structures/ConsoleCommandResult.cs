@@ -9,6 +9,6 @@ public struct ConsoleCommandResult
     {
         OutMessage = msg;
         Success = ok;
-        Type = type;
+        Type = ok ? type : Enums.ConsoleMessageTypes.Fail;
     }
 }

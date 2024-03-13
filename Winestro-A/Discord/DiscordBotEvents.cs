@@ -60,4 +60,9 @@ public static partial class DiscordBotService
         ChatOnMessageEventListener?.Invoke(msg);
         return Task.CompletedTask;
     }
+
+    private static async Task VoiceStateUpdated(SocketUser user, SocketVoiceState s1, SocketVoiceState s2)
+    {
+        LogService.Log($"s1: {s1}, s2: {s2}");
+    }
 }

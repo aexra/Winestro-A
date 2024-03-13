@@ -66,6 +66,7 @@ public static partial class DiscordBotService
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
+        _client.UserVoiceStateUpdated += VoiceStateUpdated;
         _client.InteractionCreated += async (x) =>
         {
             var ctx = new SocketInteractionContext(Client, x);

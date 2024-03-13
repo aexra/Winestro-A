@@ -47,4 +47,18 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync($"📛 Чтобы выйти откуда-то, надо быть где-то ☝️");
         }
     }
+
+    [SlashCommand("playtestfile", "Играет аудиофайл, сохраненный в приложении", runMode:RunMode.Async)]
+    public async Task PlayTest()
+    {
+        var vc = Context.Guild.CurrentUser.VoiceChannel;
+        if (vc != null)
+        {
+            // Retrieve audioclient from static (guild: ac)
+        }
+        else
+        {
+            await RespondAsync($"📛 Я не в канале!");
+        }
+    }
 }

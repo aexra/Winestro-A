@@ -437,7 +437,7 @@ public static class IntegratedConsoleService
         }
         else
         {
-            return new("Exception raised when registering *TEST* slash commands");
+            return new("Exception raised when registering *TEST* slash commands", false);
         }
     }
 
