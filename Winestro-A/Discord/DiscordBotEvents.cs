@@ -21,7 +21,14 @@ public static partial class DiscordBotService
 
     private static async Task Ready()
     {
-        await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+        try
+        {
+            await InteractionService.AddModulesAsync(Assembly.GetEntryAssembly(), null);
+        }
+        catch (Exception ex)
+        {
+            LogService.Error("Discord Ready event has thrown an exception: " + ex);
+        }
 
         RunnedAt = TimeHelper.Now;
         OnReadyEventListener?.Invoke();
@@ -61,8 +68,9 @@ public static partial class DiscordBotService
         return Task.CompletedTask;
     }
 
-    private static async Task VoiceStateUpdated(SocketUser user, SocketVoiceState s1, SocketVoiceState s2)
+    private static Task VoiceStateUpdated(SocketUser user, SocketVoiceState s1, SocketVoiceState s2)
     {
         LogService.Log($"s1: {s1}, s2: {s2}");
+        return Task.CompletedTask;
     }
 }

@@ -10,6 +10,7 @@ using System.Reflection;
 using System.Runtime.ExceptionServices;
 using Windows.Devices.Geolocation;
 using Winestro_A.Services;
+using Winestro_A.Structures;
 
 namespace Winestro_A.Discord;
 
@@ -69,18 +70,28 @@ public static partial class DiscordBotService
         _client.UserVoiceStateUpdated += VoiceStateUpdated;
         _client.InteractionCreated += async (x) =>
         {
+            LogService.Log($"Interaction created: [{x}]", Enums.LogMessageMetaTypes.Debug);
             var ctx = new SocketInteractionContext(Client, x);
             var res = await InteractionService.ExecuteCommandAsync(ctx, null);
+
+            if (res.IsSuccess)
+            {
+                LogService.Log($"Interaction executed: [{x}]", Enums.LogMessageMetaTypes.Debug);
+            }
+            else
+            {
+                LogService.Error($"Interaction [{x}] execution fail: [{res.Error}]", Enums.LogMessageMetaTypes.Debug);
+            }
         };
     }
 
-    public static async Task<bool> RegisterTestCommandsAsync()
+    public static async Task<ResultManifest> TryRegisterTestCommandsAsync()
     {
         try
         {
             var commands = await InteractionService.RegisterCommandsToGuildAsync(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID")), true);
             LogService.Log($"Test command registered successfully: {commands.Count}");
-            return true;
-        } catch (Exception ex) { return false; }
+            return new(true);
+        } catch (Exception ex) { return new(false, ex.ToString()); }
     }
 }

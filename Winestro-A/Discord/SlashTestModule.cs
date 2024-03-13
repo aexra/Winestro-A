@@ -14,10 +14,25 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         LogService.Log("Slash test commands module loaded successfully");
     }
 
+    public override Task BeforeExecuteAsync(ICommandInfo command)
+    {
+        LogService.Log($"Command [{command.Name}] is going to be invoked...", Enums.LogMessageMetaTypes.Debug);
+        return base.BeforeExecuteAsync(command);
+    }
+
     [SlashCommand("test", "Команда для теста")]
     public async Task Test()
     {
+        LogService.Log("Test discord bot command invoked", Enums.LogMessageMetaTypes.Debug);
         await RespondAsync("✅ Ы");
+    }
+
+    [SlashCommand("testdeffered", "Команда для теста отложенных команд")]
+    public async Task DeferredTest()
+    {
+        LogService.Log("Deferred test discord bot command invoked", Enums.LogMessageMetaTypes.Debug);
+        await DeferAsync();
+        await ModifyOriginalResponseAsync(props => { props.Content = "Hello, deferred world!"; });
     }
 
     [SlashCommand("join", "Заходит в голосовой канал", runMode: RunMode.Async)]

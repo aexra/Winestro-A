@@ -438,13 +438,14 @@ public static class IntegratedConsoleService
     [ConsoleCommand("discord bot commands reg test", Description = "Registers all test discord commands to test server")]
     private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
     {
-        if (await DiscordBotService.RegisterTestCommandsAsync())
+        var res = await DiscordBotService.TryRegisterTestCommandsAsync();
+        if (res.Success)
         {
             return new("Console commands have been registered");
         }
         else
         {
-            return new("Exception raised when registering *TEST* slash commands", false);
+            return new("Exception raised when registering *TEST* slash commands: " + res.Message, false);
         }
     }
 
