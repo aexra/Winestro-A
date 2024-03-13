@@ -65,7 +65,14 @@ public static class IntegratedConsoleService
         var r = TryGetAppropriateCommand(promt, out method, out ctx);
         if (r.Success)
         {
-            result = Task.Run(async() => await method.Invoke((ConsoleCommandContext)ctx)).Result;
+            try
+            {
+                result = Task.Run(async() => await method.Invoke((ConsoleCommandContext)ctx)).Result;
+            }
+            catch (Exception ex)
+            {
+                result = new($"Unhandled exception raised when invoking {ctx.Value.Name}: {ex}", false);
+            }
         }
         else
         {
@@ -235,7 +242,7 @@ public static class IntegratedConsoleService
                 }
 
                 method = Overloads[key];
-                ctx = new() { Args=Args, Kwargs=Kwargs };
+                ctx = new(name, Args, Kwargs);
                 return new(true);
             }
             else

@@ -8,6 +8,14 @@ namespace Winestro_A.Structures;
 
 public struct ConsoleCommandContext
 {
-    public List<string> Args;
-    public Dictionary<string, string> Kwargs;
+    public string Name { get; private set; }
+    public List<string> Args { get; private set; }
+    public Dictionary<string, string> Kwargs { get; private set; }
+
+    public ConsoleCommandContext(string name, List<string> args, Dictionary<string, string> kwargs)
+    {
+        Name = name;
+        Args = args;
+        Kwargs = kwargs;
+    }
 }
