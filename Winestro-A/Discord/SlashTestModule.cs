@@ -35,7 +35,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         await ModifyOriginalResponseAsync(props => { props.Content = "✅ Deferred Ы"; });
     }
 
-    [SlashCommand("join", "Заходит в голосовой канал", runMode: RunMode.Async)]
+    [SlashCommand("join", "Захожу в голосовой канал", runMode: RunMode.Async)]
     public async Task JoinChannel(IVoiceChannel channel = null)
     {
         // Get the audio channel
