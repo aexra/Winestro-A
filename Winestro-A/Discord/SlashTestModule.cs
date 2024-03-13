@@ -32,7 +32,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     {
         LogService.Log("Deferred test discord bot command invoked", Enums.LogMessageMetaTypes.Debug);
         await DeferAsync();
-        await ModifyOriginalResponseAsync(props => { props.Content = "Hello, deferred world!"; });
+        await ModifyOriginalResponseAsync(props => { props.Content = "✅ Deferred Ы"; });
     }
 
     [SlashCommand("join", "Заходит в голосовой канал", runMode: RunMode.Async)]
