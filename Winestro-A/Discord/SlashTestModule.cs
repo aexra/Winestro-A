@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.Audio;
+using Discord.Commands;
 using Discord.Interactions;
 using Winestro_A.Services;
 using Winestro_A.Youtube;
@@ -82,5 +83,52 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         using var discord = audioClient.CreatePCMStream(AudioApplication.Mixed);
         try { await output.CopyToAsync(discord); }
         finally { await discord.FlushAsync(); }
+    }
+
+    [SlashCommand("play", "Играет трек из ютуба по ссылке")]
+    public async Task Play(string url)
+    {
+        // Получим голосовой канал того кто запросил трек
+        var requested_channel = (Context.User as IGuildUser)?.VoiceChannel;
+        if (requested_channel == null)
+        {
+            await RespondAsync("📛 Зайди в канал чтобы я добавил твой трек в очередь 👺");
+            return;
+        }
+
+        // Сразу проверим, что возможно найти поток для трека
+        var stream = await Extractor.GetAudioStreamHighestQuality(url);
+        if (stream == null)
+        {
+            await RespondAsync("📛 Не могу найти подходящий трек для твоего запроса. Возможно ошибка со стороны бота.");
+            return;
+        }
+
+        // Сначала проверим, есть ли активный аудио клиент в мапе
+        if (DiscordBotService.PlayersDict.ContainsKey(Context.Guild.Id))
+        {
+            // Есть
+            // Добавим трек в очередь
+            var player = DiscordBotService.PlayersDict[Context.Guild.Id];
+
+            // На всякий проверим есть ли действующий аудио клиент на этом сервере
+            await player.ConnectIfNot(requested_channel);
+
+            // Добавим в очередь
+            player.PlayQueue.Enqueue(stream.Url);
+        }
+        else
+        {
+            // Нет
+            // Подключим и создадим новую очередь
+
+            
+        }
+
+        
+
+        var audioClient = await channel.ConnectAsync();
+
+        DiscordBotService.AddAudioPlayer(new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient));
     }
 }

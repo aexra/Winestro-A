@@ -22,4 +22,16 @@ public static partial class DiscordBotService
             return null;
         }
     }
+    public static void RemoveAudioPlayer(ulong guild)
+    {
+        try
+        {
+            PlayersDict.Remove(guild);
+        }
+        catch { }
+    }
+    public static void AddAudioPlayer(DiscordAudioPlayer player)
+    {
+        PlayersDict.TryAdd(player.GuildID, player);
+    }
 }
