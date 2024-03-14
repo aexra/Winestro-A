@@ -155,13 +155,16 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
     public async Task Queue()
     {
+        await DeferAsync();
+
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
             var now = player.NowPlaying;
 
             if (now == null)
             {
-                await RespondAsync("📛 Очереди нет, че тебе показывать?");
+
+                await ModifyOriginalResponseAsync(p => p.Content = "📛 Очереди нет, че тебе показывать?");
                 return;
             }
 
@@ -178,11 +181,11 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
                 embed.AddField($"{k}. {video.Title}", $"{video.Url}");
                 k++;
             }
-            await RespondAsync(embed: embed.Build());
+            await ModifyOriginalResponseAsync(p => p.Embed = embed.Build());
         }
         else
         {
-            await RespondAsync("📛 Очереди нет, че тебе показывать?");
+            await ModifyOriginalResponseAsync(p => p.Content = "📛 Очереди нет, че тебе показывать?");
         }
     }
 }
