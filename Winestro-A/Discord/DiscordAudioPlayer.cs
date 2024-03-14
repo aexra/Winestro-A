@@ -78,7 +78,6 @@ public class DiscordAudioPlayer
     {
         while (true)
         {
-            if (!IsPlaying) return;
             if (!IsRepeating)
             {
                 if (PlayQueue.Count > 0)
@@ -92,6 +91,7 @@ public class DiscordAudioPlayer
             }
             if (NowPlaying == null)
             {
+                isPlaying = false;
                 return;
             }
 
