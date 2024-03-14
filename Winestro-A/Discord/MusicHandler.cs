@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Winestro_A.Discord;
 
-public static partial class DiscordBotService
+public static class MusicHandler
 {
     public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new Dictionary<ulong, DiscordAudioPlayer>();
 
@@ -32,6 +32,6 @@ public static partial class DiscordBotService
     }
     public static void AddAudioPlayer(DiscordAudioPlayer player)
     {
-        PlayersDict.TryAdd(player.GuildID, player);
+        PlayersDict.TryAdd(player.Guild.Id, player);
     }
 }

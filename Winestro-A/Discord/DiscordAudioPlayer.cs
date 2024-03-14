@@ -9,56 +9,60 @@ using System.Threading.Tasks;
 using Winestro_A.Services;
 using Winestro_A.Youtube;
 using Winestro_A.FFmpeg;
+using Winestro_A.Structures;
 
 namespace Winestro_A.Discord;
 
 public class DiscordAudioPlayer
 {
-    public ulong GuildID;
-    public IUser user;
-    public IAudioClient client;
-    public Queue<string> PlayQueue;
+    public IGuildUser User;
+    public IGuild Guild => User.Guild;
+    public IAudioClient AudioClient;
+    public MusicItem? NowPlaying;
+    public Queue<MusicItem> PlayQueue;
 
-    public DiscordAudioPlayer(ulong guildID, IUser user, IAudioClient client)
+    // TODO: setter for continue/pause
+    public bool IsPlaying = false;
+
+    public DiscordAudioPlayer(IGuildUser user, IAudioClient client)
     {
-        GuildID = guildID;
-        this.user = user;
-        this.client = client;
+        this.User = user;
+        this.AudioClient = client;
         PlayQueue = new();
     }
 
-    public async Task Play()
-    {
-        await RunFFmpeg();
-    }
-    public async Task ConnectIfNot(IVoiceChannel channel)
-    {
-        var guild = DiscordBotService.GetGuild(GuildID);
-        
-        if (guild.AudioClient == null)
-        {
-            client = await channel.ConnectAsync();
-        }
-    }
 
-    private async Task RunFFmpeg()
-    {
-        using var ffmpeg = FFmpegHelper.CreateStream(PlayQueue.Dequeue());
 
-        if (ffmpeg == null)
-        {
-            LogService.Error("Cannot create FFmpeg");
-            return;
-        }
+    //public async Task Play()
+    //{
+    //    await RunFFmpeg();
+    //}
+    //public async Task ConnectIfNot(IVoiceChannel channel)
+    //{   
+    //    if (Guild.AudioClient == null)
+    //    {
+    //        AudioClient = await channel.ConnectAsync();
+    //    }
+    //}
 
-        using var output = ffmpeg.StandardOutput.BaseStream;
-        using var discord = client.CreatePCMStream(AudioApplication.Mixed);
+    //private async Task RunFFmpeg()
+    //{
+    //    using var ffmpeg = FFmpegHelper.CreateStream(PlayQueue.Dequeue());
 
-        LogService.Log("Лог перед ффмпегом", Enums.LogMessageMetaTypes.Debug);
+    //    if (ffmpeg == null)
+    //    {
+    //        LogService.Error("Cannot create FFmpeg");
+    //        return;
+    //    }
 
-        try { await output.CopyToAsync(discord); }
-        finally { await discord.FlushAsync(); }
+    //    using var output = ffmpeg.StandardOutput.BaseStream;
+    //    using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
 
-        LogService.Log("Лог после ффмпега", Enums.LogMessageMetaTypes.Debug);
-    }
+    //    LogService.Log("Лог перед ффмпегом", Enums.LogMessageMetaTypes.Debug);
+
+    //    try { await output.CopyToAsync(discord); }
+    //    finally { await discord.FlushAsync(); }
+
+    //    LogService.Log("Лог после ффмпега", Enums.LogMessageMetaTypes.Debug);
+    //}
 }
