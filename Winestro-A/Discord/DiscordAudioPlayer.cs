@@ -10,6 +10,7 @@ using Winestro_A.Services;
 using Winestro_A.Youtube;
 using Winestro_A.FFmpeg;
 using Winestro_A.Structures;
+using Discord.WebSocket;
 
 namespace Winestro_A.Discord;
 
@@ -29,6 +30,24 @@ public class DiscordAudioPlayer
         this.User = user;
         this.AudioClient = client;
         PlayQueue = new();
+    }
+
+    public void Enqueue(MusicItem item)
+    {
+        PlayQueue.Enqueue(item);
+    }
+
+    public static DiscordAudioPlayer FromConnectedChannel(IVoiceChannel channel)
+    {
+        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
+    }
+    public static async Task<DiscordAudioPlayer> FromUnconnectedChannel(IVoiceChannel channel)
+    {
+        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
+    }
+    public static async Task<DiscordAudioPlayer> FromChannel(IVoiceChannel channel)
+    {
+        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync());
     }
 
 

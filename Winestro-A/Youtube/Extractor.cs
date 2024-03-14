@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Winestro_A.Services;
+using Winestro_A.Structures;
 using YoutubeExplode;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
@@ -40,5 +41,23 @@ public static class Extractor
         {
             return null;
         }
+    }
+
+    public static async Task<MusicItem?> GetMusicItemAsync(string url)
+    {
+        MusicItem item = new();
+        Video? video = await GetVideoAsync(url);
+        var streamInfo = await GetAudioStreamHighestQuality(url);
+
+        if (video == null) return null;
+        if (streamInfo == null) return null;
+
+        item.Title = video.Title;
+        item.Description = video.Description;
+        item.Duration = video.Duration;
+        item.Author = video.Author.ChannelTitle;
+        item.AudioUrl = streamInfo.Url;
+
+        return item;
     }
 }

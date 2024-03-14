@@ -8,19 +8,11 @@ namespace Winestro_A.Discord;
 
 public static class MusicHandler
 {
-    public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new Dictionary<ulong, DiscordAudioPlayer>();
+    public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new();
 
-    public static DiscordAudioPlayer? GetAudioPlayer(ulong guild)
+    public static bool TryGetPlayer(ulong guild, out DiscordAudioPlayer? player)
     {
-        var result = PlayersDict.TryGetValue(guild, out var player);
-        if (result)
-        {
-            return player;
-        }
-        else
-        {
-            return null;
-        }
+        return PlayersDict.TryGetValue(guild, out player);
     }
     public static void RemoveAudioPlayer(ulong guild)
     {

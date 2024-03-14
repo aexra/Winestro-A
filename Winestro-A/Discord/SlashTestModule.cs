@@ -2,6 +2,7 @@
 using Discord.Audio;
 using Discord.Interactions;
 using Winestro_A.Services;
+using Winestro_A.Structures;
 using Winestro_A.Youtube;
 
 
@@ -150,6 +151,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь")]
     public async Task Play([Summary(name:"youtube promt")] string promt = "")
     {
+        // TODO: yt search before using promt (promt to url)
         if (promt == "") await Continue();
         else await Enqueue(promt);
     }
@@ -172,6 +174,35 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     }
     private async Task Enqueue(string promt)
     {
+        DiscordAudioPlayer? player;
+        IVoiceChannel? channel;
+        MusicItem? item;
+
+        item = await Extractor.GetMusicItemAsync(promt);
+        if (item == null)
+        {
+            await RespondAsync("📛 Не смог найти ничего по твоему запросу");
+            return;
+        }
         
+        MusicHandler.TryGetPlayer(Context.Guild.Id, out player);
+        channel = (Context.User as IGuildUser)?.VoiceChannel;
+
+        if (player == null && channel == null)
+        {
+            await RespondAsync("📛 Зайди в канал чтобы создать новый плейлист");
+            return;
+        }
+
+        if (player == null && channel != null)
+        {
+            player = await DiscordAudioPlayer.FromChannel(channel);
+            MusicHandler.AddAudioPlayer(player);
+        }
+
+        player.Enqueue(item.Value);
+        player.IsPlaying = true;
+
+        await RespondAsync($":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
     }
 }
