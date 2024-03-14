@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿using System.Diagnostics;
+using Discord;
 using Discord.Audio;
 using Discord.Interactions;
 using Winestro_A.Services;
@@ -88,7 +89,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     }
 
     [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь")]
-    public async Task Play([Summary(name:"promt")] string promt = "")
+    public async Task Play(string promt = "")
     {
         await DeferAsync();
 
@@ -149,5 +150,32 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         player.IsPlaying = true;
 
         await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
+    }
+
+    [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
+    public async Task Queue()
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            var now = player.NowPlaying;
+            var embed = new EmbedBuilder
+            {
+                Title = $"Сейчас играет: {now.Value.Title}",
+                Description = player.PlayQueue.Count == 1 ? "" : $"Первые {MathF.Min(5, player.PlayQueue.Count - 1)} из {player.PlayQueue.Count - 1} в очереди:",
+                Color = Color.Magenta
+            };
+            var k = 1;
+            for (var i = 1; i < player.PlayQueue.Count; i++)
+            {
+                var video = player.PlayQueue.ElementAt(i);
+                embed.AddField($"{k}. {video.Title}", $"{video.Url}");
+                k++;
+            }
+            await RespondAsync(embed: embed.Build());
+        }
+        else
+        {
+            await RespondAsync("📛 Очереди нет, че тебе показывать?");
+        }
     }
 }

@@ -57,6 +57,7 @@ public static class Extractor
         item.Duration = video.Duration;
         item.Author = video.Author.ChannelTitle;
         item.AudioUrl = streamInfo.Url;
+        item.Url = video.Url;
 
         return item;
     }

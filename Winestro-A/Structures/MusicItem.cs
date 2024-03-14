@@ -13,5 +13,6 @@ public struct MusicItem
     public string Description;
     public string Author;
     public string AudioUrl;
+    public string Url;
     public TimeSpan? Duration;
 }
