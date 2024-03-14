@@ -14,7 +14,7 @@ public static class FFmpegHelper
         var info = new ProcessStartInfo
         {
             FileName = "ffmpeg",
-            Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
+            Arguments = $"-hide_banner -loglevel verbose -reconnect 1 -reconnect_at_eof 1 -reconnect_streamed 1 -reconnect_delay_max 5 -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
             UseShellExecute = false,
             RedirectStandardOutput = true,
         };
