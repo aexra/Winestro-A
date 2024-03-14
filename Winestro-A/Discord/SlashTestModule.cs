@@ -158,6 +158,13 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
             var now = player.NowPlaying;
+
+            if (now == null)
+            {
+                await RespondAsync("📛 Очереди нет, че тебе показывать?");
+                return;
+            }
+
             var embed = new EmbedBuilder
             {
                 Title = $"Сейчас играет: {now.Value.Title}",
