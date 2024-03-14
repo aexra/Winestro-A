@@ -22,8 +22,19 @@ public class DiscordAudioPlayer
     public MusicItem? NowPlaying;
     public Queue<MusicItem> PlayQueue;
 
-    // TODO: setter for continue/pause
-    public bool IsPlaying = false;
+    private bool isPlaying = false;
+    public bool IsPlaying 
+    {
+        get => isPlaying;
+        set
+        {
+            if (value == isPlaying) return;
+            isPlaying = value;
+
+            if (value == true) Play();
+        }
+    }
+    public bool IsRepeating = false;
 
     public DiscordAudioPlayer(IGuildUser user, IAudioClient client)
     {
@@ -51,37 +62,53 @@ public class DiscordAudioPlayer
     }
 
 
+    private void Play()
+    {
+        Task.Run(PlayLoop);
+    }
+    private void Stop()
+    {
+    
+    }
+    private void Pause()
+    {
+        
+    }
+    private async Task PlayLoop()
+    {
+        while (true)
+        {
+            if (!IsPlaying) return;
+            if (!IsRepeating)
+            {
+                if (PlayQueue.Count > 0)
+                {
+                    NowPlaying = PlayQueue.Dequeue();
+                }
+                else
+                {
+                    NowPlaying = null;
+                }
+            }
+            if (NowPlaying == null)
+            {
+                return;
+            }
 
-    //public async Task Play()
-    //{
-    //    await RunFFmpeg();
-    //}
-    //public async Task ConnectIfNot(IVoiceChannel channel)
-    //{   
-    //    if (Guild.AudioClient == null)
-    //    {
-    //        AudioClient = await channel.ConnectAsync();
-    //    }
-    //}
+            using var ffmpeg = FFmpegHelper.CreateStream(NowPlaying.Value.AudioUrl);
 
-    //private async Task RunFFmpeg()
-    //{
-    //    using var ffmpeg = FFmpegHelper.CreateStream(PlayQueue.Dequeue());
+            if (ffmpeg == null)
+            {
+                LogService.Error("Cannot create FFmpeg", Enums.LogMessageMetaTypes.Music);
+                return;
+            }
 
-    //    if (ffmpeg == null)
-    //    {
-    //        LogService.Error("Cannot create FFmpeg");
-    //        return;
-    //    }
+            using var output = ffmpeg.StandardOutput.BaseStream;
+            using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
 
-    //    using var output = ffmpeg.StandardOutput.BaseStream;
-    //    using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
-
-    //    LogService.Log("Лог перед ффмпегом", Enums.LogMessageMetaTypes.Debug);
-
-    //    try { await output.CopyToAsync(discord); }
-    //    finally { await discord.FlushAsync(); }
-
-    //    LogService.Log("Лог после ффмпега", Enums.LogMessageMetaTypes.Debug);
-    //}
+            // TODO: использовать перегрузку CopyToAsync с CancellationToken'ом
+            try { await output.CopyToAsync(discord); }
+            finally { await discord.FlushAsync(); }
+        }
+    }
 }
