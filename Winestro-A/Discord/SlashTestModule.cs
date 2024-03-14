@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Audio;
-using Discord.Commands;
 using Discord.Interactions;
 using Winestro_A.Services;
 using Winestro_A.Youtube;
@@ -122,13 +121,10 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             // Нет
             // Подключим и создадим новую очередь
 
-            
+            var audioClient = await requested_channel.ConnectAsync();
+            var player = new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient);
+            player.PlayQueue.Enqueue(stream.Url);
+            DiscordBotService.AddAudioPlayer(player);
         }
-
-        
-
-        var audioClient = await channel.ConnectAsync();
-
-        DiscordBotService.AddAudioPlayer(new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient));
     }
 }
