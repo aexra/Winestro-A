@@ -87,70 +87,11 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         finally { await discord.FlushAsync(); }
     }
 
-    //[SlashCommand("play", "Играет трек из ютуба по ссылке")]
-    //public async Task Play(string url)
-    //{
-    //    LogService.Log(url, Enums.LogMessageMetaTypes.Debug);
-
-    //    // Получим голосовой канал того кто запросил трек
-    //    var requested_channel = (Context.User as IGuildUser)?.VoiceChannel;
-    //    if (requested_channel == null)
-    //    {
-    //        await RespondAsync("📛 Зайди в канал чтобы я добавил твой трек в очередь 👺");
-    //        return;
-    //    }
-
-    //    // Сразу проверим, что возможно найти поток для трека
-    //    var stream = await Extractor.GetAudioStreamHighestQuality(url);
-    //    if (stream == null)
-    //    {
-    //        await RespondAsync("📛 Не могу найти подходящий трек для твоего запроса. Возможно ошибка со стороны бота.");
-    //        return;
-    //    }
-
-    //    // Создадим пустышку на будущее
-    //    DiscordAudioPlayer player;
-
-    //    // Сначала проверим, есть ли активный аудио клиент в мапе
-    //    if (DiscordBotService.PlayersDict.ContainsKey(Context.Guild.Id))
-    //    {
-    //        // Есть
-    //        // Добавим трек в очередь
-    //        LogService.Log("player found", Enums.LogMessageMetaTypes.Debug);
-    //        // Получим плеер
-    //        player = DiscordBotService.PlayersDict[Context.Guild.Id];
-
-    //        // На всякий проверим есть ли действующий аудио клиент на этом сервере
-    //        await player.ConnectIfNot(requested_channel);
-
-    //        // Добавим в очередь
-    //        player.PlayQueue.Enqueue(stream.Url);
-    //    }
-    //    else
-    //    {
-    //        // Нет
-    //        // Подключим и создадим новую очередь
-    //        LogService.Log("player not found", Enums.LogMessageMetaTypes.Debug);
-    //        var audioClient = await requested_channel.ConnectAsync();
-    //        player = new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient);
-    //        player.PlayQueue.Enqueue(stream.Url);
-    //        DiscordBotService.AddAudioPlayer(player);
-    //    }
-    //    LogService.Log("play", Enums.LogMessageMetaTypes.Debug);
-
-    //    // response
-    //    await RespondAsync($":notes: Запустил тебе музончик бро {url}");
-
-    //    // Запустим плеер если он не работает
-    //    // TODO: проверять если уже работает
-    //    // запуск очереди если не работает, иначе добавить в очередь
-    //    // соотвутствующий респонс
-    //    await player.Play();
-    //}
-
     [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь")]
-    public async Task Play([Summary(name:"youtube promt")] string promt = "")
+    public async Task Play([Summary(name:"promt")] string promt = "")
     {
+        await DeferAsync();
+
         // TODO: yt search before using promt (promt to url)
         if (promt == "") await Continue();
         else await Enqueue(promt);
@@ -164,12 +105,16 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             if (player.PlayQueue.Count() > 1 || player.NowPlaying != null)
             {
                 MusicHandler.PlayersDict[guild.Id].IsPlaying = true;
-                await RespondAsync(":notes: Врубил твое музло");
+                await ModifyOriginalResponseAsync(p => p.Content = ":notes: Врубил твое музло");
             }
             else
             {
-                await RespondAsync("⚠️ Мне нечего врубать, добавь чё то в очередь");
+                await ModifyOriginalResponseAsync(p => p.Content = "⚠️ Мне нечего врубать, добавь чё то в очередь");
             }
+        }
+        else
+        {
+            await ModifyOriginalResponseAsync(p => p.Content = "📛 Очередь пустая, добавь музла");
         }
     }
     private async Task Enqueue(string promt)
@@ -190,7 +135,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 
         if (player == null && channel == null)
         {
-            await RespondAsync("📛 Зайди в канал чтобы создать новый плейлист");
+            await ModifyOriginalResponseAsync(p => p.Content = "📛 Зайди в канал чтобы создать новый плейлист");
             return;
         }
 
@@ -203,6 +148,6 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         player.Enqueue(item.Value);
         player.IsPlaying = true;
 
-        await RespondAsync($":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
+        await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
     }
 }
