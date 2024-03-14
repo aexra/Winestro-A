@@ -172,7 +172,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
                 Color = Color.Magenta
             };
             var k = 1;
-            for (var i = 1; i < player.PlayQueue.Count; i++)
+            for (var i = 1; i <= player.PlayQueue.Count; i++)
             {
                 var video = player.PlayQueue.ElementAt(i);
                 embed.AddField($"{k}. {video.Title}", $"{video.Url}");
