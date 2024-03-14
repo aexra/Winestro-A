@@ -14,16 +14,17 @@ public static class MusicHandler
     {
         return PlayersDict.TryGetValue(guild, out player);
     }
-    public static void RemoveAudioPlayer(ulong guild)
+    public static bool TryRemoveAudioPlayer(ulong guild)
     {
         try
         {
             PlayersDict.Remove(guild);
+            return true;
         }
-        catch { }
+        catch { return false; }
     }
-    public static void AddAudioPlayer(DiscordAudioPlayer player)
+    public static bool TryAddAudioPlayer(DiscordAudioPlayer player)
     {
-        PlayersDict.TryAdd(player.Guild.Id, player);
+        return PlayersDict.TryAdd(player.Guild.Id, player);
     }
 }

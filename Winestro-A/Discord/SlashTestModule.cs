@@ -105,7 +105,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             var player = PlayersDict[guild.Id];
             if (player.PlayQueue.Count() > 1 || player.NowPlaying != null)
             {
-                MusicHandler.PlayersDict[guild.Id].IsPlaying = true;
+                MusicHandler.PlayersDict[guild.Id].State = MusicPlayerStates.Playing;
                 await ModifyOriginalResponseAsync(p => p.Content = ":notes: Врубил твое музло");
             }
             else
@@ -143,11 +143,11 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         if (player == null && channel != null)
         {
             player = await DiscordAudioPlayer.FromChannel(channel);
-            MusicHandler.AddAudioPlayer(player);
+            MusicHandler.TryAddAudioPlayer(player);
         }
 
         player.Enqueue(item.Value);
-        player.IsPlaying = true;
+        player.State = MusicPlayerStates.Playing;
 
         await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
     }

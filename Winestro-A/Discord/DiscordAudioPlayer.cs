@@ -11,27 +11,47 @@ using Winestro_A.Youtube;
 using Winestro_A.FFmpeg;
 using Winestro_A.Structures;
 using Discord.WebSocket;
+using System.Diagnostics;
 
 namespace Winestro_A.Discord;
 
+public enum MusicPlayerStates
+{
+    Idle,
+    Playing,
+    Paused,
+    Default
+}
+
 public class DiscordAudioPlayer
 {
+    private static readonly int maxWaitTime = 120;
+
     public IGuildUser User;
     public IGuild Guild => User.Guild;
     public IAudioClient AudioClient;
     public MusicItem? NowPlaying;
     public Queue<MusicItem> PlayQueue;
+    public IVoiceChannel Channel;
 
-    private bool isPlaying = false;
-    public bool IsPlaying 
+    private Process? FFmpegProc = null;
+    private MusicPlayerStates _state = MusicPlayerStates.Default;
+    public MusicPlayerStates State
     {
-        get => isPlaying;
+        get => _state;
         set
         {
-            if (value == isPlaying) return;
-            isPlaying = value;
-
-            if (value == true) Play();
+            if (_state == value) return;
+            else
+            {
+                var ls = _state;
+                _state = value;
+                if (value == MusicPlayerStates.Playing)
+                {
+                    if (ls != MusicPlayerStates.Idle)
+                        Play();
+                }
+            }
         }
     }
     public bool IsRepeating = false;
@@ -58,7 +78,7 @@ public class DiscordAudioPlayer
     }
     public static async Task<DiscordAudioPlayer> FromChannel(IVoiceChannel channel)
     {
-        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync());
+        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync()) { Channel = channel };
     }
 
 
@@ -91,24 +111,44 @@ public class DiscordAudioPlayer
             }
             if (NowPlaying == null)
             {
-                isPlaying = false;
-                return;
+                State = MusicPlayerStates.Idle;
+                var counter = 0;
+                while (counter <= maxWaitTime)
+                {
+                    await Task.Delay(1000);
+                    counter++;
+                    if (State == MusicPlayerStates.Playing)
+                    {
+                        break;
+                    }
+                }
+                if (counter >= maxWaitTime)
+                {
+                    await OnPlayLoopClose();
+                    return;
+                }
+                continue;
             }
 
-            using var ffmpeg = FFmpegHelper.CreateStream(NowPlaying.Value.AudioUrl);
+            FFmpegProc = FFmpegHelper.CreateStream(NowPlaying.Value.AudioUrl);
 
-            if (ffmpeg == null)
+            if (FFmpegProc == null)
             {
                 LogService.Error("Cannot create FFmpeg", Enums.LogMessageMetaTypes.Music);
                 return;
             }
 
-            using var output = ffmpeg.StandardOutput.BaseStream;
+            using var output = FFmpegProc.StandardOutput.BaseStream;
             using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
 
             // TODO: использовать перегрузку CopyToAsync с CancellationToken'ом
             try { await output.CopyToAsync(discord); }
             finally { await discord.FlushAsync(); }
         }
+    }
+    private async Task OnPlayLoopClose()
+    {
+        MusicHandler.TryRemoveAudioPlayer(Guild.Id);
+        await Channel.DisconnectAsync();
     }
 }
