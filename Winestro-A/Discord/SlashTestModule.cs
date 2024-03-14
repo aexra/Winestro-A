@@ -77,7 +77,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 
         await RespondAsync($"✅ Зашел в {channel.Mention}");
 
-        using var ffmpeg = FFmpeg.FFmpeg.CreateStream((await Extractor.GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM")).Url);
+        using var ffmpeg = FFmpeg.FFmpegHelper.CreateStream((await Extractor.GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM")).Url);
         using var output = ffmpeg.StandardOutput.BaseStream;
         using var discord = audioClient.CreatePCMStream(AudioApplication.Mixed);
         try { await output.CopyToAsync(discord); }
@@ -87,6 +87,8 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("play", "Играет трек из ютуба по ссылке")]
     public async Task Play(string url)
     {
+        LogService.Log(url, Enums.LogMessageMetaTypes.Debug);
+
         // Получим голосовой канал того кто запросил трек
         var requested_channel = (Context.User as IGuildUser)?.VoiceChannel;
         if (requested_channel == null)
@@ -103,12 +105,17 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             return;
         }
 
+        // Создадим пустышку на будущее
+        DiscordAudioPlayer player;
+
         // Сначала проверим, есть ли активный аудио клиент в мапе
         if (DiscordBotService.PlayersDict.ContainsKey(Context.Guild.Id))
         {
             // Есть
             // Добавим трек в очередь
-            var player = DiscordBotService.PlayersDict[Context.Guild.Id];
+            LogService.Log("player found", Enums.LogMessageMetaTypes.Debug);
+            // Получим плеер
+            player = DiscordBotService.PlayersDict[Context.Guild.Id];
 
             // На всякий проверим есть ли действующий аудио клиент на этом сервере
             await player.ConnectIfNot(requested_channel);
@@ -120,11 +127,21 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         {
             // Нет
             // Подключим и создадим новую очередь
-
+            LogService.Log("player not found", Enums.LogMessageMetaTypes.Debug);
             var audioClient = await requested_channel.ConnectAsync();
-            var player = new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient);
+            player = new DiscordAudioPlayer(Context.Guild.Id, Context.Guild.CurrentUser, audioClient);
             player.PlayQueue.Enqueue(stream.Url);
             DiscordBotService.AddAudioPlayer(player);
         }
+        LogService.Log("play", Enums.LogMessageMetaTypes.Debug);
+
+        // response
+        await RespondAsync($":notes: Запустил тебе музончик бро {url}");
+
+        // Запустим плеер если он не работает
+        // TODO: проверять если уже работает
+        // запуск очереди если не работает, иначе добавить в очередь
+        // соотвутствующий респонс
+        await player.Play();
     }
 }

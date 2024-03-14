@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Winestro_A.FFmpeg;
 
-public static class FFmpeg
+public static class FFmpegHelper
 {
     public static Process? CreateStream(string path)
     {
