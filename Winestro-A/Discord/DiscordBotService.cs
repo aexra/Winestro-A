@@ -67,7 +67,7 @@ public static partial class DiscordBotService
         _client.Ready += Ready;
         _client.Disconnected += Disconnected;
         _client.MessageReceived += MessageRecieved;
-        _client.UserVoiceStateUpdated += VoiceStateUpdated;
+        //_client.UserVoiceStateUpdated += VoiceStateUpdated;
         _client.InteractionCreated += async (x) =>
         {
             LogService.Log($"Interaction created: [{x}]", Enums.LogMessageMetaTypes.Debug);

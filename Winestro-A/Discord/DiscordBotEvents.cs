@@ -68,6 +68,8 @@ public static partial class DiscordBotService
         return Task.CompletedTask;
     }
 
+    // Это ивент который срабатывает после ЛЮБОГО изменения состояния войса
+    // TODO: проверять если это (SocketGuildUser)user == client.RestUser чтобы чекать состояние бота
     private static Task VoiceStateUpdated(SocketUser user, SocketVoiceState s1, SocketVoiceState s2)
     {
         LogService.Log($"s1: {s1}, s2: {s2}");
