@@ -21,6 +21,4 @@ public static class FFmpegHelper
 
         return Process.Start(info);
     }
-
-
 }
