@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Winestro_A.Services;
-using Winestro_A.Structures;
+﻿using Winestro_A.Structures;
 using YoutubeExplode;
 using YoutubeExplode.Videos;
 using YoutubeExplode.Videos.Streams;
+
+using YoutubeSearchApi.Net.Models.Youtube;
+using YoutubeSearchApi.Net.Services;
 
 namespace Winestro_A.Youtube;
 
 public static class Extractor
 {
     private static YoutubeClient client;
+    private static YoutubeSearchClient searchClient;
 
     public static void Init()
     {
         client = new();
+        searchClient = new(new HttpClient());
 
         _ = Task.Run(async () => await GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM"));
     }
@@ -41,6 +40,12 @@ public static class Extractor
         {
             return null;
         }
+    }
+
+    public static async Task<YoutubeVideo?> Search(string promt)
+    {
+        var response = await searchClient.SearchAsync(promt);
+        return response.Results.Count > 0? response.Results.First() : null;
     }
 
     public static async Task<MusicItem?> GetMusicItemAsync(string url)

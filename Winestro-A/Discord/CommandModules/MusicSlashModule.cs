@@ -54,6 +54,17 @@ public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
         IVoiceChannel? channel;
         MusicItem? item;
 
+        if (!promt.Contains("https://"))
+        {
+            var video = await Extractor.Search(promt);
+            if (video == null)
+            {
+                await RespondAsync("📛 Не смог найти ничего по твоему запросу");
+                return;
+            }
+            promt = video.Id;
+        }
+
         item = await Extractor.GetMusicItemAsync(promt);
         if (item == null)
         {
