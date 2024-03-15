@@ -166,8 +166,6 @@ public class DiscordAudioPlayer
             using var output = FFmpegProc.StandardOutput.BaseStream;
             using var discord = AudioClient.CreatePCMStream(AudioApplication.Music);
 
-            await AudioClient.SetSpeakingAsync(true);
-
             while (true)
             {
                 if (SkipRequested)
@@ -194,8 +192,6 @@ public class DiscordAudioPlayer
                     break;
                 }
             }
-
-            await AudioClient.SetSpeakingAsync(false);
 
             LogService.Log($"Finished playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
 
