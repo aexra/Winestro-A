@@ -105,7 +105,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             var player = PlayersDict[guild.Id];
             if (player.PlayQueue.Count() > 1 || player.NowPlaying != null)
             {
-                MusicHandler.PlayersDict[guild.Id].State = MusicPlayerStates.Playing;
+                MusicHandler.PlayersDict[guild.Id].Continue();
                 await ModifyOriginalResponseAsync(p => p.Content = ":notes: Врубил твое музло");
             }
             else
@@ -150,6 +150,48 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         player.State = MusicPlayerStates.Playing;
 
         await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
+    }
+
+    [SlashCommand("skip", "Пропускает текущий трек")]
+    public async Task Skip(uint count = 1)
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            player?.Skip(count);
+            await RespondAsync($":notes: Пропустил тебе {count} музлa");
+        }
+        else
+        {
+            await RespondAsync("⚠️ Чо пропускать если нечево..");
+        }
+    }
+
+    [SlashCommand("pause", "Приостанавливает воспроизведение музла")]
+    public async Task Pause()
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            player?.Pause();
+            await RespondAsync(":green_square: Приостановил воспроизведение музла");
+        }
+        else
+        {
+            await RespondAsync("⚠️ Чо останавливать если нечево..");
+        }
+    }
+
+    [SlashCommand("repeat", "Залупливает воспроизведение музла")]
+    public async Task Repeat()
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            player?.ToggleRepeat();
+            await RespondAsync($"🔂 Залупил тебе музло");
+        }
+        else
+        {
+            await RespondAsync("⚠️ Чо залупливать если нечево..");
+        }
     }
 
     [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
