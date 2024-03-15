@@ -194,6 +194,20 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         }
     }
 
+    [SlashCommand("clear", "Очищает очередь музла (текущее останется)")]
+    public async Task ClearQueue()
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            player?.ClearQueue();
+            await RespondAsync(":white_check_mark: Очистил тебе очередь");
+        }
+        else
+        {
+            await RespondAsync("⚠️ Чо залупливать если нечево..");
+        }
+    }
+
     [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
     public async Task Queue(uint max = 5)
     {

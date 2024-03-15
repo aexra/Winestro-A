@@ -115,6 +115,11 @@ public class DiscordAudioPlayer
     {
         IsRepeating = !IsRepeating;
     }
+    public void ClearQueue()
+    {
+        PlayQueue.Clear();
+    }
+    
     private async Task PlayLoop()
     {
         PlayLoopActive = true;
