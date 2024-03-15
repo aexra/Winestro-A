@@ -435,13 +435,20 @@ public static class IntegratedConsoleService
         return new("Console commands have been registered");
     }
 
-    [ConsoleCommand("discord bot commands reg test", Description = "Registers all test discord commands to test server")]
-    private static async Task<ConsoleCommandResult> BotRegisterTestSlashCommands(ConsoleCommandContext ctx)
+    [ConsoleCommand("sudo discord bot slash delete all", Description = "Deletes ALL global commands from the discord")]
+    private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
     {
-        var res = await DiscordBotService.TryRegisterTestCommandsAsync();
+        //await DiscordBotService.DeleteSlashCommands();
+        return new("Global slash commands will be deleted in ~1 hour");
+    }
+
+    [ConsoleCommand("discord commands reg test", Description = "Registers all test discord commands to test server")]
+    private static async Task<ConsoleCommandResult> BotRegisterSlashCommandsFromTestGuild(ConsoleCommandContext ctx)
+    {
+        var res = await DiscordBotService.TryRegisterAllCommandsToGuildAsync();
         if (res.Success)
         {
-            return new("Console commands have been registered");
+            return new("Console commands have been registered to test guild");
         }
         else
         {
@@ -449,10 +456,19 @@ public static class IntegratedConsoleService
         }
     }
 
-    [ConsoleCommand("sudo discord bot slash delete all", Description = "Deletes ALL global commands from the discord")]
-    private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
+    [ConsoleCommand("discord commands unreg test", Description = "Registers all test discord commands to test server")]
+    private static async Task<ConsoleCommandResult> BotUnregisterSlashCommandsFromTestGuild(ConsoleCommandContext ctx)
     {
-        //await DiscordBotService.DeleteSlashCommands();
-        return new("Global slash commands will be deleted in ~1 hour");
-    }    
+        var res = await DiscordBotService.TryUnregisterAllCommandsFromGuildAsync();
+        if (res.Success)
+        {
+            return new("Console commands have been unregistered from test guild");
+        }
+        else
+        {
+            return new("Exception raised when registering *TEST* slash commands: " + res.Message, false);
+        }
+    }
+
+     
 }

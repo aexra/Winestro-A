@@ -69,25 +69,6 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         }
     }
 
-    [SlashCommand("playtestfile", "Играет аудиофайл, сохраненный в приложении", runMode:RunMode.Async)]
-    public async Task PlayTest()
-    {
-        // Get the audio channel
-        var channel = (Context.User as IGuildUser)?.VoiceChannel;
-        if (channel == null) { await RespondAsync("📛 Ты или сам зайди в канал, или скажи в какой мне зайти 👺"); return; }
-
-        // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
-        var audioClient = await channel.ConnectAsync();
-
-        await RespondAsync($"✅ Зашел в {channel.Mention}");
-
-        using var ffmpeg = FFmpeg.FFmpegHelper.CreateStream((await Extractor.GetAudioStreamHighestQuality("https://www.youtube.com/watch?v=jKikelM3FWM")).Url);
-        using var output = ffmpeg.StandardOutput.BaseStream;
-        using var discord = audioClient.CreatePCMStream(AudioApplication.Mixed);
-        try { await output.CopyToAsync(discord); }
-        finally { await discord.FlushAsync(); }
-    }
-
     [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь", runMode:RunMode.Async)]
     public async Task Play(string promt = "")
     {

@@ -85,13 +85,23 @@ public static partial class DiscordBotService
         };
     }
 
-    public static async Task<ResultManifest> TryRegisterTestCommandsAsync()
+    public static async Task<ResultManifest> TryRegisterAllCommandsToGuildAsync()
     {
         try
         {
-            var commands = await InteractionService.RegisterCommandsToGuildAsync(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID")), true);
-            LogService.Log($"Test command registered successfully: {commands.Count}");
+            var commands = await InteractionService.AddModulesToGuildAsync(GetGuild(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID"))), true);
+            LogService.Log($"Test commands registered successfully: {commands.Count}");
             return new(true);
         } catch (Exception ex) { return new(false, ex.ToString()); }
+    }
+    public static async Task<ResultManifest> TryUnregisterAllCommandsFromGuildAsync()
+    {
+        try
+        {
+            await InteractionService.RemoveModulesFromGuildAsync(GetGuild(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID"))), InteractionService.Modules.ToArray());
+            LogService.Log($"Test commands unregistered successfully");
+            return new(true);
+        }
+        catch (Exception ex) { return new(false, ex.ToString()); }
     }
 }
