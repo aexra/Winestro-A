@@ -151,6 +151,8 @@ public class DiscordAudioPlayer
                 continue;
             }
 
+            LogService.Log($"Starting playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
+
             FFmpegProc = FFmpegHelper.CreateStream(NowPlaying.Value.AudioUrl);
 
             if (FFmpegProc == null)
@@ -165,6 +167,8 @@ public class DiscordAudioPlayer
             //// TODO: использовать перегрузку CopyToAsync с CancellationToken'ом
             //try { await output.CopyToAsync(discord); }
             //finally { await discord.FlushAsync(); }
+
+            await AudioClient.SetSpeakingAsync(true);
 
             while (true)
             {
@@ -192,6 +196,10 @@ public class DiscordAudioPlayer
                     break;
                 }
             }
+
+            await AudioClient.SetSpeakingAsync(false);
+
+            LogService.Log($"Finished playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
 
             await discord?.FlushAsync();
         }
