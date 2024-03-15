@@ -12,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Winestro_A.Discord;
 using Winestro_A.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -32,5 +33,25 @@ public sealed partial class MiscModulePage : Page
     {
         ViewModel = App.GetService<MiscModuleViewModel>();
         InitializeComponent();
+    }
+
+    private async void SyncTest_Click(object sender, RoutedEventArgs e)
+    {
+        await DiscordBotService.TryRegisterTestCommandsAsync();
+    }
+
+    private void SyncGlobalAll_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void SyncGlobalMusic_Click(object sender, RoutedEventArgs e)
+    {
+
+    }
+
+    private void SyncGlobalMisc_Click(object sender, RoutedEventArgs e)
+    {
+
     }
 }

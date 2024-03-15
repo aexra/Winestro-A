@@ -9,6 +9,21 @@
     mc:Ignorable="d">
 
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
 
+        <StackPanel Grid.Column="0" Spacing="10">
+            <TextBlock Text="Very useful buttons" FontWeight="Bold"/>
+            <Button x:Name="SyncTest" HorizontalAlignment="Stretch" Click="SyncTest_Click" Content="Sync test discord slash commands"/>
+            <Button x:Name="SyncGlobalAll" HorizontalAlignment="Stretch" Click="SyncGlobalAll_Click" IsEnabled="False" Content="Sync all discord slash commands globally"/>
+            <Button x:Name="SyncGlobalMusic" HorizontalAlignment="Stretch" Click="SyncGlobalMusic_Click" IsEnabled="False" Content="Sync music discord slash commands globally"/>
+            <Button x:Name="SyncGlobalMisc" HorizontalAlignment="Stretch" Click="SyncGlobalMisc_Click" IsEnabled="False" Content="Sync misc discord slash commands globally"/>
+        </StackPanel>
+
+        <StackPanel Grid.Column="1">
+            
+        </StackPanel>
     </Grid>
 </Page>
