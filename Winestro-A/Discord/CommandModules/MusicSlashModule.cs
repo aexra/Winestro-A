@@ -154,7 +154,7 @@ public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
     {
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
-            player?.Pause();
+            player?.Stop();
             await RespondAsync("⏹️ Кончил воспроизведение музла");
         }
         else

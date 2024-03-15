@@ -83,7 +83,6 @@ public class MusicPlayer
         return new MusicPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync()) { Channel = channel };
     }
 
-
     private void Play()
     {
         Task.Run(PlayLoop);
