@@ -135,6 +135,7 @@ public class DiscordAudioPlayer
             {
                 State = MusicPlayerStates.Idle;
                 var counter = 0;
+                LogService.Log($"Entered awaiting loop for {Guild.Name}", Enums.LogMessageMetaTypes.Music);
                 while (counter <= maxWaitTime)
                 {
                     await Task.Delay(1000);
@@ -163,7 +164,7 @@ public class DiscordAudioPlayer
             }
 
             using var output = FFmpegProc.StandardOutput.BaseStream;
-            using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
+            using var discord = AudioClient.CreatePCMStream(AudioApplication.Music);
 
             await AudioClient.SetSpeakingAsync(true);
 
