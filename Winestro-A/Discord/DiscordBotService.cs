@@ -89,7 +89,7 @@ public static partial class DiscordBotService
     {
         try
         {
-            var commands = await InteractionService.AddModulesToGuildAsync(GetGuild(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID"))), true);
+            var commands = await InteractionService.AddModulesToGuildAsync(GetGuild(ulong.Parse((string)ConfigService.Get("DiscordTestGuildID"))), true, InteractionService.Modules.ToArray());
             LogService.Log($"Test commands registered successfully: {commands.Count}");
             return new(true);
         } catch (Exception ex) { return new(false, ex.ToString()); }
