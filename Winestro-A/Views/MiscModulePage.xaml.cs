@@ -37,7 +37,7 @@ public sealed partial class MiscModulePage : Page
 
     private async void SyncTest_Click(object sender, RoutedEventArgs e)
     {
-        await DiscordBotService.TryRegisterTestCommandsAsync();
+        await DiscordBotService.TryRegisterAllCommandsToGuildAsync();
     }
 
     private void SyncGlobalAll_Click(object sender, RoutedEventArgs e)
