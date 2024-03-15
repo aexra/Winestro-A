@@ -40,18 +40,18 @@ public sealed partial class MiscModulePage : Page
         await DiscordBotService.TryRegisterAllCommandsToGuildAsync();
     }
 
-    private void SyncGlobalAll_Click(object sender, RoutedEventArgs e)
+    private async void SyncGlobal_Click(object sender, RoutedEventArgs e)
     {
-
+        await DiscordBotService.TryRegisterAllCommandsGloballyAsync();
     }
 
-    private void SyncGlobalMusic_Click(object sender, RoutedEventArgs e)
+    private async void UnsyncTest_Click(object sender, RoutedEventArgs e)
     {
-
+        await DiscordBotService.TryUnregisterAllCommandsFromGuildAsync();
     }
 
-    private void SyncGlobalMisc_Click(object sender, RoutedEventArgs e)
+    private async void UnsyncGlobal_Click(object sender, RoutedEventArgs e)
     {
-
+        await DiscordBotService.TryUnregisterAllCommandsGloballyAsync();
     }
 }

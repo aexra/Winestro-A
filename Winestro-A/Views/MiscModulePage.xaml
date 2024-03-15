@@ -16,10 +16,10 @@
 
         <StackPanel Grid.Column="0" Spacing="10">
             <TextBlock Text="Very useful buttons" FontWeight="Bold"/>
-            <Button x:Name="SyncTest" HorizontalAlignment="Stretch" Click="SyncTest_Click" Content="Sync test discord slash commands"/>
-            <Button x:Name="SyncGlobalAll" HorizontalAlignment="Stretch" Click="SyncGlobalAll_Click" IsEnabled="False" Content="Sync all discord slash commands globally"/>
-            <Button x:Name="SyncGlobalMusic" HorizontalAlignment="Stretch" Click="SyncGlobalMusic_Click" IsEnabled="False" Content="Sync music discord slash commands globally"/>
-            <Button x:Name="SyncGlobalMisc" HorizontalAlignment="Stretch" Click="SyncGlobalMisc_Click" IsEnabled="False" Content="Sync misc discord slash commands globally"/>
+            <Button x:Name="SyncTest" HorizontalAlignment="Stretch" Click="SyncTest_Click" Content="Sync discord slash commands to test guild"/>
+            <Button x:Name="SyncGlobal" HorizontalAlignment="Stretch" Click="SyncGlobal_Click" Content="Sync discord slash commands globally"/>
+            <Button x:Name="UnsyncTest" HorizontalAlignment="Stretch" Click="UnsyncTest_Click" Content="Unsync discord slash commands from test guild"/>
+            <Button x:Name="UnsyncGlobal" HorizontalAlignment="Stretch" Click="UnsyncGlobal_Click" Content="Unsync discord slash commands globally"/>
         </StackPanel>
 
         <StackPanel Grid.Column="1">
