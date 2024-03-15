@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using Discord;
-using Discord.Audio;
+﻿using Discord;
 using Discord.Interactions;
 using Winestro_A.Services;
 using Winestro_A.Structures;
@@ -9,7 +7,7 @@ using Winestro_A.Youtube;
 
 namespace Winestro_A.Discord;
 
-public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
+public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
 {
     private static Dictionary<ulong, MusicPlayer> PlayersDict => MusicHandler.PlayersDict;
 
@@ -17,7 +15,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     {
         base.OnModuleBuilding(commandService, module);
 
-        LogService.Log("Slash test commands module loaded successfully");
+        LogService.Log("Music slash commands module loaded successfully");
     }
 
     public override Task BeforeExecuteAsync(ICommandInfo command)
@@ -69,7 +67,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         }
     }
 
-    [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь", runMode:RunMode.Async)]
+    [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь", runMode: RunMode.Async)]
     public async Task Play(string promt = "")
     {
         await DeferAsync();
@@ -111,7 +109,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             await RespondAsync("📛 Не смог найти ничего по твоему запросу");
             return;
         }
-        
+
         MusicHandler.TryGetPlayer(Context.Guild.Id, out player);
         channel = (Context.User as IGuildUser)?.VoiceChannel;
 
@@ -221,7 +219,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             for (var i = 0; i < player.PlayQueue.Count; i++)
             {
                 var video = player.PlayQueue.ElementAt(i);
-                embed.AddField($"{i+1}. {video.Title} - {video.Duration}", $"{video.Url}");
+                embed.AddField($"{i + 1}. {video.Title} - {video.Duration}", $"{video.Url}");
             }
             await ModifyOriginalResponseAsync(p => p.Embed = embed.Build());
         }
