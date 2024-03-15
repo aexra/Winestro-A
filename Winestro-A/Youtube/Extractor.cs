@@ -29,7 +29,7 @@ public static class Extractor
     public static async Task<StreamManifest?> GetVideoStreamManifest(string url)
     {
         return await client.Videos.Streams.GetManifestAsync(url);
-    }
+    } // This things is extremely slow, needs fixing or sth
     public static async Task<IStreamInfo?> GetAudioStreamHighestQuality(string url)
     {
         try
