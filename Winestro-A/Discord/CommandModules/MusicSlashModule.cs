@@ -18,55 +18,6 @@ public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
         LogService.Log("Music slash commands module loaded successfully");
     }
 
-    public override Task BeforeExecuteAsync(ICommandInfo command)
-    {
-        LogService.Log($"Command [{command.Name}] is going to be invoked...", Enums.LogMeta.Debug);
-        return base.BeforeExecuteAsync(command);
-    }
-
-    [SlashCommand("test", "Команда для теста")]
-    public async Task Test()
-    {
-        LogService.Log("Test discord bot command invoked", Enums.LogMeta.Debug);
-        await RespondAsync("✅ Ы");
-    }
-
-    [SlashCommand("testdeffered", "Команда для теста отложенных команд")]
-    public async Task DeferredTest()
-    {
-        LogService.Log("Deferred test discord bot command invoked", Enums.LogMeta.Debug);
-        await DeferAsync();
-        await ModifyOriginalResponseAsync(props => { props.Content = "✅ Deferred Ы"; });
-    }
-
-    [SlashCommand("join", "Захожу в голосовой канал", runMode: RunMode.Async)]
-    public async Task JoinChannel(IVoiceChannel channel = null)
-    {
-        // Get the audio channel
-        channel = channel ?? (Context.User as IGuildUser)?.VoiceChannel;
-        if (channel == null) { await RespondAsync("📛 Ты или сам зайди в канал, или скажи в какой мне зайти 👺"); return; }
-
-        // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
-        var audioClient = await channel.ConnectAsync();
-
-        await RespondAsync($"✅ Зашел в {channel.Mention}");
-    }
-
-    [SlashCommand("leave", "Ухожу из голосового канала", runMode: RunMode.Async)]
-    public async Task LeaveChannel()
-    {
-        if (Context.Guild.CurrentUser.VoiceChannel != null)
-        {
-            var channel = Context.Guild.CurrentUser.VoiceChannel;
-            await channel.DisconnectAsync();
-            await RespondAsync($"✅ Вышел из {channel.Mention}");
-        }
-        else
-        {
-            await RespondAsync($"📛 Чтобы выйти откуда-то, надо быть где-то ☝️");
-        }
-    }
-
     [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь", runMode: RunMode.Async)]
     public async Task Play(string promt = "")
     {
