@@ -45,11 +45,10 @@ public class DiscordAudioPlayer
             if (_state == value) return;
             else
             {
-                var ls = _state;
                 _state = value;
                 if (value == MusicPlayerStates.Playing)
                 {
-                    if (ls != MusicPlayerStates.Idle)
+                    if (!PlayLoopActive)
                         Play();
                 }
             }
@@ -57,6 +56,7 @@ public class DiscordAudioPlayer
     }
     public bool IsRepeating = false;
     private bool SkipRequested = false;
+    private bool PlayLoopActive = false;
 
     public DiscordAudioPlayer(IGuildUser user, IAudioClient client)
     {
@@ -97,7 +97,7 @@ public class DiscordAudioPlayer
     }
     public void Skip(uint count)
     {
-        for (int i = 0;  i < count - 1; i++)
+        for (var i = 0;  i < count - 1; i++)
         {
             PlayQueue.Dequeue();
         }
@@ -117,6 +117,7 @@ public class DiscordAudioPlayer
     }
     private async Task PlayLoop()
     {
+        PlayLoopActive = true;
         LogService.Log($"Entered play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
         while (true)
         {
@@ -200,6 +201,7 @@ public class DiscordAudioPlayer
     }
     private async Task OnPlayLoopClose()
     {
+        PlayLoopActive = false;
         LogService.Log($"Finished play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
         await DeleteSelf();
     }

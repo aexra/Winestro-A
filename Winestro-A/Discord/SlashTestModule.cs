@@ -106,7 +106,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             if (player.PlayQueue.Count() > 1 || player.NowPlaying != null)
             {
                 MusicHandler.PlayersDict[guild.Id].Continue();
-                await ModifyOriginalResponseAsync(p => p.Content = ":notes: Врубил твое музло");
+                await ModifyOriginalResponseAsync(p => p.Content = ":arrow_forward: Врубил твое музло");
             }
             else
             {
@@ -158,7 +158,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
             player?.Skip(count);
-            await RespondAsync($":notes: Пропустил тебе {count} музлa");
+            await RespondAsync($"⏬ Пропустил тебе {count} музлa");
         }
         else
         {
@@ -172,7 +172,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
             player?.Pause();
-            await RespondAsync(":green_square: Приостановил воспроизведение музла");
+            await RespondAsync(":pause_button: Приостановил воспроизведение музла");
         }
         else
         {
@@ -186,7 +186,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
         {
             player?.ToggleRepeat();
-            await RespondAsync($"🔂 Залупил тебе музло");
+            await RespondAsync(player.IsRepeating ? $"🔂 Залупил тебе музло" : $"🔁 Разлупил тебе музло");
         }
         else
         {
