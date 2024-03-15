@@ -165,10 +165,6 @@ public class DiscordAudioPlayer
             using var output = FFmpegProc.StandardOutput.BaseStream;
             using var discord = AudioClient.CreatePCMStream(AudioApplication.Mixed);
 
-            //// TODO: использовать перегрузку CopyToAsync с CancellationToken'ом
-            //try { await output.CopyToAsync(discord); }
-            //finally { await discord.FlushAsync(); }
-
             await AudioClient.SetSpeakingAsync(true);
 
             while (true)
