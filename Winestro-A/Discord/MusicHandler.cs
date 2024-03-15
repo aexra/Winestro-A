@@ -10,13 +10,12 @@ public static class MusicHandler
 {
     public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new();
 
-    public static void KillAllPlayer()
+    public static async Task KillAllPlayers()
     {
-        foreach (var player in PlayersDict)
+        foreach (var player in PlayersDict.Values)
         {
-            
+            await player.Kill();
         }
-        PlayersDict.Clear();
     }
 
     public static bool TryGetPlayer(ulong guild, out DiscordAudioPlayer? player)

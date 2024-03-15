@@ -58,6 +58,7 @@ public static partial class DiscordBotService
     }
     public static async Task Stop()
     {
+        await MusicHandler.KillAllPlayers();
         await _client.LogoutAsync();
     }
 
