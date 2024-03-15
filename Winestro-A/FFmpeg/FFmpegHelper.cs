@@ -9,7 +9,7 @@ namespace Winestro_A.FFmpeg;
 
 public static class FFmpegHelper
 {
-    public static Process? CreateStream(string path)
+    public static Process? Run(string path)
     {
         var info = new ProcessStartInfo
         {

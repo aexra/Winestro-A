@@ -75,6 +75,7 @@ public sealed partial class MaestroPage : Page
     {
         Data.ConnectionState = DiscordBotService.ConnectionState.ToString();
         Data.GuildsConnected = DiscordBotService.Guilds.Count.ToString();
+        Data.PlayersActive = MusicHandler.PlayersDict.Count.ToString();
         Data.CurrentTime = TimeHelper.GetNowString();
 
         if (DiscordBotService.RunnedAt != null)

@@ -93,7 +93,7 @@ public class DiscordAudioPlayer
         PlayQueue.Clear();
         SkipRequested = true;
         NowPlaying = null;
-        await DeleteSelf();
+        await Kill();
     }
     public void Skip(uint count)
     {
@@ -161,7 +161,7 @@ public class DiscordAudioPlayer
 
             LogService.Log($"Starting playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
 
-            FFmpegProc = FFmpegHelper.CreateStream(NowPlaying.Value.AudioUrl);
+            FFmpegProc = FFmpegHelper.Run(NowPlaying.Value.AudioUrl);
 
             if (FFmpegProc == null)
             {
@@ -208,11 +208,12 @@ public class DiscordAudioPlayer
     {
         PlayLoopActive = false;
         LogService.Log($"Finished play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
-        await DeleteSelf();
+        await Kill();
     }
 
-    private async Task DeleteSelf()
+    public async Task Kill()
     {
+        FFmpegProc?.Kill();
         MusicHandler.TryRemoveAudioPlayer(Guild.Id);
         await Channel.DisconnectAsync();
     }

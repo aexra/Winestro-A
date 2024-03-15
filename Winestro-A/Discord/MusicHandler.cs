@@ -10,6 +10,15 @@ public static class MusicHandler
 {
     public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new();
 
+    public static void KillAllPlayer()
+    {
+        foreach (var player in PlayersDict)
+        {
+            
+        }
+        PlayersDict.Clear();
+    }
+
     public static bool TryGetPlayer(ulong guild, out DiscordAudioPlayer? player)
     {
         return PlayersDict.TryGetValue(guild, out player);
