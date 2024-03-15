@@ -22,21 +22,21 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 
     public override Task BeforeExecuteAsync(ICommandInfo command)
     {
-        LogService.Log($"Command [{command.Name}] is going to be invoked...", Enums.LogMessageMetaTypes.Debug);
+        LogService.Log($"Command [{command.Name}] is going to be invoked...", Enums.LogMeta.Debug);
         return base.BeforeExecuteAsync(command);
     }
 
     [SlashCommand("test", "Команда для теста")]
     public async Task Test()
     {
-        LogService.Log("Test discord bot command invoked", Enums.LogMessageMetaTypes.Debug);
+        LogService.Log("Test discord bot command invoked", Enums.LogMeta.Debug);
         await RespondAsync("✅ Ы");
     }
 
     [SlashCommand("testdeffered", "Команда для теста отложенных команд")]
     public async Task DeferredTest()
     {
-        LogService.Log("Deferred test discord bot command invoked", Enums.LogMessageMetaTypes.Debug);
+        LogService.Log("Deferred test discord bot command invoked", Enums.LogMeta.Debug);
         await DeferAsync();
         await ModifyOriginalResponseAsync(props => { props.Content = "✅ Deferred Ы"; });
     }

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Winestro_A.Enums;
 
-public enum LogMessageTypes
+public enum LogSeverity
 {
     Info,
     Warning,
     Error,
 };
 
-public enum LogMessageMetaTypes
+public enum LogMeta
 {
     Default,
     Music,

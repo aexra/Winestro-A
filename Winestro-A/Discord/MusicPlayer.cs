@@ -123,7 +123,7 @@ public class MusicPlayer
     private async Task PlayLoop()
     {
         PlayLoopActive = true;
-        LogService.Log($"Entered play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
+        LogService.Log($"Entered play loop for [{Guild.Name}]", Enums.LogMeta.Music);
         while (true)
         {
             if (!IsRepeating)
@@ -141,7 +141,7 @@ public class MusicPlayer
             {
                 State = MusicPlayerStates.Idle;
                 var counter = 0;
-                LogService.Log($"Entered awaiting loop for {Guild.Name}", Enums.LogMessageMetaTypes.Music);
+                LogService.Log($"Entered awaiting loop for {Guild.Name}", Enums.LogMeta.Music);
                 while (counter <= maxWaitTime)
                 {
                     await Task.Delay(1000);
@@ -159,13 +159,13 @@ public class MusicPlayer
                 continue;
             }
 
-            LogService.Log($"Starting playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
+            LogService.Log($"Starting playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMeta.Music);
 
             FFmpegProc = FFmpegHelper.Run(NowPlaying.Value.AudioUrl);
 
             if (FFmpegProc == null)
             {
-                LogService.Error("Cannot create FFmpeg", Enums.LogMessageMetaTypes.Music);
+                LogService.Error("Cannot create FFmpeg", Enums.LogMeta.Music);
                 return;
             }
 
@@ -194,12 +194,12 @@ public class MusicPlayer
                 catch (Exception ex)
                 {
                     await discord?.FlushAsync();
-                    LogService.Error("Exception in MusicPlayer: " + ex.ToString(), Enums.LogMessageMetaTypes.Music);
+                    LogService.Error("Exception in MusicPlayer: " + ex.ToString(), Enums.LogMeta.Music);
                     break;
                 }
             }
 
-            LogService.Log($"Finished playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMessageMetaTypes.Music);
+            LogService.Log($"Finished playing to [{Guild.Name}] -> [{NowPlaying.Value.Title}]", Enums.LogMeta.Music);
 
             await discord?.FlushAsync();
         }
@@ -207,7 +207,7 @@ public class MusicPlayer
     private async Task OnPlayLoopClose()
     {
         PlayLoopActive = false;
-        LogService.Log($"Finished play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
+        LogService.Log($"Finished play loop for [{Guild.Name}]", Enums.LogMeta.Music);
         await Kill();
     }
 

@@ -56,7 +56,7 @@ public static partial class DiscordBotService
                 LogService.Error(msg.Message);
                 break;
             default:
-                LogService.Log(msg.Message, Enums.LogMessageMetaTypes.Debug);
+                LogService.Log(msg.Message, Enums.LogMeta.Debug);
                 break;
         }
         return Task.CompletedTask;

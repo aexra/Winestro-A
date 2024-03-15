@@ -23,29 +23,29 @@ public class LogService
 
     public static bool UpdateRequired = false;
 
-    public static void Log(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Log(string msg, LogMeta meta = LogMeta.Default)
     {
-        TryLog(msg, LogMessageTypes.Info, meta);
+        TryLog(msg, LogSeverity.Info, meta);
     }
-    public static void Log(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Log(object obj, LogMeta meta = LogMeta.Default)
     {
-        TryLog(obj.ToString(), LogMessageTypes.Info, meta);
+        TryLog(obj.ToString(), LogSeverity.Info, meta);
     }
-    public static void Warning(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Warning(string msg, LogMeta meta = LogMeta.Default)
     {
-        TryLog(msg, LogMessageTypes.Warning, meta);
+        TryLog(msg, LogSeverity.Warning, meta);
     }
-    public static void Warning(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Warning(object obj, LogMeta meta = LogMeta.Default)
     {
-        TryLog(obj.ToString(), LogMessageTypes.Warning, meta);
+        TryLog(obj.ToString(), LogSeverity.Warning, meta);
     }
-    public static void Error(string msg, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Error(string msg, LogMeta meta = LogMeta.Default)
     {
-        TryLog(msg, LogMessageTypes.Error, meta);
+        TryLog(msg, LogSeverity.Error, meta);
     }
-    public static void Error(object obj, LogMessageMetaTypes meta = LogMessageMetaTypes.Default)
+    public static void Error(object obj, LogMeta meta = LogMeta.Default)
     {
-        TryLog(obj.ToString(), LogMessageTypes.Error, meta);
+        TryLog(obj.ToString(), LogSeverity.Error, meta);
     }
     public static void ForceUpdateControlsCollections()
     {
@@ -56,7 +56,7 @@ public class LogService
         catch { }
     }
 
-    private static void TryLog(string msg, LogMessageTypes type, LogMessageMetaTypes meta)
+    private static void TryLog(string msg, LogSeverity type, LogMeta meta)
     {
         if (string.IsNullOrWhiteSpace(msg)) return;
         try
@@ -79,7 +79,7 @@ public class LogService
         };
         LogMessages.Add(lmc);
 
-        if (log.Meta == LogMessageMetaTypes.Default)
+        if (log.Meta == LogMeta.Default)
         {
             LogMessageControl lmcmain = new()
             {
@@ -102,14 +102,14 @@ public class LogService
         };
         switch (log.Type)
         {
-            case LogMessageTypes.Warning:
+            case LogSeverity.Warning:
                 WarningMessages.Add(lmce);
                 break;
-            case LogMessageTypes.Error:
+            case LogSeverity.Error:
                 ErrorMessages.Add(lmce);
                 break;
             default:
-                if (log.Meta == LogMessageMetaTypes.Default)
+                if (log.Meta == LogMeta.Default)
                     InfoMessages.Add(lmce);
                 break;
         }
@@ -124,13 +124,13 @@ public class LogService
         };
         switch (log.Meta)
         {
-            case LogMessageMetaTypes.Music:
+            case LogMeta.Music:
                 MusicMessages.Add(lmcmeta);
                 break;
-            case LogMessageMetaTypes.Misc:
+            case LogMeta.Misc:
                 MiscMessages.Add(lmcmeta);
                 break;
-            case LogMessageMetaTypes.Debug:
+            case LogMeta.Debug:
                 DebugMessages.Add(lmcmeta);
                 break;
             default:

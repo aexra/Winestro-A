@@ -46,7 +46,7 @@ public static class IntegratedConsoleService
             if (found)
             {
                 CommandsList.Add(method.CreateDelegate<Func<ConsoleCommandContext, Task<ConsoleCommandResult>>>());
-                LogService.Log($"Console command [{iccattr.Name}] compiled", Enums.LogMessageMetaTypes.Debug);
+                LogService.Log($"Console command [{iccattr.Name}] compiled", Enums.LogMeta.Debug);
                 counter++;
             }
         }
@@ -299,21 +299,21 @@ public static class IntegratedConsoleService
     [ConsoleCommand("log", RequiredArgs = 1, KwargsKeys = new string[]{"type", "meta"}, Description = "Log to log panel. Syntax: log <word1> ... [type=info|warning|error] [meta=music|misc|debug]")]
     private static async Task<ConsoleCommandResult> Log(ConsoleCommandContext ctx)
     {
-        LogMessageTypes? type = null;
-        LogMessageMetaTypes? meta = null;
+        LogSeverity? type = null;
+        LogMeta? meta = null;
 
         if (ctx.Kwargs.ContainsKey("type"))
         {
             switch (ctx.Kwargs["type"])
             {
                 case "info":
-                    type = LogMessageTypes.Info;
+                    type = LogSeverity.Info;
                     break;
                 case "warning":
-                    type = LogMessageTypes.Warning;
+                    type = LogSeverity.Warning;
                     break;
                 case "error":
-                    type = LogMessageTypes.Error;
+                    type = LogSeverity.Error;
                     break;
                 default:
                     return new ConsoleCommandResult()
@@ -329,16 +329,16 @@ public static class IntegratedConsoleService
             switch (ctx.Kwargs["meta"])
             {
                 case "default":
-                    meta = LogMessageMetaTypes.Default;
+                    meta = LogMeta.Default;
                     break;
                 case "music":
-                    meta = LogMessageMetaTypes.Music;
+                    meta = LogMeta.Music;
                     break;
                 case "misc":
-                    meta = LogMessageMetaTypes.Misc;
+                    meta = LogMeta.Misc;
                     break;
                 case "debug":
-                    meta = LogMessageMetaTypes.Debug;
+                    meta = LogMeta.Debug;
                     break;
                 default:
                     return new ConsoleCommandResult()
@@ -352,16 +352,16 @@ public static class IntegratedConsoleService
 
         switch (type)
         {
-            case LogMessageTypes.Warning:
-                LogService.Warning(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+            case LogSeverity.Warning:
+                LogService.Warning(string.Join(" ", ctx.Args), meta ??= Enums.LogMeta.Debug);
                 return new ConsoleCommandResult()
                 {
                     Success = true,
                     Type = Enums.ConsoleMessageTypes.Ok,
                     OutMessage = $"Reported warning to {meta} log tab"
                 };
-            case LogMessageTypes.Error:
-                LogService.Error(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+            case LogSeverity.Error:
+                LogService.Error(string.Join(" ", ctx.Args), meta ??= Enums.LogMeta.Debug);
                 return new ConsoleCommandResult()
                 {
                     Success = true,
@@ -369,7 +369,7 @@ public static class IntegratedConsoleService
                     OutMessage = $"Reported error to {meta} log tab"
                 };
             default:
-                LogService.Log(string.Join(" ", ctx.Args), meta ??= Enums.LogMessageMetaTypes.Debug);
+                LogService.Log(string.Join(" ", ctx.Args), meta ??= Enums.LogMeta.Debug);
                 return new ConsoleCommandResult()
                 {
                     Success = true,

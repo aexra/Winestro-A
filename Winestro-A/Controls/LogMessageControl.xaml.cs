@@ -7,8 +7,8 @@ namespace Winestro_A.Controls;
 
 public sealed partial class LogMessageControl : UserControl
 {
-    public LogMessageTypes Type { get; set; }
-    public LogMessageMetaTypes Meta { get; set; } = LogMessageMetaTypes.Default;
+    public LogSeverity Type { get; set; }
+    public LogMeta Meta { get; set; } = LogMeta.Default;
     public string Text { get; set; }
     public string Time { get; set; }
     public ulong Id;
@@ -18,9 +18,9 @@ public sealed partial class LogMessageControl : UserControl
         get {
             switch (Type)
             {
-                case LogMessageTypes.Warning:
+                case LogSeverity.Warning:
                     return "ms-appx:///Assets/LogMessageWarningIcon.png";
-                case LogMessageTypes.Error:
+                case LogSeverity.Error:
                     return "ms-appx:///Assets/LogMessageErrorIcon.png";
                 default:
                     return "ms-appx:///Assets/LogMessageInfoIcon.png";
