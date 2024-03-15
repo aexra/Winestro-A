@@ -117,6 +117,7 @@ public class DiscordAudioPlayer
     }
     private async Task PlayLoop()
     {
+        LogService.Log($"Entered play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
         while (true)
         {
             if (!IsRepeating)
@@ -206,6 +207,7 @@ public class DiscordAudioPlayer
     }
     private async Task OnPlayLoopClose()
     {
+        LogService.Log($"Finished play loop for [{Guild.Name}]", Enums.LogMessageMetaTypes.Music);
         await DeleteSelf();
     }
 
