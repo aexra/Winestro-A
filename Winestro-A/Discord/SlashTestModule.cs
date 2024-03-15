@@ -185,7 +185,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         }
         else
         {
-            await RespondAsync("⚠️ Чо залупливать если нечево..");
+            await RespondAsync("⚠️ Чо очищать если очереди нету..");
         }
     }
 
