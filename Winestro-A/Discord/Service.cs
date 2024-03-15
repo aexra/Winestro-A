@@ -105,7 +105,8 @@ public static partial class DiscordBotService
     {
         try
         {
-            await InteractionService.RegisterCommandsGloballyAsync();
+            var commands = await InteractionService.RegisterCommandsGloballyAsync();
+            LogService.Log($"All commands registered successfully: {commands.Count}");
             return new(true);
         }
         catch (Exception ex) { return new(false, ex.ToString()); }
@@ -115,6 +116,7 @@ public static partial class DiscordBotService
         try
         {
             await Client.Rest.DeleteAllGlobalCommandsAsync();
+            LogService.Log($"All commands unregistered successfully");
             return new(true);
         }
         catch (Exception ex) { return new(false, ex.ToString()); }
