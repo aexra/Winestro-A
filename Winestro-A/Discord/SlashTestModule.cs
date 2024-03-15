@@ -88,7 +88,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         finally { await discord.FlushAsync(); }
     }
 
-    [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь")]
+    [SlashCommand("play", "Продолжает воспроизведение музыки или добавляет новую в очередь", runMode:RunMode.Async)]
     public async Task Play(string promt = "")
     {
         await DeferAsync();
