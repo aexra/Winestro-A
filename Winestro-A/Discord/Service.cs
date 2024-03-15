@@ -71,17 +71,12 @@ public static partial class DiscordBotService
         //_client.UserVoiceStateUpdated += VoiceStateUpdated;
         _client.InteractionCreated += async (x) =>
         {
-            LogService.Log($"Interaction created: [{x}]", Enums.LogMeta.Debug);
             var ctx = new SocketInteractionContext(Client, x);
             var res = await InteractionService.ExecuteCommandAsync(ctx, null);
 
-            if (res.IsSuccess)
+            if (!res.IsSuccess)
             {
-                LogService.Log($"Interaction executed: [{x}]", Enums.LogMeta.Debug);
-            }
-            else
-            {
-                LogService.Error($"Interaction [{x}] execution fail: [{res.Error}]", Enums.LogMeta.Debug);
+                LogService.Error($"Interaction [{x}] execution fail: [{res.Error}]");
             }
         };
     }
