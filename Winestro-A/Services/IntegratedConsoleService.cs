@@ -7,6 +7,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Discord.Interactions;
 using Microsoft.UI.Xaml.Controls;
 using Windows.ApplicationModel.UserDataTasks.DataProvider;
 using Windows.Storage;
@@ -428,17 +429,17 @@ public static class IntegratedConsoleService
         return new ConsoleCommandResult($"Stopping bot...");
     }
 
-    [ConsoleCommand("discord bot commands reg", Description = "Registers all global discord commands")]
-    private static async Task<ConsoleCommandResult> BotRegisterSlashCommands(ConsoleCommandContext ctx)
+    [ConsoleCommand("sudo discord commands reg", Description = "Registers all global discord commands")]
+    private static async Task<ConsoleCommandResult> BotRegisterSlashCommandsGlobally(ConsoleCommandContext ctx)
     {
-        //await DiscordBotService.RegisterGlobalSlashCommands();
+        await DiscordBotService.TryRegisterAllCommandsGloballyAsync();
         return new("Console commands have been registered");
     }
 
-    [ConsoleCommand("sudo discord bot slash delete all", Description = "Deletes ALL global commands from the discord")]
-    private static async Task<ConsoleCommandResult> BotDeleteAllGlobalSlashCommands(ConsoleCommandContext ctx)
+    [ConsoleCommand("sudo discord commands unreg", Description = "Deletes ALL global commands from the discord")]
+    private static async Task<ConsoleCommandResult> BotUnregisterSlashCommandsGlobally(ConsoleCommandContext ctx)
     {
-        //await DiscordBotService.DeleteSlashCommands();
+        await DiscordBotService.TryUnregisterAllCommandsGloballyAsync();
         return new("Global slash commands will be deleted in ~1 hour");
     }
 

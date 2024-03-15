@@ -100,4 +100,23 @@ public static partial class DiscordBotService
         }
         catch (Exception ex) { return new(false, ex.ToString()); }
     }
+
+    public static async Task<ResultManifest> TryRegisterAllCommandsGloballyAsync()
+    {
+        try
+        {
+            await InteractionService.RegisterCommandsGloballyAsync();
+            return new(true);
+        }
+        catch (Exception ex) { return new(false, ex.ToString()); }
+    }
+    public static async Task<ResultManifest> TryUnregisterAllCommandsGloballyAsync()
+    {
+        try
+        {
+            await Client.Rest.DeleteAllGlobalCommandsAsync();
+            return new(true);
+        }
+        catch (Exception ex) { return new(false, ex.ToString()); }
+    }
 }
