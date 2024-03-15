@@ -130,7 +130,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
         player.Enqueue(item.Value);
         player.State = MusicPlayerStates.Playing;
 
-        await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title}**");
+        await ModifyOriginalResponseAsync(p => p.Content = $":notes: Добавил твое музло в очередь: **{item.Value.Title} - {item.Value.Duration}**");
     }
 
     [SlashCommand("skip", "Пропускает текущий трек")]
@@ -205,16 +205,23 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
                 return;
             }
 
+            TimeSpan TotalDuration = TimeSpan.Zero;
+
+            foreach (var item in player.PlayQueue)
+            {
+                TotalDuration += item.Duration ?? TimeSpan.Zero;
+            }
+
             var embed = new EmbedBuilder
             {
-                Title = $"Сейчас играет: {now.Value.Title}",
-                Description = player.PlayQueue.Count == 0 ? "" : $"Первые {MathF.Min(max, player.PlayQueue.Count)} из {player.PlayQueue.Count} в очереди:",
+                Title = $"Сейчас играет: {now.Value.Title} - {now.Value.Duration}",
+                Description = player.PlayQueue.Count == 0 ? "" : $"Первые {MathF.Min(max, player.PlayQueue.Count)} из {player.PlayQueue.Count} в очереди - {TotalDuration}",
                 Color = Color.Magenta
             };
             for (var i = 0; i < player.PlayQueue.Count; i++)
             {
                 var video = player.PlayQueue.ElementAt(i);
-                embed.AddField($"{i+1}. {video.Title}", $"{video.Url}");
+                embed.AddField($"{i+1}. {video.Title} - {video.Duration}", $"{video.Url}");
             }
             await ModifyOriginalResponseAsync(p => p.Embed = embed.Build());
         }
