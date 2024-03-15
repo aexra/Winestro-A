@@ -153,7 +153,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     }
 
     [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
-    public async Task Queue()
+    public async Task Queue(uint max = 5)
     {
         await DeferAsync();
 
@@ -171,15 +171,13 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
             var embed = new EmbedBuilder
             {
                 Title = $"Сейчас играет: {now.Value.Title}",
-                Description = player.PlayQueue.Count == 1 ? "" : $"Первые {MathF.Min(5, player.PlayQueue.Count - 1)} из {player.PlayQueue.Count - 1} в очереди:",
+                Description = player.PlayQueue.Count == 0 ? "" : $"Первые {MathF.Min(max, player.PlayQueue.Count)} из {player.PlayQueue.Count} в очереди:",
                 Color = Color.Magenta
             };
-            var k = 1;
-            for (var i = 1; i <= player.PlayQueue.Count; i++)
+            for (var i = 0; i < player.PlayQueue.Count; i++)
             {
                 var video = player.PlayQueue.ElementAt(i);
-                embed.AddField($"{k}. {video.Title}", $"{video.Url}");
-                k++;
+                embed.AddField($"{i+1}. {video.Title}", $"{video.Url}");
             }
             await ModifyOriginalResponseAsync(p => p.Embed = embed.Build());
         }
