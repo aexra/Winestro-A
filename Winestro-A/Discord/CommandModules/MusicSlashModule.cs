@@ -149,6 +149,20 @@ public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
         }
     }
 
+    [SlashCommand("stop", "Останавливает воспроизведение музла и очищает очередь")]
+    public async Task Stop()
+    {
+        if (MusicHandler.TryGetPlayer(Context.Guild.Id, out var player))
+        {
+            player?.Pause();
+            await RespondAsync("⏹️ Кончил воспроизведение музла");
+        }
+        else
+        {
+            await RespondAsync("⚠️ Чо останавливать если нечево..");
+        }
+    }
+
     [SlashCommand("queue", "Выводит очередь воспроизведения музыки")]
     public async Task Queue(uint max = 5)
     {
