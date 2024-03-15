@@ -23,7 +23,7 @@ public enum MusicPlayerStates
     Default
 }
 
-public class DiscordAudioPlayer
+public class MusicPlayer
 {
     private static readonly int maxWaitTime = 120;
     private static readonly int batchSize = 1920;
@@ -58,7 +58,7 @@ public class DiscordAudioPlayer
     private bool SkipRequested = false;
     private bool PlayLoopActive = false;
 
-    public DiscordAudioPlayer(IGuildUser user, IAudioClient client)
+    public MusicPlayer(IGuildUser user, IAudioClient client)
     {
         this.User = user;
         this.AudioClient = client;
@@ -70,17 +70,17 @@ public class DiscordAudioPlayer
         PlayQueue.Enqueue(item);
     }
 
-    public static DiscordAudioPlayer FromConnectedChannel(IVoiceChannel channel)
+    public static MusicPlayer FromConnectedChannel(IVoiceChannel channel)
     {
-        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
+        return new MusicPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
     }
-    public static async Task<DiscordAudioPlayer> FromUnconnectedChannel(IVoiceChannel channel)
+    public static async Task<MusicPlayer> FromUnconnectedChannel(IVoiceChannel channel)
     {
-        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
+        return new MusicPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient);
     }
-    public static async Task<DiscordAudioPlayer> FromChannel(IVoiceChannel channel)
+    public static async Task<MusicPlayer> FromChannel(IVoiceChannel channel)
     {
-        return new DiscordAudioPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync()) { Channel = channel };
+        return new MusicPlayer(((SocketGuild)channel.Guild).CurrentUser, channel.Guild.AudioClient ?? await channel.ConnectAsync()) { Channel = channel };
     }
 
 

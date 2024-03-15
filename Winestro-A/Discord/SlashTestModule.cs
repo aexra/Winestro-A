@@ -11,7 +11,7 @@ namespace Winestro_A.Discord;
 
 public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private static Dictionary<ulong, DiscordAudioPlayer> PlayersDict => MusicHandler.PlayersDict;
+    private static Dictionary<ulong, MusicPlayer> PlayersDict => MusicHandler.PlayersDict;
 
     public override void OnModuleBuilding(InteractionService commandService, ModuleInfo module)
     {
@@ -101,7 +101,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
     }
     private async Task Enqueue(string promt)
     {
-        DiscordAudioPlayer? player;
+        MusicPlayer? player;
         IVoiceChannel? channel;
         MusicItem? item;
 
@@ -123,7 +123,7 @@ public class SlashTestModule : InteractionModuleBase<SocketInteractionContext>
 
         if (player == null && channel != null)
         {
-            player = await DiscordAudioPlayer.FromChannel(channel);
+            player = await MusicPlayer.FromChannel(channel);
             MusicHandler.TryAddAudioPlayer(player);
         }
 

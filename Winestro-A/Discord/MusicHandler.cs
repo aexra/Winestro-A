@@ -8,7 +8,7 @@ namespace Winestro_A.Discord;
 
 public static class MusicHandler
 {
-    public static Dictionary<ulong, DiscordAudioPlayer> PlayersDict = new();
+    public static Dictionary<ulong, MusicPlayer> PlayersDict = new();
 
     public static async Task KillAllPlayers()
     {
@@ -18,7 +18,7 @@ public static class MusicHandler
         }
     }
 
-    public static bool TryGetPlayer(ulong guild, out DiscordAudioPlayer? player)
+    public static bool TryGetPlayer(ulong guild, out MusicPlayer? player)
     {
         return PlayersDict.TryGetValue(guild, out player);
     }
@@ -31,7 +31,7 @@ public static class MusicHandler
         }
         catch { return false; }
     }
-    public static bool TryAddAudioPlayer(DiscordAudioPlayer player)
+    public static bool TryAddAudioPlayer(MusicPlayer player)
     {
         return PlayersDict.TryAdd(player.Guild.Id, player);
     }
