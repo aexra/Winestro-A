@@ -39,7 +39,9 @@ public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
 {
    [SlashCommand("test", "My sample command", runMode: RunMode.Sync)]
    public async Task MethodName(...) {
-      ...
+      // ...
+      await RespondAsync("Hello, world!");
+      // ...   
    }
 }
 ```
