@@ -24,4 +24,12 @@
 Все команды бота реализованы в модулях по директории: ```Winestro_A/Discord/CommandModules/```<br>
 Например: [MusicSlashModule.cs](Winestro-A/Discord/CommandModules/MusicSlashModule.cs)
 
+Вы можете создать новый модуль в этой же папке (вообще в любой, но не зря же я ее создавал?) следующим образом:
+```cs
+namespace Winestro_A.Discord;
+public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
+{
 
+}
+```
+Для более детальной информации о создании модулей [Interaction Framework](https://docs.discordnet.dev/guides/int_framework) можно прочитать [тут](https://docs.discordnet.dev/guides/int_framework/intro.html#interaction-context)
