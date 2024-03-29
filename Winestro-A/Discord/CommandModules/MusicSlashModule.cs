@@ -7,7 +7,7 @@ using Winestro_A.Youtube;
 
 namespace Winestro_A.Discord;
 
-public class MusicClashModule : InteractionModuleBase<SocketInteractionContext>
+public class MusicSlashModule : InteractionModuleBase<SocketInteractionContext>
 {
     private static Dictionary<ulong, MusicPlayer> PlayersDict => MusicHandler.PlayersDict;
 
