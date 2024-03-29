@@ -32,4 +32,15 @@ public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
 
 }
 ```
+А также объявить команду (зарегистрировать в дискорде и написать у себя не одно и то же)
+```cs
+namespace Winestro_A.Discord;
+public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
+{
+   [SlashCommand("test", "My sample command", runMode: RunMode.Sync)]
+   public async Task MethodName(...) {
+      ...
+   }
+}
+```
 Для более детальной информации о создании модулей [Interaction Framework](https://docs.discordnet.dev/guides/int_framework) можно прочитать [тут](https://docs.discordnet.dev/guides/int_framework/intro.html#interaction-context)
