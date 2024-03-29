@@ -61,5 +61,5 @@ private static async Task<ConsoleCommandResult> Sample(ConsoleCommandContext ctx
 }
 ```
 
-Как это выглядит в консоли:
+Как это выглядит в консоли:{br}
 ![image](https://github.com/aexra/Winestro-A/assets/121866384/229707d2-604e-4888-b885-94889efd12f3)
