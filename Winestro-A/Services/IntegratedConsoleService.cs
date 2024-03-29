@@ -273,7 +273,7 @@ public static class IntegratedConsoleService
 
     // HERE COMMANDS GO
 
-    // EVERY COMMAND HAS TO BE LIKE
+    // EVERY COMMAND HAS TO BE LIKE (outdated info)
     // [ICCommand("CommandName", [Aliases: string[]], [nArgs: int], [KwargsKeys: string[]])]
     // ... static ConsoleCommandResult MethodName(ConsoleCommandContext) { }
 
