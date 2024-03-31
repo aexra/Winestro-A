@@ -49,7 +49,7 @@ public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
    }
 }
 ```
-Для более детальной информации о создании модулей [Interaction Framework](https://docs.discordnet.dev/guides/int_framework) можно прочитать [тут](https://docs.discordnet.dev/guides/int_framework/intro.html#interaction-context)
+Подробнее о создании модулей [Interaction Framework](https://docs.discordnet.dev/guides/int_framework) можно прочитать [тут](https://docs.discordnet.dev/guides/int_framework/intro.html#interaction-context)
 
 ### Кастомизация команд консоли
 На момент записи README моя консоль поддерживает только определенные в ее же классе команды, поэтому все новые команды должны быть определены в ```Winestro-A/Services/IntegratedConsoleService.cs```, т.е. [тут](Winestro-A/Services/IntegratedConsoleService.cs)
