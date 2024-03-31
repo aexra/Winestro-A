@@ -36,7 +36,8 @@ public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
 
 }
 ```
-А также объявить команду (зарегистрировать в дискорде и написать у себя не одно и то же)
+А также объявить команду <br> 
+> P.S. зарегистрировать в дискорде и написать у себя - не одно и то же
 ```cs
 namespace Winestro_A.Discord;
 public class SampleSlashModule : InteractionModuleBase<SocketInteractionContext>
