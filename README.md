@@ -22,6 +22,7 @@
 3. Для применения комманд к тестовому серверу, необходимо один раз в консоли прописать ```discord commands reg test``` (при условии что бот запущен)
 
 ![image](https://github.com/aexra/Winestro-A/assets/121866384/17b8c499-da7f-48c8-90c5-43689419291c)
+![image](https://github.com/aexra/Winestro-A/assets/121866384/ca0202cf-0754-4295-9691-bdc8df0f40db)
 
 ### Кастомизация команд дискорда
 Все команды бота реализованы в модулях по директории: ```Winestro_A/Discord/CommandModules/```<br>
